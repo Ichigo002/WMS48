@@ -1,8 +1,7 @@
 #include <Arduino.h>
 
-int clk = 1,
-  latch = 1,
-   data = 1;
+int btn = 34;
+int led = 23;
 
 void setup() {
   pinMode(btn, INPUT);
