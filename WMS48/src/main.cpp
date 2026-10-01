@@ -9,17 +9,17 @@ Display display;
 void setup()
 {
   // Initialize your setup code here
-  display.setup(60);
+  display.setup(config::refresh_rate_hz);
 
   Serial.begin(115200);
-  for (size_t i = 0; i < 48; i++)
+  /*for (size_t i = 0; i < 48; i++)
   {
     for (size_t j = 0; j < 32; j++)
     {
       display.setPixelRaw(i, j, 255);
     }
     
-  }
+  }*/
   
 }
 

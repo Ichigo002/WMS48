@@ -32,13 +32,12 @@ void Display::setup(uint8_t refresh_freq_hz)
     pinMode(config::display::rows_latch, OUTPUT);
     pinMode(config::display::rows_oe, OUTPUT);
 
-    digitalWrite(config::display::rows_oe, LOW);
+    digitalWrite(config::display::rows_oe, HIGH);
 }
-
 
 void Display::setPixelRaw(u_int x, u_int y, uint8_t value)
 {
-    if(x >=48 || y >= 32)
+    if (x >= 48 || y >= 32)
         return;
     buffer[x][y] = value;
 }
@@ -47,35 +46,39 @@ void IRAM_ATTR Display::refresh_row(int row)
 {
     digitalWrite(config::display::rows_latch, LOW);
     digitalWrite(config::display::rows_clk, LOW);
+    
 
-    int physical_row = map_y[row];
+    for (byte i = 0; i < 4; i++)
+    {
+        buff_rows[i] = 0;
+    }
+    
 
-
-    // do zmiany i przeprogramowania:
-    int current_hc595 = ((8 - row % 8) + row) / 8;
-    int tmp_buff = 0;
+    int pr = map_y[row]; // physical row
+    int which_buff = (pr - (pr % 8)) / 8;
+    buff_rows[which_buff] = buff_rows[which_buff] | (1 << (pr % 8));
 
     for (size_t i = 0; i < 4; i++)
     {
-        tmp_buff = 255;
-        //if (current_hc595 == i)
-        //    tmp_buff = (1 << (row % 8));
-
         shiftOut(
             config::display::rows_data,
             config::display::rows_clk,
             LSBFIRST,
-            ~tmp_buff);
+            ~buff_rows[i]);
     }
 
     digitalWrite(config::display::rows_latch, HIGH);
 
     digitalWrite(config::display::rows_latch, LOW);
+    digitalWrite(config::display::rows_oe, LOW);
+    digitalWrite(config::display::columns_oe, LOW);
 }
 
 void IRAM_ATTR Display::refresh_cols(int current_row)
 {
-    digitalWrite(config::display::columns_oe, LOW);
+    digitalWrite(config::display::rows_oe, HIGH);
+    digitalWrite(config::display::columns_oe, HIGH);
+
     digitalWrite(config::display::columns_latch, LOW);
     digitalWrite(config::display::columns_clk, LOW);
 
@@ -90,7 +93,7 @@ void IRAM_ATTR Display::refresh_cols(int current_row)
         {
             int m = map_x[j];
             int which_buff = (m - (m % 8)) / 8;
-            buff[which_buff] = buff[which_buff] | (1 << (m % 8));   
+            buff[which_buff] = buff[which_buff] | (1 << (m % 8));
         }
     }
 
