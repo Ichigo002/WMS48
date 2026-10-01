@@ -15,7 +15,7 @@ void Display::setup(uint8_t refresh_freq_hz)
 {
     instance = this;
 
-    uint32_t T_us = 1000000UL / (refresh_freq_hz * 32);
+    uint32_t T_us = 1000000UL / (refresh_freq_hz * 32); // 1/8 of resresh time for one bitplane
 
     timer = timerBegin(0, 80, true);
     timerAttachInterrupt(timer, &Display::refreshISR, true);
@@ -33,26 +33,92 @@ void Display::setup(uint8_t refresh_freq_hz)
     pinMode(config::display::rows_oe, OUTPUT);
 
     digitalWrite(config::display::rows_oe, HIGH);
+
+    buildBitPlanes();
+}
+
+void Display::update()
+{
+    buildBitPlanes();
 }
 
 void Display::setPixelRaw(u_int x, u_int y, uint8_t value)
 {
     if (x >= 48 || y >= 32)
         return;
-    buffer[x][y] = value;
+    abstract_buffer[x][y] = value;
+}
+
+void Display::buildBitPlanes()
+{
+    if(build_bitplane_ready)
+        return;
+
+    int m, which_buff;
+
+    for (byte i = 0; i < 8; i++) // each bitplanes loop
+    {
+        for (byte j = 0; j < 32; j++) // each row loop
+        {
+            for (byte l = 0; l < 48; l++) // each column loop
+            {
+                if (abstract_buffer[l][j] & (1 << i) != 0)
+                {
+                    m = map_x[l];
+                    which_buff = (m - (m % 8)) / 8;
+
+                    ptr_rebuild_bitplane[i][j][which_buff] =
+                        ptr_rebuild_bitplane[i][j][which_buff] | (1 << (m % 8));
+                }
+            }
+        }
+    }
+    build_bitplane_ready = true;
+
+    // for (byte j = 0; j < 48; j++)
+    // {
+    //     if (abstract_buffer[j][current_row] != 0) // TEMPORARY
+    //     {
+    //         int m = map_x[j];
+    //         int which_buff = (m - (m % 8)) / 8;
+    //         buff[which_buff] = buff[which_buff] | (1 << (m % 8));
+    //         ptr_rebuild_bitplane[]
+    //     }
+    // }
+}
+
+void IRAM_ATTR Display::swapBitplaneBuffer()
+{
+    if (ptr_ready_bitplane == bitplanes_A)
+    {
+        ptr_ready_bitplane = bitplanes_B;
+        ptr_rebuild_bitplane = bitplanes_A;
+    }
+    else
+    {
+        ptr_ready_bitplane = bitplanes_A;
+        ptr_rebuild_bitplane = bitplanes_B;
+    }
+}
+
+void IRAM_ATTR Display::iram_refresh_finished()
+{
+    if(build_bitplane_ready)
+    {
+        build_bitplane_ready = false;
+        swapBitplaneBuffer();
+    }
 }
 
 void IRAM_ATTR Display::refresh_row(int row)
 {
     digitalWrite(config::display::rows_latch, LOW);
     digitalWrite(config::display::rows_clk, LOW);
-    
 
     for (byte i = 0; i < 4; i++)
     {
         buff_rows[i] = 0;
     }
-    
 
     int pr = map_y[row]; // physical row
     int which_buff = (pr - (pr % 8)) / 8;
@@ -74,7 +140,7 @@ void IRAM_ATTR Display::refresh_row(int row)
     digitalWrite(config::display::columns_oe, LOW);
 }
 
-void IRAM_ATTR Display::refresh_cols(int current_row)
+void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
 {
     digitalWrite(config::display::rows_oe, HIGH);
     digitalWrite(config::display::columns_oe, HIGH);
@@ -82,29 +148,16 @@ void IRAM_ATTR Display::refresh_cols(int current_row)
     digitalWrite(config::display::columns_latch, LOW);
     digitalWrite(config::display::columns_clk, LOW);
 
-    for (char i = 0; i < 6; i++) // clear buffor before next refresh
-    {
-        buff[i] = 0;
-    }
-
-    for (byte j = 0; j < 48; j++)
-    {
-        if (buffer[j][current_row] != 0) // TEMPORARY
-        {
-            int m = map_x[j];
-            int which_buff = (m - (m % 8)) / 8;
-            buff[which_buff] = buff[which_buff] | (1 << (m % 8));
-        }
-    }
-
     for (byte i = 0; i < 6; i++)
     {
+        uint8_t t = ptr_ready_bitplane[current_bitplane][current_row][i];
+
         /* 0 - turned off, 1 - turned on*/
         shiftOut(
             config::display::columns_data,
             config::display::columns_clk,
             LSBFIRST,
-            buff[i]);
+            t);
     }
 
     digitalWrite(config::display::columns_latch, HIGH);
@@ -113,10 +166,18 @@ void IRAM_ATTR Display::refresh_cols(int current_row)
 
 void IRAM_ATTR Display::refreshISR()
 {
-    instance->refresh_cols(instance->current_row);
+    instance->refresh_cols(instance->current_row, instance->current_bitplane);
     instance->refresh_row(instance->current_row);
 
     instance->current_row++;
-    if (instance->current_row > 32)
+    if (instance->current_row >= 32)
+    {
         instance->current_row = 0;
+        instance->current_bitplane++;
+        if (instance->current_bitplane >= 8)
+        {
+            instance->current_bitplane = 0;
+            instance->iram_refresh_finished();
+        }
+    }
 }

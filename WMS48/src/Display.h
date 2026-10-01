@@ -12,24 +12,40 @@ public:
 
     void setup(uint8_t refresh_freq_hz);
 
+    void update();
+    
     void setPixelRaw(u_int x, u_int y, uint8_t value);
 
 protected:
+    void buildBitPlanes();
+
+    void IRAM_ATTR swapBitplaneBuffer();
+
+    void IRAM_ATTR iram_refresh_finished();
+
     void IRAM_ATTR refresh_row(int row);
-    void IRAM_ATTR refresh_cols(int current_row);
+    void IRAM_ATTR refresh_cols(int current_row, int current_bitplane);
 
     hw_timer_t *timer = NULL;
     static Display *instance;
 
-    volatile char current_row;
+    volatile bool refresh_finished = false;
+    volatile char current_row = 0;
+    volatile char current_bitplane = 0;
 
     static void IRAM_ATTR refreshISR();
 
 protected:
-    uint8_t buff[6];
+    volatile bool build_bitplane_ready = false;
     uint8_t buff_rows[4];
 
-    uint8_t buffer[48][32]; // [x][y]
+    volatile uint8_t (*ptr_rebuild_bitplane)[32][6] = bitplanes_A;
+    volatile uint8_t (*ptr_ready_bitplane)[32][6] = bitplanes_B;
+
+    volatile uint8_t bitplanes_A[8][32][6]; // 8 bitplanes, [bitplane][rows][columns raw byte]
+    volatile uint8_t bitplanes_B[8][32][6]; // 8 bitplanes, [bitplane][rows][columns raw byte]
+
+    uint8_t abstract_buffer[48][32]; // [x][y]
     /*
         00000000 00000000 00000000 00000000 00000000 00000000  0
         00000000 00000000 00000000 00000000 00000000 00000000  .
