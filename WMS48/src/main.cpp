@@ -12,15 +12,15 @@ void setup()
   display.setup(config::refresh_rate_hz);
 
   Serial.begin(115200);
+  Serial.println("Send command: x,y,v for pixel: ");
   /*for (size_t i = 0; i < 48; i++)
   {
     for (size_t j = 0; j < 32; j++)
     {
       display.setPixelRaw(i, j, 255);
     }
-    
+
   }*/
-  
 }
 
 void loop()
@@ -28,34 +28,41 @@ void loop()
 
   if (Serial.available() != 0)
   {
-    int value = Serial.parseInt();
+    int x = Serial.parseInt();
+    int y = Serial.parseInt();
+    int v = Serial.parseInt();
 
-    Serial.print("Pixel[");
-    Serial.print(value);
-    Serial.print("][0] = ");
+    if (x > 47 || y > 31 || x < 0 || y < 0 || v < 0 || v > 255)
+    {
+      Serial.println("VALUES OUT OF RANGE");
+    }
+    else
+    {
+      uint8_t brightness = static_cast<uint8_t>(v);
 
-      display.setPixelRaw(0, value, 0xFF);
-      display.setPixelRaw(1, value, 0xFF);
-      display.setPixelRaw(2, value, 0xFF);
-      display.setPixelRaw(3, value, 0xFF);
-      Serial.println("1\n");
+      Serial.printf("Pixel[%d][%d] = %hhu\n", x, y, brightness);
+
+      display.setPixelRaw(x, y, brightness);
+    }
   }
 
-  //display.refresh();
-  // if(millis() - timec > 200)
-  //   {
-  //     timec = millis();
-  //     if(k>48)
-  //     {
-  //       k=0;
-  //       y++;
-  //     }
-  //     if(y>32)
-  //     {
-  //       y = k = 0;
-  //     }
-  //     display.setPixelRaw(k, y, 0xFF);
-  //     k++;
+  display.update();
+
+  // display.refresh();
+  //  if(millis() - timec > 200)
+  //    {
+  //      timec = millis();
+  //      if(k>48)
+  //      {
+  //        k=0;
+  //        y++;
+  //      }
+  //      if(y>32)
+  //      {
+  //        y = k = 0;
+  //      }
+  //      display.setPixelRaw(k, y, 0xFF);
+  //      k++;
 
   //   }
 }
