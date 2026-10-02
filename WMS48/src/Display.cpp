@@ -60,15 +60,23 @@ void Display::buildBitPlanes()
     {
         for (byte j = 0; j < 32; j++) // each row loop
         {
+            for (byte g = 0; g < 6; g++)
+            {
+                ptr_rebuild_bitplane[i][j][g] = 0;
+            }
+            
             for (byte l = 0; l < 48; l++) // each column loop
             {
-                if (abstract_buffer[l][j] & (1 << i) != 0)
+                
+                if (abstract_buffer[l][j] & (1 << (i)))
                 {
+                    Serial.print("AKUKU \n");
                     m = map_x[l];
                     which_buff = (m - (m % 8)) / 8;
 
                     ptr_rebuild_bitplane[i][j][which_buff] =
                         ptr_rebuild_bitplane[i][j][which_buff] | (1 << (m % 8));
+
                 }
             }
         }
