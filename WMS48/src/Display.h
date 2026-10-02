@@ -16,6 +16,8 @@ public:
     
     void setPixelRaw(u_int x, u_int y, uint8_t value);
 
+    volatile double refresh_time, last_time;
+
 protected:
     void buildBitPlanes();
 

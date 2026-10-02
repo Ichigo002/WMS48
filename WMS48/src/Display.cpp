@@ -70,7 +70,6 @@ void Display::buildBitPlanes()
                 
                 if (abstract_buffer[l][j] & (1 << (i)))
                 {
-                    Serial.print("AKUKU \n");
                     m = map_x[l];
                     which_buff = (m - (m % 8)) / 8;
 
@@ -83,16 +82,6 @@ void Display::buildBitPlanes()
     }
     build_bitplane_ready = true;
 
-    // for (byte j = 0; j < 48; j++)
-    // {
-    //     if (abstract_buffer[j][current_row] != 0) // TEMPORARY
-    //     {
-    //         int m = map_x[j];
-    //         int which_buff = (m - (m % 8)) / 8;
-    //         buff[which_buff] = buff[which_buff] | (1 << (m % 8));
-    //         ptr_rebuild_bitplane[]
-    //     }
-    // }
 }
 
 void IRAM_ATTR Display::swapBitplaneBuffer()
@@ -174,6 +163,7 @@ void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
 
 void IRAM_ATTR Display::refreshISR()
 {
+    instance->last_time = micros();
     instance->refresh_cols(instance->current_row, instance->current_bitplane);
     instance->refresh_row(instance->current_row);
 
@@ -188,4 +178,7 @@ void IRAM_ATTR Display::refreshISR()
             instance->iram_refresh_finished();
         }
     }
+
+    instance->refresh_time = micros() - instance->last_time;
+
 }

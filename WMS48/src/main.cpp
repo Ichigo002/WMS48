@@ -26,6 +26,8 @@ void setup()
 void loop()
 {
 
+  Serial.println(display.refresh_time);
+
   if (Serial.available() != 0)
   {
     int x = Serial.parseInt();
