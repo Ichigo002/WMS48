@@ -39,7 +39,7 @@ void Display::setup(uint8_t refresh_freq_hz)
 {
     instance = this;
 
-    uint32_t T_us = 1000000UL / (refresh_freq_hz * 32); // 1/8 of resresh time for one bitplane
+    uint32_t T_us = 1000000UL / (refresh_freq_hz * 32) / 8; // 1/8 of resresh time for one bitplane
 
     timer = timerBegin(0, 80, true);
     timerAttachInterrupt(timer, &Display::refreshISR, true);
@@ -70,6 +70,8 @@ void Display::setPixelRaw(u_int x, u_int y, uint8_t value)
 {
     if (x >= 48 || y >= 32)
         return;
+    if(value > 31)
+        value = 31;
     abstract_buffer[x][y] = value;
 }
 
@@ -80,7 +82,7 @@ void Display::buildBitPlanes()
 
     int m, which_buff;
 
-    for (byte i = 0; i < 8; i++) // each bitplanes loop
+    for (byte i = 0; i < 5; i++) // each bitplanes loop
     {
         for (byte j = 0; j < 32; j++) // each row loop
         {
@@ -131,8 +133,8 @@ void IRAM_ATTR Display::iram_refresh_finished()
 
 void IRAM_ATTR Display::refresh_row(int row)
 {
-    digitalWrite(config::display::rows_latch, LOW);
-    digitalWrite(config::display::rows_clk, LOW);
+    ROW_LATCH_LOW();
+    ROW_CLK_LOW();
 
     for (byte i = 0; i < 4; i++)
     {
@@ -145,18 +147,34 @@ void IRAM_ATTR Display::refresh_row(int row)
 
     for (size_t i = 0; i < 4; i++)
     {
-        shiftOut(
-            config::display::rows_data,
-            config::display::rows_clk,
-            LSBFIRST,
-            ~buff_rows[i]);
+        // shiftOut(
+        //     config::display::rows_data,
+        //     config::display::rows_clk,
+        //     LSBFIRST,
+        //     ~buff_rows[i]);
+
+        for (uint8_t j = 0; j < 8; j++)
+        {
+            if (buff_rows[i] & (1 << j))
+            {
+                ROW_DATA_LOW();
+            }
+            else
+            {
+                ROW_DATA_HIGH();
+            }
+
+            // Tiny inline toggle for the clock
+            ROW_CLK_HIGH();
+            ROW_CLK_LOW();
+        }
     }
 
-    digitalWrite(config::display::rows_latch, HIGH);
+    ROW_LATCH_HIGH();
+    ROW_LATCH_LOW();
 
-    digitalWrite(config::display::rows_latch, LOW);
-    digitalWrite(config::display::rows_oe, LOW);
-    digitalWrite(config::display::columns_oe, LOW);
+    ROW_OE_LOW();
+    COL_OE_LOW();
 }
 
 void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
@@ -204,21 +222,34 @@ void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
 
 void IRAM_ATTR Display::refreshISR()
 {
-    instance->last_time = micros();
-    instance->refresh_cols(instance->current_row, instance->current_bitplane);
-    instance->refresh_row(instance->current_row);
+    if (!instance->refresh_measurement_finished)
+        instance->last_time = micros();
 
-    instance->current_row++;
+    if (instance->refresh_measurement_finished &&
+        micros() - instance->last_time > instance->refresh_frame_time * (1 << instance->current_bitplane))
+    {
+        instance->last_time = micros();
+        instance->refresh_cols(instance->current_row, instance->current_bitplane);
+
+        instance->refresh_row(instance->current_row);
+
+        instance->current_row++;
+    }
+
     if (instance->current_row >= 32)
     {
         instance->current_row = 0;
         instance->current_bitplane++;
-        if (instance->current_bitplane >= 8)
+        if (instance->current_bitplane > 4)
         {
             instance->current_bitplane = 0;
             instance->iram_refresh_finished();
         }
     }
 
-    instance->refresh_time = micros() - instance->last_time;
+    if (!instance->refresh_measurement_finished)
+    {
+        instance->refresh_frame_time = micros() - instance->last_time;
+        instance->refresh_measurement_finished = true;
+    }
 }

@@ -16,12 +16,10 @@ public:
     
     void setPixelRaw(u_int x, u_int y, uint8_t value);
 
-    volatile double refresh_time, last_time;
+    volatile double refresh_frame_time = 0, last_time;
 
 protected:
     void buildBitPlanes();
-
-    void IRAM_ATTR fastShiftOut(uint8_t val);
 
     void IRAM_ATTR swapBitplaneBuffer();
 
@@ -34,8 +32,10 @@ protected:
     static Display *instance;
 
     volatile bool refresh_finished = false;
+    volatile bool refresh_measurement_finished = false;
     volatile char current_row = 0;
     volatile char current_bitplane = 0;
+    
 
     static void IRAM_ATTR refreshISR();
 
@@ -46,8 +46,8 @@ protected:
     volatile uint8_t (*ptr_rebuild_bitplane)[32][6] = bitplanes_A;
     volatile uint8_t (*ptr_ready_bitplane)[32][6] = bitplanes_B;
 
-    volatile uint8_t bitplanes_A[8][32][6]; // 8 bitplanes, [bitplane][rows][columns raw byte]
-    volatile uint8_t bitplanes_B[8][32][6]; // 8 bitplanes, [bitplane][rows][columns raw byte]
+    volatile uint8_t bitplanes_A[5][32][6]; // 5 bitplanes, [bitplane][rows][columns raw byte]
+    volatile uint8_t bitplanes_B[5][32][6]; // 5 bitplanes, [bitplane][rows][columns raw byte]
 
     uint8_t abstract_buffer[48][32]; // [x][y]
     /*
