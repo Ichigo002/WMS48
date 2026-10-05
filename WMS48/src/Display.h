@@ -21,6 +21,8 @@ public:
 protected:
     void buildBitPlanes();
 
+    void IRAM_ATTR fastShiftOut(uint8_t val);
+
     void IRAM_ATTR swapBitplaneBuffer();
 
     void IRAM_ATTR iram_refresh_finished();

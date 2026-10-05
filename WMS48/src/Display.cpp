@@ -2,6 +2,30 @@
 
 Display *Display::instance = nullptr;
 
+#define COL_CLK_HIGH() (GPIO.out_w1ts = (1UL << 25))
+#define COL_CLK_LOW() (GPIO.out_w1tc = (1UL << 25))
+
+#define COL_LATCH_HIGH() (GPIO.out_w1ts = (1UL << 27))
+#define COL_LATCH_LOW() (GPIO.out_w1tc = (1UL << 27))
+
+#define COL_DATA_HIGH() (GPIO.out1_w1ts.val = (1UL << (33 - 32)))
+#define COL_DATA_LOW() (GPIO.out1_w1tc.val = (1UL << (33 - 32)))
+
+#define COL_OE_HIGH() (GPIO.out1_w1ts.val = (1UL << (32 - 32)))
+#define COL_OE_LOW() (GPIO.out1_w1tc.val = (1UL << (32 - 32)))
+
+#define ROW_CLK_HIGH() (GPIO.out_w1ts = (1UL << 2))
+#define ROW_CLK_LOW() (GPIO.out_w1tc = (1UL << 2))
+
+#define ROW_LATCH_HIGH() (GPIO.out_w1ts = (1UL << 5))
+#define ROW_LATCH_LOW() (GPIO.out_w1tc = (1UL << 5))
+
+#define ROW_DATA_HIGH() (GPIO.out_w1ts = (1UL << 18))
+#define ROW_DATA_LOW() (GPIO.out_w1tc = (1UL << 18))
+
+#define ROW_OE_HIGH() (GPIO.out_w1ts = (1UL << 17))
+#define ROW_OE_LOW() (GPIO.out_w1tc = (1UL << 17))
+
 Display::Display()
 {
     current_row = 0;
@@ -51,7 +75,7 @@ void Display::setPixelRaw(u_int x, u_int y, uint8_t value)
 
 void Display::buildBitPlanes()
 {
-    if(build_bitplane_ready)
+    if (build_bitplane_ready)
         return;
 
     int m, which_buff;
@@ -64,10 +88,10 @@ void Display::buildBitPlanes()
             {
                 ptr_rebuild_bitplane[i][j][g] = 0;
             }
-            
+
             for (byte l = 0; l < 48; l++) // each column loop
             {
-                
+
                 if (abstract_buffer[l][j] & (1 << (i)))
                 {
                     m = map_x[l];
@@ -75,13 +99,11 @@ void Display::buildBitPlanes()
 
                     ptr_rebuild_bitplane[i][j][which_buff] =
                         ptr_rebuild_bitplane[i][j][which_buff] | (1 << (m % 8));
-
                 }
             }
         }
     }
     build_bitplane_ready = true;
-
 }
 
 void IRAM_ATTR Display::swapBitplaneBuffer()
@@ -100,7 +122,7 @@ void IRAM_ATTR Display::swapBitplaneBuffer()
 
 void IRAM_ATTR Display::iram_refresh_finished()
 {
-    if(build_bitplane_ready)
+    if (build_bitplane_ready)
     {
         build_bitplane_ready = false;
         swapBitplaneBuffer();
@@ -139,26 +161,45 @@ void IRAM_ATTR Display::refresh_row(int row)
 
 void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
 {
-    digitalWrite(config::display::rows_oe, HIGH);
-    digitalWrite(config::display::columns_oe, HIGH);
+    COL_OE_HIGH();
+    ROW_OE_HIGH();
 
-    digitalWrite(config::display::columns_latch, LOW);
-    digitalWrite(config::display::columns_clk, LOW);
+    COL_LATCH_LOW();
+    COL_CLK_LOW();
+
+    uint8_t t;
 
     for (byte i = 0; i < 6; i++)
     {
-        uint8_t t = ptr_ready_bitplane[current_bitplane][current_row][i];
+        t = ptr_ready_bitplane[current_bitplane][current_row][i];
 
         /* 0 - turned off, 1 - turned on*/
-        shiftOut(
+        /*shiftOut(
             config::display::columns_data,
             config::display::columns_clk,
             LSBFIRST,
             t);
+        */
+
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            if (t & (1 << i))
+            {
+                COL_DATA_HIGH();
+            }
+            else
+            {
+                COL_DATA_LOW();
+            }
+
+            // Tiny inline toggle for the clock
+            COL_CLK_HIGH();
+            COL_CLK_LOW();
+        }
     }
 
-    digitalWrite(config::display::columns_latch, HIGH);
-    digitalWrite(config::display::columns_latch, LOW);
+    COL_LATCH_HIGH();
+    COL_LATCH_LOW();
 }
 
 void IRAM_ATTR Display::refreshISR()
@@ -180,5 +221,4 @@ void IRAM_ATTR Display::refreshISR()
     }
 
     instance->refresh_time = micros() - instance->last_time;
-
 }
