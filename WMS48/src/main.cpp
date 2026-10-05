@@ -46,6 +46,15 @@ void loop()
 
       display.setPixelRaw(x, y, brightness);
     }
+
+    for (size_t i = 0; i < 20; i++)
+    {
+      display.setPixelRaw(4, i, 255);
+      display.setPixelRaw(7, i, 255);
+      display.setPixelRaw(5, 10, 255);
+      display.setPixelRaw(6, 10, 255);
+    }
+    
   }
 
   display.update();
