@@ -95,6 +95,11 @@ void Graphics::drawCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t brig)
     }
 }
 
+void Graphics::drawText(uint8_t x, uint8_t y, string text, const Font &font, uint8_t brig)
+{
+    
+}
+
 double Graphics::getDistanceBetween(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
 {
     int dx = x1 - x0;
