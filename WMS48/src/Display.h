@@ -23,7 +23,6 @@ ticks per sohrtest isr period = 17,6us/0.1us = 176 ticks
 
 */
 
-
 class Display
 {
 public:
@@ -32,16 +31,17 @@ public:
 
     void setup(uint8_t refresh_freq_hz);
 
-
     void update();
-    
+
     void setPixelRaw(u_int x, u_int y, uint8_t value);
 
     void setNewRefreshRate(uint8_t refresh_freq_hz);
 
-    volatile double refresh_frame_time = 0, last_time;
+    // 0 - dark, 1 - bright
+    void setBrightness(float _brightness);
 
-    int brightness;
+    float getBrightness();
+
 protected:
     void buildBitPlanes();
 
@@ -56,14 +56,14 @@ protected:
     static Display *instance;
 
     volatile bool refresh_finished = false;
-    
+
     volatile char current_row = 0;
     volatile char current_bitplane = 0;
-    
 
     static void IRAM_ATTR refreshISR();
 
 protected:
+    volatile int modified_ticks_per_row;
     volatile bool build_bitplane_ready = false;
     uint8_t buff_rows[4];
 
@@ -84,7 +84,6 @@ protected:
     */
 
 private:
-
     int ticks_per_row_refresh;
     // map abstract coordinates x to physical pins on display
     int map_x[48] =
@@ -102,7 +101,6 @@ private:
             16, 17, 18, 19, 20, 21, 22, 23,
             8, 9, 10, 11, 12, 13, 14, 15,
             0, 1, 2, 3, 4, 5, 6, 7};
-
 };
 
 #endif

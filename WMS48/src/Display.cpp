@@ -29,7 +29,6 @@ Display *Display::instance = nullptr;
 Display::Display()
 {
     current_row = 0;
-    brightness = 1;
 }
 
 Display::~Display()
@@ -39,9 +38,8 @@ Display::~Display()
 void Display::setup(uint8_t refresh_freq_hz)
 {
     setNewRefreshRate(refresh_freq_hz);
+    setBrightness(1);
     instance = this;
-
-   // uint32_t timer_ticks = 10000; // 10000000UL / (60 * 32) / 32;
 
     timer = timerBegin(0, 8, true);
 
@@ -60,7 +58,7 @@ void Display::setup(uint8_t refresh_freq_hz)
     pinMode(config::display::rows_latch, OUTPUT);
     pinMode(config::display::rows_oe, OUTPUT);
 
-    digitalWrite(config::display::rows_oe, HIGH);
+    ROW_OE_HIGH();
 
     buildBitPlanes();
 }
@@ -86,6 +84,24 @@ void Display::setNewRefreshRate(uint8_t refresh_freq_hz)
         frame_period_ms * 1000.0 / 31.0 / 32.0;
 
     ticks_per_row_refresh = smallest_bitplane_row_refresh_us / 0.1;
+}
+
+void Display::setBrightness(float _brightness)
+{
+    if(_brightness < 0) _brightness = 0;
+    if(_brightness > 1.0f) _brightness = 1.0f;
+
+    modified_ticks_per_row = ticks_per_row_refresh * _brightness;
+
+    if(modified_ticks_per_row < 20)
+    {
+        modified_ticks_per_row = 20;
+    }
+}
+
+float Display::getBrightness()
+{
+    return (float)modified_ticks_per_row / (float)ticks_per_row_refresh;
 }
 
 void Display::buildBitPlanes()
@@ -160,11 +176,6 @@ void IRAM_ATTR Display::refresh_row(int row)
 
     for (size_t i = 0; i < 4; i++)
     {
-        // shiftOut(
-        //     config::display::rows_data,
-        //     config::display::rows_clk,
-        //     LSBFIRST,
-        //     ~buff_rows[i]);
 
         for (uint8_t j = 0; j < 8; j++)
         {
@@ -205,12 +216,6 @@ void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
         t = ptr_ready_bitplane[current_bitplane][current_row][i];
 
         /* 0 - turned off, 1 - turned on*/
-        /*shiftOut(
-            config::display::columns_data,
-            config::display::columns_clk,
-            LSBFIRST,
-            t);
-        */
 
         for (uint8_t i = 0; i < 8; i++)
         {
@@ -223,7 +228,6 @@ void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
                 COL_DATA_LOW();
             }
 
-            // Tiny inline toggle for the clock
             COL_CLK_HIGH();
             COL_CLK_LOW();
         }
@@ -252,7 +256,7 @@ void IRAM_ATTR Display::refreshISR()
         }
     }
 
-    uint32_t next_alarm_ticks = instance->ticks_per_row_refresh * (1 << instance->current_bitplane) * instance->brightness;
+    int next_alarm_ticks = instance->modified_ticks_per_row * (1 << instance->current_bitplane);
 
     timerAlarmWrite(instance->timer, next_alarm_ticks, true);
 }

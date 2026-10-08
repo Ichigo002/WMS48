@@ -18,6 +18,7 @@ void setup()
                   ESP_ARDUINO_VERSION_MAJOR,
                   ESP_ARDUINO_VERSION_MINOR,
                   ESP_ARDUINO_VERSION_PATCH);
+                  
   /*for (size_t i = 0; i < 48; i++)
   {
     for (size_t j = 0; j < 32; j++)
@@ -46,10 +47,10 @@ void loop()
 
   if (Serial.available() != 0)
   {
-    int x = Serial.parseInt();
+    float x = Serial.parseFloat();
 
-    display.brightness = x;
-    Serial.print(display.brightness);
+    display.setBrightness(x);
+    Serial.println(display.getBrightness());
     
     // int y = Serial.parseInt();
     // int v = Serial.parseInt();
@@ -74,22 +75,4 @@ void loop()
   
 
   display.update();
-
-  // display.refresh();
-  //  if(millis() - timec > 200)
-  //    {
-  //      timec = millis();
-  //      if(k>48)
-  //      {
-  //        k=0;
-  //        y++;
-  //      }
-  //      if(y>32)
-  //      {
-  //        y = k = 0;
-  //      }
-  //      display.setPixelRaw(k, y, 0xFF);
-  //      k++;
-
-  //   }
 }
