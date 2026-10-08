@@ -35,10 +35,10 @@ void loop()
     int v1 = Serial.parseInt();
     int v2 = Serial.parseInt();
     int v3 = Serial.parseInt();
-    int v4 = Serial.parseInt();
+    //int v4 = Serial.parseInt();
 
     graphics.clear();
-    graphics.drawRect(v1, v2, v3, v4);
+    graphics.drawCircle(v1, v2, v3);
   }
 
   
