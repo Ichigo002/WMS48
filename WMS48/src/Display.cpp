@@ -88,12 +88,14 @@ void Display::setNewRefreshRate(uint8_t refresh_freq_hz)
 
 void Display::setBrightness(float _brightness)
 {
-    if(_brightness < 0) _brightness = 0;
-    if(_brightness > 1.0f) _brightness = 1.0f;
+    if (_brightness < 0)
+        _brightness = 0;
+    if (_brightness > 1.0f)
+        _brightness = 1.0f;
 
     modified_ticks_per_row = ticks_per_row_refresh * _brightness;
 
-    if(modified_ticks_per_row < 20)
+    if (modified_ticks_per_row < 20)
     {
         modified_ticks_per_row = 20;
     }

@@ -91,7 +91,6 @@ private:
     volatile int modified_ticks_per_row;
     // raw base of shortest period for refreshing a row
     int ticks_per_row_refresh;
-    
 
     uint8_t buff_rows[4];
 
@@ -113,7 +112,6 @@ private:
     */
 
 private:
-    
     // map abstract coordinates x & y to physical pins on display
     int map_x[48] =
         {
