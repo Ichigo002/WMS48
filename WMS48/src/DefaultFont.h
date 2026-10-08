@@ -4,7 +4,7 @@
 #include "Font.h"
 #include <Arduino.h>
 
-class DefaultFont : protected Font
+class DefaultFont : public Font
 {
 public:
     DefaultFont(/* args */)
@@ -13,7 +13,7 @@ public:
         height = 7;
     }
 
-    virtual uint8_t *getCharacter(char ascii) { return font5x7[ascii - 0x20]; }
+    virtual const uint8_t *getCharacter(char ascii) const { return font5x7[ascii - 0x20]; }
 
 protected:
     // 5x7 ASCII font

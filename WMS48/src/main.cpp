@@ -4,9 +4,11 @@
 #include <SparkFun_VEML7700_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_VEML7700
 #include "Display.h"
 #include "Graphics.h"
+#include "DefaultFont.h"
 
 Display display;
 Graphics graphics(display);
+DefaultFont defaultFont;
 
 void setup()
 {
@@ -35,10 +37,21 @@ void loop()
     int v1 = Serial.parseInt();
     int v2 = Serial.parseInt();
     int v3 = Serial.parseInt();
+    String v = Serial.readString();
+    
+    string str;
+
+      str.append(v.c_str());
+      str.erase(str.begin());
+
+    
+    
+    //int v3 = Serial.parseInt();
     //int v4 = Serial.parseInt();
+    Serial.println(str.c_str());
 
     graphics.clear();
-    graphics.drawCircle(v1, v2, v3);
+    graphics.drawText(v1, v2, str, defaultFont, v3);
   }
 
   

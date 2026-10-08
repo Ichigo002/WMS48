@@ -87,7 +87,7 @@ void Graphics::drawCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t brig)
         cy++;
         t1 += cy;
         float t2 = t1 - cx;
-        if(t2 >= 0)
+        if (t2 >= 0)
         {
             t1 = t2;
             cx--;
@@ -95,9 +95,42 @@ void Graphics::drawCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t brig)
     }
 }
 
-void Graphics::drawText(uint8_t x, uint8_t y, string text, const Font &font, uint8_t brig)
+void Graphics::drawCharacter(uint8_t x, uint8_t y, char ascii, const Font &font, int font_size, uint8_t brig)
 {
-    
+    if (ascii == ' ')
+    {
+        return;
+    }
+
+    const uint8_t *ch = font.getCharacter(ascii);
+
+    for (size_t iy = 0; iy < font.getCharacterHeight(); iy++)
+    {
+        for (size_t ix = 0; ix < font.getCharacterWidth(); ix++)
+        {
+            if (ch[iy] & (1 << (font.getCharacterWidth() - ix - 1)))
+            {
+                //Serial.println(font_size);
+                for (size_t sx = 0; sx < font_size; sx++)
+                {
+                    for (size_t sy = 0; sy < font_size; sy++)
+                    {
+                        drawPixel(x + sx + font_size * ix, y + sy + font_size * iy, brig);
+
+                        //Serial.printf("x: %d, y: %d", x + sx + font_size * ix, y + sy + font_size * iy);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Graphics::drawText(uint8_t x, uint8_t y, string text, const Font &font, int font_size, uint8_t brig, int spacing)
+{
+    for (size_t i = 0; i < text.length(); i++)
+    {
+        drawCharacter(x + i * font_size * (font.getCharacterWidth() + spacing) , y, text[i], font, font_size, brig);
+    }
 }
 
 double Graphics::getDistanceBetween(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
@@ -107,17 +140,17 @@ double Graphics::getDistanceBetween(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t 
     return sqrt(dx * dx + dy * dy);
 }
 
-void Graphics::drawSymmetricCircle(uint8_t x, uint8_t y,uint8_t cx, uint8_t cy, uint8_t r, uint8_t brig)
+void Graphics::drawSymmetricCircle(uint8_t x, uint8_t y, uint8_t cx, uint8_t cy, uint8_t r, uint8_t brig)
 {
-    drawPixel(cx+x, cx+y, brig);
-    drawPixel(cx-x, cy+y, brig);
-    drawPixel(cx+x, cy-y, brig);
-    drawPixel(cx-x, cy-y, brig);
+    drawPixel(cx + x, cx + y, brig);
+    drawPixel(cx - x, cy + y, brig);
+    drawPixel(cx + x, cy - y, brig);
+    drawPixel(cx - x, cy - y, brig);
 
-    drawPixel(cx+y, cx+x, brig);
-    drawPixel(cx-y, cy+x, brig);
-    drawPixel(cx+y, cy-x, brig);
-    drawPixel(cx-y, cy-x, brig);
+    drawPixel(cx + y, cx + x, brig);
+    drawPixel(cx - y, cy + x, brig);
+    drawPixel(cx + y, cy - x, brig);
+    drawPixel(cx - y, cy - x, brig);
 }
 
 void Graphics::drawLineLow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t brig)

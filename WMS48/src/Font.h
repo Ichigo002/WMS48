@@ -6,16 +6,14 @@ class Font
 public:
     virtual ~Font() = default;
 
-    int getCharacterWidth() { return width; };
-    int getCharacterHeight() { return height; };
+    int getCharacterWidth() const { return width; };
+    int getCharacterHeight() const { return height; };
 
-    virtual uint8_t *getCharacter(char ascii) = 0;
+     virtual const uint8_t *getCharacter(char ascii) const = 0;
 
 protected:
     int height;
     int width;
-
-    
 };
 
 #endif
