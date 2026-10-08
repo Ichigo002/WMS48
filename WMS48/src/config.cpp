@@ -19,7 +19,7 @@ namespace config
     constexpr int pin_led = 23;
     constexpr int bluetooth_btn = 34;
 
-    constexpr int refresh_rate_hz = 100;
+    constexpr int refresh_rate_hz = 60;
 }
 
 #endif

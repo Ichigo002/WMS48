@@ -4,6 +4,26 @@
 #include <Arduino.h>
 #include "config.cpp"
 
+/*
+frame rate = 60Hz
+frame period = 1/60 = 16.67 ms
+average ISR period: 16.67 / 5 bitplanes = 3.33ms
+
+timer divider: 8
+total clock esp32: 80MHz
+80 / 8 = 10MHz
+1 tick = 0.1us
+
+16.67 / 31 = 0.53 ms = 530us
+HOWEVER we need to refresh all 32 rows too,
+530us / 32 = 17,6 us per row
+
+ticks per sohrtest isr period = 17,6us/0.1us = 176 ticks
+
+
+*/
+
+
 class Display
 {
 public:
@@ -12,12 +32,16 @@ public:
 
     void setup(uint8_t refresh_freq_hz);
 
+
     void update();
     
     void setPixelRaw(u_int x, u_int y, uint8_t value);
 
+    void setNewRefreshRate(uint8_t refresh_freq_hz);
+
     volatile double refresh_frame_time = 0, last_time;
 
+    int brightness;
 protected:
     void buildBitPlanes();
 
@@ -32,7 +56,7 @@ protected:
     static Display *instance;
 
     volatile bool refresh_finished = false;
-    volatile bool refresh_measurement_finished = false;
+    
     volatile char current_row = 0;
     volatile char current_bitplane = 0;
     
@@ -60,6 +84,8 @@ protected:
     */
 
 private:
+
+    int ticks_per_row_refresh;
     // map abstract coordinates x to physical pins on display
     int map_x[48] =
         {
@@ -76,6 +102,7 @@ private:
             16, 17, 18, 19, 20, 21, 22, 23,
             8, 9, 10, 11, 12, 13, 14, 15,
             0, 1, 2, 3, 4, 5, 6, 7};
+
 };
 
 #endif

@@ -29,6 +29,7 @@ Display *Display::instance = nullptr;
 Display::Display()
 {
     current_row = 0;
+    brightness = 1;
 }
 
 Display::~Display()
@@ -37,13 +38,16 @@ Display::~Display()
 
 void Display::setup(uint8_t refresh_freq_hz)
 {
+    setNewRefreshRate(refresh_freq_hz);
     instance = this;
 
-    uint32_t T_us = 1000000UL / (refresh_freq_hz * 32) / 8; // 1/8 of resresh time for one bitplane
+   // uint32_t timer_ticks = 10000; // 10000000UL / (60 * 32) / 32;
 
-    timer = timerBegin(0, 80, true);
+    timer = timerBegin(0, 8, true);
+
     timerAttachInterrupt(timer, &Display::refreshISR, true);
-    timerAlarmWrite(timer, T_us, true);
+    timerAlarmWrite(timer, ticks_per_row_refresh, true);
+    timerWrite(timer, 0);
     timerAlarmEnable(timer);
 
     pinMode(config::display::columns_clk, OUTPUT);
@@ -70,9 +74,18 @@ void Display::setPixelRaw(u_int x, u_int y, uint8_t value)
 {
     if (x >= 48 || y >= 32)
         return;
-    if(value > 31)
+    if (value > 31)
         value = 31;
     abstract_buffer[x][y] = value;
+}
+
+void Display::setNewRefreshRate(uint8_t refresh_freq_hz)
+{
+    double frame_period_ms = 1000.0 / refresh_freq_hz;
+    double smallest_bitplane_row_refresh_us =
+        frame_period_ms * 1000.0 / 31.0 / 32.0;
+
+    ticks_per_row_refresh = smallest_bitplane_row_refresh_us / 0.1;
 }
 
 void Display::buildBitPlanes()
@@ -222,19 +235,11 @@ void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
 
 void IRAM_ATTR Display::refreshISR()
 {
-    if (!instance->refresh_measurement_finished)
-        instance->last_time = micros();
+    instance->refresh_cols(instance->current_row, instance->current_bitplane);
 
-    if (instance->refresh_measurement_finished &&
-        micros() - instance->last_time > instance->refresh_frame_time * (1 << instance->current_bitplane))
-    {
-        instance->last_time = micros();
-        instance->refresh_cols(instance->current_row, instance->current_bitplane);
+    instance->refresh_row(instance->current_row);
 
-        instance->refresh_row(instance->current_row);
-
-        instance->current_row++;
-    }
+    instance->current_row++;
 
     if (instance->current_row >= 32)
     {
@@ -247,9 +252,7 @@ void IRAM_ATTR Display::refreshISR()
         }
     }
 
-    if (!instance->refresh_measurement_finished)
-    {
-        instance->refresh_frame_time = micros() - instance->last_time;
-        instance->refresh_measurement_finished = true;
-    }
+    uint32_t next_alarm_ticks = instance->ticks_per_row_refresh * (1 << instance->current_bitplane) * instance->brightness;
+
+    timerAlarmWrite(instance->timer, next_alarm_ticks, true);
 }
