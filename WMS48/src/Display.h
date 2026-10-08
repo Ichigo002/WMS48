@@ -54,6 +54,9 @@ public:
     // value - value between 0-31 sets brightness of individual pixel independently
     void setPixelRaw(u_int x, u_int y, uint8_t value);
 
+    // Clears abstract buffer
+    void clear();
+
     // changes refresh rate. do not require restarting display
     void setNewRefreshRate(uint8_t refresh_freq_hz);
 

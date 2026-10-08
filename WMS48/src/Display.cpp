@@ -77,6 +77,19 @@ void Display::setPixelRaw(u_int x, u_int y, uint8_t value)
     abstract_buffer[x][y] = value;
 }
 
+void Display::clear()
+{
+    for (size_t x = 0; x < 48; x++)
+    {
+            for (size_t y = 0; y < 32; y++)
+            {
+                abstract_buffer[x][y] = 0;
+            }
+            
+    }
+    
+}
+
 void Display::setNewRefreshRate(uint8_t refresh_freq_hz)
 {
     double frame_period_ms = 1000.0 / refresh_freq_hz;
