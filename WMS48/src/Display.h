@@ -23,50 +23,79 @@ ticks per sohrtest isr period = 17,6us/0.1us = 176 ticks
 
 */
 
+/*
+ Software interface dealing with hardware.
+ It is Display controller.
+ It allows simply to control every led on display
+
+ ABSTRAT MAP OF PIXEL
+
+    00000000 00000000 00000000 00000000 00000000 00000000  0
+    00000000 00000000 00000000 00000000 00000000 00000000  .
+    .                                                      .
+    .                                                      .
+    .                                                      31
+    0 . . .                                              47
+
+*/
 class Display
 {
 public:
     Display();
     ~Display();
 
+    // call it in thesetup function of program
     void setup(uint8_t refresh_freq_hz);
 
+    // call it in the main loop of program
     void update();
 
+    // Turn on pixel (x,y)
+    // value - value between 0-31 sets brightness of individual pixel independently
     void setPixelRaw(u_int x, u_int y, uint8_t value);
 
+    // changes refresh rate. do not require restarting display
     void setNewRefreshRate(uint8_t refresh_freq_hz);
 
     // 0 - dark, 1 - bright
     void setBrightness(float _brightness);
-
     float getBrightness();
 
-protected:
+private:
     void buildBitPlanes();
 
+    // swaps bitplanes buffers A->B, B->A
     void IRAM_ATTR swapBitplaneBuffer();
 
+    // checks if bitplane building process is finished before swap to avoid ghosting
     void IRAM_ATTR iram_refresh_finished();
 
     void IRAM_ATTR refresh_row(int row);
     void IRAM_ATTR refresh_cols(int current_row, int current_bitplane);
 
+    // CRITICAL TIMER used for refreshing.
     hw_timer_t *timer = NULL;
+
     static Display *instance;
 
     volatile bool refresh_finished = false;
+    volatile bool build_bitplane_ready = false;
 
     volatile char current_row = 0;
     volatile char current_bitplane = 0;
 
+    // Begginning of refresh is here :P
     static void IRAM_ATTR refreshISR();
 
-protected:
+    // ticks_per_row_refresh multiplied by total brightness level of display.
     volatile int modified_ticks_per_row;
-    volatile bool build_bitplane_ready = false;
+    // raw base of shortest period for refreshing a row
+    int ticks_per_row_refresh;
+    
+
     uint8_t buff_rows[4];
 
+    // pointers to 2 buffers
     volatile uint8_t (*ptr_rebuild_bitplane)[32][6] = bitplanes_A;
     volatile uint8_t (*ptr_ready_bitplane)[32][6] = bitplanes_B;
 
@@ -84,8 +113,8 @@ protected:
     */
 
 private:
-    int ticks_per_row_refresh;
-    // map abstract coordinates x to physical pins on display
+    
+    // map abstract coordinates x & y to physical pins on display
     int map_x[48] =
         {
             0, 2, 4, 6, 8, 10, 12, 14,
