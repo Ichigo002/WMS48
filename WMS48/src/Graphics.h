@@ -22,10 +22,10 @@ public:
     void drawRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t brig = 32);
     void drawFilledRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t brig = 32);
     void drawCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t brig = 32);
-   // void drawQuarterOfCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t )
 
     void drawCharacter(uint8_t x, uint8_t y, char ascii, const Font& font, int font_size = 1, uint8_t brig = 32);
-    void drawText(uint8_t x, uint8_t y, string text, const Font& font, int font_size = 1, uint8_t brig = 32, int spacing = 1);
+
+    void drawText(uint8_t x, uint8_t y, String text, const Font& font, int font_size = 1, uint8_t brig = 32, int spacing = 1);
 
     double getDistanceBetween(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
 private:

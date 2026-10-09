@@ -6,20 +6,25 @@
 #include <vector>
 #include <functional>
 
-struct CommandBody
-{
-    String executable_name;
-    String hint_details;
-    String help_details;
-    std::function<void(ExecTools&, std::vector<String>&)> execute;
-};
-
 // struct containing pointers to all required objects to execute effieciently command
 struct ExecTools
 {
     Graphics& graphics;
+    Font& font;
     Display& display;
 };
+
+struct CommandBody
+{
+    String executable_name;
+    String category;
+    bool one_word_cmd;
+    String hint_details;
+    String help_details;
+    std::function<int(ExecTools&, std::vector<String>&)> execute;
+};
+
+
 
 /*
 Arguments order:
@@ -29,11 +34,11 @@ hint example: rect x* y* w* h* b
 help:         rect help
 help example: rect [x=pos] [y=pos] [w=width] [h=height] [b=brightness(0-32)]
 */
-class SerialCommandsHandler
+class SerialCmdsParser
 {
 public:
-    SerialCommandsHandler(Graphics& g, Display& d);
-    ~SerialCommandsHandler();
+    SerialCmdsParser(Graphics& g, Display& d, Font& f);
+    ~SerialCmdsParser();
 
     void updateSerial();
     
@@ -43,24 +48,16 @@ private:
     int processArgumentList(std::vector<String>& args);
 
     void printHelp();
+    void initCommands();
 
 private:
-    Graphics graphics;
-    Display display;
+    Graphics& graphics;
+    Display& display;
+    Font& font;
 
     ExecTools* execTools;
 
     std::vector<CommandBody> command_list;
-
-    // int commands_list_size = 5;
-    // String commands[6] = {
-    //     "help",
-    //     "drawLine",
-    //     "drawRect",
-    //     "drawFilledRect",
-    //     "drawCircle",
-    //     "drawText",
-    // };
 };
 
 #endif

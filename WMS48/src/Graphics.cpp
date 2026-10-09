@@ -125,7 +125,7 @@ void Graphics::drawCharacter(uint8_t x, uint8_t y, char ascii, const Font &font,
     }
 }
 
-void Graphics::drawText(uint8_t x, uint8_t y, string text, const Font &font, int font_size, uint8_t brig, int spacing)
+void Graphics::drawText(uint8_t x, uint8_t y, String text, const Font &font, int font_size, uint8_t brig, int spacing)
 {
     for (size_t i = 0; i < text.length(); i++)
     {

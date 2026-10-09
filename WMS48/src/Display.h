@@ -59,12 +59,15 @@ public:
 
     // changes refresh rate. do not require restarting display
     void setNewRefreshRate(uint8_t refresh_freq_hz);
+    
 
     // 0 - dark, 1 - bright
     void setBrightness(float _brightness);
     float getBrightness();
 
 private:
+    void calculateRefresh(uint8_t refresh_freq_hz);
+
     void buildBitPlanes();
 
     // swaps bitplanes buffers A->B, B->A
@@ -93,7 +96,7 @@ private:
     // ticks_per_row_refresh multiplied by total brightness level of display.
     volatile int modified_ticks_per_row;
     // raw base of shortest period for refreshing a row
-    int ticks_per_row_refresh;
+    volatile int ticks_per_row_refresh;
 
     uint8_t buff_rows[4];
 

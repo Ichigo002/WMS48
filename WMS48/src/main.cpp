@@ -5,13 +5,13 @@
 #include "Display.h"
 #include "Graphics.h"
 #include "DefaultFont.h"
-#include "SerialCommandsHandler.h"
+#include "SerialCmdsParser.h"
 
 Display display;
 Graphics graphics(display);
 DefaultFont defaultFont;
 
-SerialCommandsHandler sch(graphics);
+SerialCmdsParser cmdParser(graphics, display, defaultFont);
 
 void setup()
 {
@@ -19,22 +19,18 @@ void setup()
   display.setup(config::refresh_rate_hz);
 
   Serial.begin(115200);
-  Serial.println("Send command: x,y,v for pixel: ");
-  Serial.printf("ESP-IDF version: %s\n", ESP.getSdkVersion());
-    Serial.printf("Arduino version: %d.%d.%d\n",
-                  ESP_ARDUINO_VERSION_MAJOR,
-                  ESP_ARDUINO_VERSION_MINOR,
-                  ESP_ARDUINO_VERSION_PATCH);
-
-  
-  
-    
+  // Serial.printf("ESP-IDF version: %s\n", ESP.getSdkVersion());
+  //   Serial.printf("Arduino version: %d.%d.%d\n",
+  //                 ESP_ARDUINO_VERSION_MAJOR,
+  //                 ESP_ARDUINO_VERSION_MINOR,
+  //                 ESP_ARDUINO_VERSION_PATCH);
+ 
 }
 
 void loop()
 {
 
-  sch.updateSerial();
-  
+  cmdParser.updateSerial();
+
   display.update();
 }

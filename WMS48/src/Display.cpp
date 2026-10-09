@@ -37,7 +37,7 @@ Display::~Display()
 
 void Display::setup(uint8_t refresh_freq_hz)
 {
-    setNewRefreshRate(refresh_freq_hz);
+    calculateRefresh(refresh_freq_hz);
     setBrightness(1);
     instance = this;
 
@@ -92,11 +92,12 @@ void Display::clear()
 
 void Display::setNewRefreshRate(uint8_t refresh_freq_hz)
 {
-    double frame_period_ms = 1000.0 / refresh_freq_hz;
-    double smallest_bitplane_row_refresh_us =
-        frame_period_ms * 1000.0 / 31.0 / 32.0;
+    calculateRefresh(refresh_freq_hz);
 
-    ticks_per_row_refresh = smallest_bitplane_row_refresh_us / 0.1;
+    timerAlarmDisable(timer);
+    timerAlarmWrite(timer, ticks_per_row_refresh, true);
+    timerWrite(timer, 0);
+    timerAlarmEnable(timer);
 }
 
 void Display::setBrightness(float _brightness)
@@ -117,6 +118,18 @@ void Display::setBrightness(float _brightness)
 float Display::getBrightness()
 {
     return (float)modified_ticks_per_row / (float)ticks_per_row_refresh;
+}
+
+void Display::calculateRefresh(uint8_t refresh_freq_hz)
+{
+    if(refresh_freq_hz == 0)
+        refresh_freq_hz = 1;
+        
+    double frame_period_ms = 1000.0 / refresh_freq_hz;
+    double smallest_bitplane_row_refresh_us =
+        frame_period_ms * 1000.0 / 31.0 / 32.0;
+
+    ticks_per_row_refresh = smallest_bitplane_row_refresh_us / 0.1;
 }
 
 void Display::buildBitPlanes()
