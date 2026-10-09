@@ -37,6 +37,16 @@ Display::~Display()
 
 void Display::setup(uint8_t refresh_freq_hz)
 {
+    pinMode(config::display::columns_clk, OUTPUT);
+    pinMode(config::display::columns_data, OUTPUT);
+    pinMode(config::display::columns_latch, OUTPUT);
+    pinMode(config::display::columns_oe, OUTPUT);
+
+    pinMode(config::display::rows_clk, OUTPUT);
+    pinMode(config::display::rows_data, OUTPUT);
+    pinMode(config::display::rows_latch, OUTPUT);
+    pinMode(config::display::rows_oe, OUTPUT);
+
     calculateRefresh(refresh_freq_hz);
     setBrightness(1);
     instance = this;
@@ -48,15 +58,7 @@ void Display::setup(uint8_t refresh_freq_hz)
     timerWrite(timer, 0);
     timerAlarmEnable(timer);
 
-    pinMode(config::display::columns_clk, OUTPUT);
-    pinMode(config::display::columns_data, OUTPUT);
-    pinMode(config::display::columns_latch, OUTPUT);
-    pinMode(config::display::columns_oe, OUTPUT);
-
-    pinMode(config::display::rows_clk, OUTPUT);
-    pinMode(config::display::rows_data, OUTPUT);
-    pinMode(config::display::rows_latch, OUTPUT);
-    pinMode(config::display::rows_oe, OUTPUT);
+    
 
     ROW_OE_HIGH();
 
