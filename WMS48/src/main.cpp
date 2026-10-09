@@ -5,10 +5,13 @@
 #include "Display.h"
 #include "Graphics.h"
 #include "DefaultFont.h"
+#include "SerialCommandsHandler.h"
 
 Display display;
 Graphics graphics(display);
 DefaultFont defaultFont;
+
+SerialCommandsHandler sch(graphics);
 
 void setup()
 {
@@ -31,30 +34,7 @@ void setup()
 void loop()
 {
 
-
-  if (Serial.available() != 0)
-  {
-    int v1 = Serial.parseInt();
-    int v2 = Serial.parseInt();
-    int v3 = Serial.parseInt();
-    String v = Serial.readString();
-    
-    string str;
-
-      str.append(v.c_str());
-      str.erase(str.begin());
-
-    
-    
-    //int v3 = Serial.parseInt();
-    //int v4 = Serial.parseInt();
-    Serial.println(str.c_str());
-
-    graphics.clear();
-    graphics.drawText(v1, v2, str, defaultFont, v3);
-  }
-
+  sch.updateSerial();
   
-
   display.update();
 }
