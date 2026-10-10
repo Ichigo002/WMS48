@@ -122,7 +122,7 @@ void SerialCmdsParser::initCommands()
         }});
 
         command_list.push_back(CommandBody{
-        .executable_name = "txt",
+        .executable_name = "txtBasic",
         .category = "Graphics",
         .one_word_cmd = false,
         .hint_details = " x y text",
@@ -148,11 +148,11 @@ void SerialCmdsParser::initCommands()
         }});
 
         command_list.push_back(CommandBody{
-        .executable_name = "txtAuto",
+        .executable_name = "txt",
         .category = "Graphics",
         .one_word_cmd = false,
         .hint_details = " text",
-        .help_details = " [your text] ",
+        .help_details = " [your text] Automatic text placement",
         .execute = [](ExecTools ext, std::vector<String> &args)
         {
             if (args.size() < 1 + 1)
@@ -169,8 +169,18 @@ void SerialCmdsParser::initCommands()
                 }
                 else
                 {
-                    txt += args[i];
-                    txt += " ";
+                    if((txt + args[i]).length() > 8)
+                    {
+                        txts.push_back(txt);
+                        txt = "";
+                        txt += args[i];
+                        txt += " ";
+                    }
+                    else
+                    {
+                        txt += args[i];
+                        txt += " ";
+                    }
                 }
             }
 
