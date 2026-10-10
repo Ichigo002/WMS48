@@ -15,6 +15,25 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
+        .executable_name = "setPixel",
+        .category = "Graphics",
+        .one_word_cmd = false,
+        .hint_details = " x y b",
+        .help_details = " [x start] [y start] [brightness (0-32)]",
+        .execute = [](ExecTools ext, std::vector<String> &args)
+        {
+            if (args.size() < 3 + 1)
+                return -1;
+
+            int v1 = args[1].toInt();
+            int v2 = args[2].toInt();
+            int v3 = args[3].toInt();
+
+            ext.graphics.drawPixel(v1, v2, v3);
+            return 0;
+        }});
+
+    command_list.push_back(CommandBody{
         .executable_name = "drawLine",
         .category = "Graphics",
         .one_word_cmd = false,
@@ -253,6 +272,23 @@ void SerialCmdsParser::initCommands()
             int v1 = args[1].toInt();
 
             ext.hardwareInterface.turnBuiltInLED(v1 == 1);
+            
+            return 0;
+        }});
+
+        command_list.push_back(CommandBody{
+        .executable_name = "readLuxValue",
+        .category = "Hardware",
+        .one_word_cmd = true,
+        .hint_details = " ",
+        .help_details = " reads lux light of environment",
+        .execute = [](ExecTools ext, std::vector<String> &args)
+        {
+            if (args.size() < 0 + 1)
+                return -1;
+
+            Serial.print("LUX VALUE = ");
+            Serial.println(ext.hardwareInterface.getLuxValue());
             
             return 0;
         }});

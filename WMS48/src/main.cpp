@@ -31,14 +31,7 @@ void setup()
 double last = 0;
 void loop()
 {
-  hardwareInterface.update();
   cmdParser.updateSerial();
-
-  if (micros() - last > 500)
-  {
-    last = micros();
-    Serial.println(hardwareInterface.getMovementSensorStatus());
-  }
 
   display.update();
 }

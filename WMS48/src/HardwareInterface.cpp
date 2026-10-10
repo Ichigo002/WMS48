@@ -14,12 +14,22 @@ void HardwareInterface::setup()
     pinMode(config::bluetooth_btn, INPUT);
 
     pinMode(config::motion_sensor, INPUT);
+
+    Wire.begin();
+
+    if (veml.begin() == false)
+    {
+        
+        while (1)
+        {
+            Serial.println("Unable to communicate with the VEML7700. Please check the wiring. Freezing...");
+        }
+    }
+    veml.setIntegrationTime(VEML7700_INTEGRATION_50ms);
+    veml.setSensitivityMode(VEML7700_SENSITIVITY_x2);
+    veml.setPersistenceProtect(VEML7700_PERSISTENCE_4);
 }
 
-void HardwareInterface::update()
-{
-
-}
 
 void HardwareInterface::turnBuiltInLED(bool v)
 {
@@ -38,5 +48,5 @@ bool HardwareInterface::getMovementSensorStatus()
 
 float HardwareInterface::getLuxValue()
 {
-    return 0.0f;
+    return veml.getLux();
 }

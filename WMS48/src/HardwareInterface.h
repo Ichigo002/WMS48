@@ -2,6 +2,7 @@
 #define HARDWARE_INTERFACE_H
 
 #include <Arduino.h>
+#include <SparkFun_VEML7700_Arduino_Library.h>
 #include "config.cpp"
 
 class HardwareInterface
@@ -11,7 +12,6 @@ public:
     ~HardwareInterface();
 
     void setup();
-    void update();
 
     // turn on or off built in led at the back of display
     void turnBuiltInLED(bool v);
@@ -25,9 +25,7 @@ public:
     // returns value of lux from Veml7700 sensor
     float getLuxValue();
 private:
-
-    bool is_bt_pressed;
-    bool is_bt_up;
+    SparkFunVEML7700 veml;
 
 };
 
