@@ -17,6 +17,7 @@ void setup()
 {
   // Initialize your setup code here
   display.setup(config::refresh_rate_hz);
+  pinMode(config::pin_led, OUTPUT);
 
   Serial.begin(115200);
   // Serial.printf("ESP-IDF version: %s\n", ESP.getSdkVersion());
@@ -24,7 +25,7 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
- 
+  
 }
 
 void loop()

@@ -97,18 +97,19 @@ void SerialCmdsParser::initCommands()
         .executable_name = "drawText",
         .category = "Graphics",
         .one_word_cmd = false,
-        .hint_details = " x y f txt",
-        .help_details = " [x start] [y start] [font size 1-3] [your text] ",
+        .hint_details = " x y f b txt",
+        .help_details = " [x start] [y start] [font size 1-3] [brightness 0-32] [your text] ",
         .execute = [](ExecTools ext, std::vector<String> &args)
         {
-            if (args.size() < 4 + 1)
+            if (args.size() < 5 + 1)
                 return -1;
 
             int v1 = args[1].toInt();
             int v2 = args[2].toInt();
             int v4 = args[3].toInt();
+            int v5 = args[4].toInt();
             String txt = "";
-            for (size_t i = 4; i < args.size(); i++)
+            for (size_t i = 5; i < args.size(); i++)
             {
                 txt += args[i];
                 txt += " ";
@@ -116,14 +117,40 @@ void SerialCmdsParser::initCommands()
 
             txt.remove(txt.length()-1);
             
-            ext.graphics.drawText(v1, v2, txt, ext.font, v4);
+            ext.graphics.drawText(v1, v2, txt, ext.font, v4, v5);
+            return 0;
+        }});
+
+        command_list.push_back(CommandBody{
+        .executable_name = "txt",
+        .category = "Graphics",
+        .one_word_cmd = false,
+        .hint_details = " x y text",
+        .help_details = " [x start] [y start] [your text] ",
+        .execute = [](ExecTools ext, std::vector<String> &args)
+        {
+            if (args.size() < 3 + 1)
+                return -1;
+
+            int v1 = args[1].toInt();
+            int v2 = args[2].toInt();
+            String txt = "";
+            for (size_t i = 3; i < args.size(); i++)
+            {
+                txt += args[i];
+                txt += " ";
+            }
+
+            txt.remove(txt.length()-1);
+            
+            ext.graphics.drawText(v1, v2, txt, ext.font, 1);
             return 0;
         }});
 
     /* DISPLAY CMDS*/
 
     command_list.push_back(CommandBody{
-        .executable_name = "setTotalBrig",
+        .executable_name = "setBrightness",
         .category = "Display",
         .one_word_cmd = false,
         .hint_details = " v",
@@ -144,7 +171,7 @@ void SerialCmdsParser::initCommands()
         .category = "Display",
         .one_word_cmd = false,
         .hint_details = " f",
-        .help_details = " [frequency in Hz units of screen. Default: 60Hz] TO FIX IT",
+        .help_details = " [frequency in Hz of screen. Def: 60Hz]",
         .execute = [](ExecTools ext, std::vector<String> &args)
         {
             if (args.size() < 1 + 1)
@@ -160,7 +187,7 @@ void SerialCmdsParser::initCommands()
         .executable_name = "turnLed",
         .category = "Hardware",
         .one_word_cmd = false,
-        .hint_details = " v",
+        .hint_details = " (1 or 0)",
         .help_details = " [1 - on, 0 - off]",
         .execute = [](ExecTools ext, std::vector<String> &args)
         {

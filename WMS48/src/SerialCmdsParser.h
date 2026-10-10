@@ -48,7 +48,11 @@ private:
     int processArgumentList(std::vector<String>& args);
 
     void printHelp();
+    void printHelpDecoration(String& h);
+    void printHelpTree(String& h);
+
     void initCommands();
+    void createCategoryList();
 
 private:
     Graphics& graphics;
@@ -58,6 +62,7 @@ private:
     ExecTools* execTools;
 
     std::vector<CommandBody> command_list;
+    std::vector<String> category_list;
 };
 
 #endif
