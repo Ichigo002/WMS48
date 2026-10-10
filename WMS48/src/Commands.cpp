@@ -147,6 +147,52 @@ void SerialCmdsParser::initCommands()
             return 0;
         }});
 
+        command_list.push_back(CommandBody{
+        .executable_name = "txtAuto",
+        .category = "Graphics",
+        .one_word_cmd = false,
+        .hint_details = " text",
+        .help_details = " [your text] ",
+        .execute = [](ExecTools ext, std::vector<String> &args)
+        {
+            if (args.size() < 1 + 1)
+                return -1;
+
+            std::vector<String> txts;
+            String txt = "";
+            for (size_t i = 1; i < args.size(); i++)
+            {
+                if(args[i] == "\\n") // enter sign '\n'
+                {
+                    txts.push_back(txt);
+                    txt = "";
+                }
+                else
+                {
+                    txt += args[i];
+                    txt += " ";
+                }
+            }
+
+            txt.remove(txt.length()-1);
+
+            txts.push_back(txt);
+
+            int s = txts.size();
+
+            if(s > 4)
+                s = 4;
+
+            ext.graphics.clear();
+            
+            for (size_t i = 0; i < s; i++)
+            {
+                ext.graphics.drawText(0, 8*i, txts[i], ext.font, 1);
+            }
+            
+            return 0;
+        }});
+
     /* DISPLAY CMDS*/
 
     command_list.push_back(CommandBody{
