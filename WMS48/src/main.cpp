@@ -6,18 +6,20 @@
 #include "Graphics.h"
 #include "DefaultFont.h"
 #include "SerialCmdsParser.h"
+#include "HardwareInterface.h"
 
 Display display;
 Graphics graphics(display);
 DefaultFont defaultFont;
+HardwareInterface hardwareInterface;
 
-SerialCmdsParser cmdParser(graphics, display, defaultFont);
+SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface);
 
 void setup()
 {
   // Initialize your setup code here
   display.setup(config::refresh_rate_hz);
-  pinMode(config::pin_led, OUTPUT);
+  hardwareInterface.setup();
 
   Serial.begin(115200);
   // Serial.printf("ESP-IDF version: %s\n", ESP.getSdkVersion());
@@ -25,13 +27,18 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
-  
 }
-
+double last = 0;
 void loop()
 {
-
+  hardwareInterface.update();
   cmdParser.updateSerial();
+
+  if (micros() - last > 500)
+  {
+    last = micros();
+    Serial.println(hardwareInterface.getMovementSensorStatus());
+  }
 
   display.update();
 }

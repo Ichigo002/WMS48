@@ -2,6 +2,7 @@
 #define SCH_H
 
 #include "Graphics.h"
+#include "HardwareInterface.h"
 #include <Arduino.h>
 #include <vector>
 #include <functional>
@@ -12,6 +13,7 @@ struct ExecTools
     Graphics& graphics;
     Font& font;
     Display& display;
+    HardwareInterface& hardwareInterface;
 };
 
 struct CommandBody
@@ -37,7 +39,7 @@ help example: rect [x=pos] [y=pos] [w=width] [h=height] [b=brightness(0-32)]
 class SerialCmdsParser
 {
 public:
-    SerialCmdsParser(Graphics& g, Display& d, Font& f);
+    SerialCmdsParser(Graphics& g, Display& d, Font& f, HardwareInterface& h);
     ~SerialCmdsParser();
 
     void updateSerial();
@@ -58,6 +60,7 @@ private:
     Graphics& graphics;
     Display& display;
     Font& font;
+    HardwareInterface& hardwareInterface;
 
     ExecTools* execTools;
 

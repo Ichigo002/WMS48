@@ -252,12 +252,7 @@ void SerialCmdsParser::initCommands()
 
             int v1 = args[1].toInt();
 
-            if(v1 == 1)
-            {
-                digitalWrite(config::pin_led, HIGH);
-            } else {
-                digitalWrite(config::pin_led, LOW);
-            }
+            ext.hardwareInterface.turnBuiltInLED(v1 == 1);
             
             return 0;
         }});

@@ -1,12 +1,13 @@
 #include "SerialCmdsParser.h"
 
-SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f)
-    : graphics(g), display(d), font(f)
+SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f, HardwareInterface &h)
+    : graphics(g), display(d), font(f), hardwareInterface(h)
 {
     execTools = new ExecTools{
         graphics,
         font,
-        display};
+        display,
+        hardwareInterface};
 
     initCommands();
     createCategoryList();
