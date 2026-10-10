@@ -58,8 +58,6 @@ void Display::setup(uint8_t refresh_freq_hz)
     timerWrite(timer, 0);
     timerAlarmEnable(timer);
 
-    
-
     ROW_OE_HIGH();
 
     buildBitPlanes();
@@ -83,23 +81,19 @@ void Display::clear()
 {
     for (size_t x = 0; x < 48; x++)
     {
-            for (size_t y = 0; y < 32; y++)
-            {
-                abstract_buffer[x][y] = 0;
-            }
-            
+        for (size_t y = 0; y < 32; y++)
+        {
+            abstract_buffer[x][y] = 0;
+        }
     }
-    
 }
 
 void Display::setNewRefreshRate(uint8_t refresh_freq_hz)
 {
+    float b = getBrightness();
     calculateRefresh(refresh_freq_hz);
-
-    timerAlarmDisable(timer);
-    timerAlarmWrite(timer, ticks_per_row_refresh, true);
-    timerWrite(timer, 0);
-    timerAlarmEnable(timer);
+    setBrightness(b);
+    
 }
 
 void Display::setBrightness(float _brightness)
@@ -124,9 +118,9 @@ float Display::getBrightness()
 
 void Display::calculateRefresh(uint8_t refresh_freq_hz)
 {
-    if(refresh_freq_hz == 0)
+    if (refresh_freq_hz == 0)
         refresh_freq_hz = 1;
-        
+
     double frame_period_ms = 1000.0 / refresh_freq_hz;
     double smallest_bitplane_row_refresh_us =
         frame_period_ms * 1000.0 / 31.0 / 32.0;

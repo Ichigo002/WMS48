@@ -129,7 +129,12 @@ void Graphics::drawText(uint8_t x, uint8_t y, String text, const Font &font, int
 {
     for (size_t i = 0; i < text.length(); i++)
     {
-        drawCharacter(x + i * font_size * (font.getCharacterWidth() + spacing) , y, text[i], font, font_size, brig);
+        unsigned int tx = x + i * font_size * (font.getCharacterWidth() + spacing);
+        if(tx > 48)
+        {
+            return;
+        }
+        drawCharacter(tx, y, text[i], font, font_size, brig);
     }
 }
 
