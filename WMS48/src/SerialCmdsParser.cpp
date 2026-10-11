@@ -11,6 +11,7 @@ SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f, HardwareInt
 
     initCommands();
     createCategoryList();
+    cmd_raw = "";
 }
 
 SerialCmdsParser::~SerialCmdsParser()
@@ -19,11 +20,17 @@ SerialCmdsParser::~SerialCmdsParser()
 
 void SerialCmdsParser::updateSerial()
 {
-    if (Serial.available() != 0)
+    while (Serial.available() > 0)
+    {
+        char c = Serial.read();
+        cmd_raw += c;
+    }
+    if(cmd_raw != "")
     {
         std::vector<String> args;
 
-        parseCommand(Serial.readString(), args);
+        parseCommand(cmd_raw, args); 
+        cmd_raw = "";
         processArgumentList(args);
     }
 }

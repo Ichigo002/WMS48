@@ -66,6 +66,8 @@ private:
 
     std::vector<CommandBody> command_list;
     std::vector<String> category_list;
+
+    String cmd_raw;
 };
 
 #endif

@@ -7,11 +7,13 @@
 #include "DefaultFont.h"
 #include "SerialCmdsParser.h"
 #include "HardwareInterface.h"
+#include "TextAnimator.h"
 
 Display display;
 Graphics graphics(display);
 DefaultFont defaultFont;
 HardwareInterface hardwareInterface;
+TextAnimator txt;
 
 SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface);
 
@@ -27,11 +29,37 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
+  txt.anim_settings.speed_x = -12;
+  txt.anim_settings.speed_y = 0;
+  txt.text_settings.font_size = 4;
+  txt.text_settings.font = &defaultFont;
+  txt.text_settings.text = "BOJANOWSKI WIKTOR";
+  txt.anim_settings.animation_mode = AnimMode::LOOP;
+  txt.start();
 }
-double last = 0;
+
+uint32_t previousTime = 0;
+float deltaTime;
+
 void loop()
 {
-  cmdParser.updateSerial();
+  if(txt.isAnimationStopped())
+  {
+    Serial.println("it is stopped, lets re run");
+    txt.text_settings.text = "Goodbye!";
+    txt.anim_settings.speed_y = 2.5f;
+    txt.restart();
+  }
 
+  uint32_t currentTime = millis();
+  deltaTime = (currentTime - previousTime) / 1000.0f; // seconds
+  previousTime = currentTime;
+
+
+  txt.update(deltaTime);
+
+  cmdParser.updateSerial();
+  
+  txt.draw(graphics);
   display.update();
 }

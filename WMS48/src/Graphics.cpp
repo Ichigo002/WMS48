@@ -95,7 +95,7 @@ void Graphics::drawCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t brig)
     }
 }
 
-void Graphics::drawCharacter(uint8_t x, uint8_t y, char ascii, const Font &font, int font_size, uint8_t brig)
+void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int font_size, uint8_t brig)
 {
     if (ascii == ' ')
     {
@@ -125,15 +125,19 @@ void Graphics::drawCharacter(uint8_t x, uint8_t y, char ascii, const Font &font,
     }
 }
 
-void Graphics::drawText(uint8_t x, uint8_t y, String text, const Font &font, int font_size, uint8_t brig, int spacing)
+void Graphics::drawText(int x, int y, String text, const Font &font, int font_size, uint8_t brig, int spacing)
 {
     for (size_t i = 0; i < text.length(); i++)
     {
-        unsigned int tx = x + i * font_size * (font.getCharacterWidth() + spacing);
+        int tx = x + i * font_size * (font.getCharacterWidth() + spacing);
         if(tx > 48)
         {
             return;
         }
+        // if(tx < -1 * font_size * (font.getCharacterWidth() + spacing))
+        // {
+        //     return;
+        // }
         drawCharacter(tx, y, text[i], font, font_size, brig);
     }
 }
