@@ -15,12 +15,12 @@ void Graphics::clear()
     display.clear();
 }
 
-void Graphics::drawPixel(uint8_t x, uint8_t y, uint8_t brig)
+void Graphics::drawPixel(int x, int y, uint8_t brig)
 {
     display.setPixelRaw(x, y, brig);
 }
 
-void Graphics::drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t brig)
+void Graphics::drawLine(int x0, int y0, int x1, int y1, uint8_t brig)
 {
     if (ABS(y1 - y0) < ABS(x1 - x0))
     {
@@ -38,7 +38,7 @@ void Graphics::drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t 
     }
 }
 
-void Graphics::drawRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t brig)
+void Graphics::drawRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig)
 {
     w--;
     h--;
@@ -64,7 +64,7 @@ void Graphics::drawRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t brig
     }
 }
 
-void Graphics::drawFilledRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t brig)
+void Graphics::drawFilledRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig)
 {
     for (size_t i = x; i < x + w; i++)
     {
@@ -75,7 +75,7 @@ void Graphics::drawFilledRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_
     }
 }
 
-void Graphics::drawCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t brig)
+void Graphics::drawCircle(int x, int y, uint8_t r, uint8_t brig)
 {
     float t1 = r / 16;
     int cx = r;
@@ -130,23 +130,13 @@ void Graphics::drawText(int x, int y, String text, const Font &font, int font_si
     for (size_t i = 0; i < text.length(); i++)
     {
         int tx = x + i * font_size * (font.getCharacterWidth() + spacing);
-        if(tx > 48)
-        {
-            return;
-        }
-        // if(tx < -1 * font_size * (font.getCharacterWidth() + spacing))
+        // if(tx > 48)
         // {
         //     return;
         // }
+
         drawCharacter(tx, y, text[i], font, font_size, brig);
     }
-}
-
-double Graphics::getDistanceBetween(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1)
-{
-    int dx = x1 - x0;
-    int dy = y1 - y0;
-    return sqrt(dx * dx + dy * dy);
 }
 
 void Graphics::drawSymmetricCircle(uint8_t x, uint8_t y, uint8_t cx, uint8_t cy, uint8_t r, uint8_t brig)

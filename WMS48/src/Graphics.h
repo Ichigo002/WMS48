@@ -17,17 +17,16 @@ public:
     ~Graphics();
 
     void clear();
-    void drawPixel(uint8_t x, uint8_t y, uint8_t brig);
-    void drawLine(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t brig = 32);
-    void drawRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t brig = 32);
-    void drawFilledRect(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint8_t brig = 32);
-    void drawCircle(uint8_t x, uint8_t y, uint8_t r, uint8_t brig = 32);
+    void drawPixel(int x, int y, uint8_t brig);
+    void drawLine(int x0, int y0, int x1, int y1, uint8_t brig = 32);
+    void drawRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig = 32);
+    void drawFilledRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig = 32);
+    void drawCircle(int x, int y, uint8_t r, uint8_t brig = 32);
 
     void drawCharacter(int x, int y, char ascii, const Font& font, int font_size = 1, uint8_t brig = 32);
 
     void drawText(int x, int y, String text, const Font& font, int font_size = 1, uint8_t brig = 32, int spacing = 1);
 
-    double getDistanceBetween(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
 private:
 
     void drawSymmetricCircle(uint8_t x, uint8_t y,uint8_t cx, uint8_t cy, uint8_t r, uint8_t brig);

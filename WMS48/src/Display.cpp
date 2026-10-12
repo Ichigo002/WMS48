@@ -68,10 +68,11 @@ void Display::update()
     buildBitPlanes();
 }
 
-void Display::setPixelRaw(u_int x, u_int y, uint8_t value)
+void Display::setPixelRaw(int x, int y, uint8_t value)
 {
-    if (x >= 48 || y >= 32)
+    if(x < 0 || y < 0 || x > 47 || y > 31)
         return;
+        
     if (value > 31)
         value = 31;
     abstract_buffer[x][y] = value;

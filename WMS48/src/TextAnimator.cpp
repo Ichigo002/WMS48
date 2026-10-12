@@ -45,20 +45,20 @@ void TextAnimator::update(float deltaTime)
             pos_y = HEIGHT;
         }
     }
-    if(a->animation_mode == AnimMode::INFINITE_SCROLLING) // TODO LATER
-    {
-        if (a->speed_x > 0 && pos_x > WIDTH) // right edge
-        {
-            pos_x2 = -txt_w;
+    // if(a->animation_mode == AnimMode::INFINITE_SCROLLING) // TODO LATER
+    // {
+    //     if (a->speed_x > 0 && pos_x > WIDTH) // right edge
+    //     {
+    //         pos_x2 = -txt_w;
 
-        }
+    //     }
 
-        prev_x2 = pos_x2;
-        prev_y2 = pos_y2;
+    //     prev_x2 = pos_x2;
+    //     prev_y2 = pos_y2;
 
-        pos_x2 += a->speed_x * deltaTime;
-        pos_y2 += a->speed_y * deltaTime;
-    }
+    //     pos_x2 += a->speed_x * deltaTime;
+    //     pos_y2 += a->speed_y * deltaTime;
+    // }
 
     if(a->animation_mode == AnimMode::PING_PONG)
     {
@@ -70,22 +70,26 @@ void TextAnimator::update(float deltaTime)
 
     pos_x += a->speed_x * deltaTime;
     pos_y += a->speed_y * deltaTime;
-
-    
 }
 
 void TextAnimator::draw(Graphics &g)
 {
     if(is_paused)
         return;
-    g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
+    Serial.println("START\nprev_x: " + String(prev_x));
+Serial.println("prev_y: " + String(prev_y));
+Serial.println("txt_w: " + String(txt_w));
+Serial.println("txt_h: " + String(txt_h));
+
+    //g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
+    g.clear();
     g.drawText(pos_x, pos_y, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
 
-    if(render_duplicated_txt) 
-    {
-        g.drawFilledRect(prev_x2, prev_y2, txt_w, txt_h, 0);
-        g.drawText(pos_x2, pos_y2, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
-    }
+    // if(render_duplicated_txt) 
+    // {
+    //     g.drawFilledRect(prev_x2, prev_y2, txt_w, txt_h, 0);
+    //     g.drawText(pos_x2, pos_y2, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
+    // }
 }
 
 int TextAnimator::initSettings()
@@ -101,9 +105,8 @@ int TextAnimator::initSettings()
     pos_x = pos_x2 = a->start_pos_x;
     pos_y = pos_y2 = a->start_pos_y;
 
-    int l = t->text.length();
-    txt_w = l * t->font_size * (t->font->getCharacterWidth() + t->text_spacing);
-    txt_h = l * t->font_size * t->font->getCharacterHeight();
+    txt_w = t->text.length() * t->font_size * (t->font->getCharacterWidth() + t->text_spacing);
+    txt_h = t->font_size * t->font->getCharacterHeight();
     return 0;
 }
 

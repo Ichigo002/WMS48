@@ -29,9 +29,9 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
-  txt.anim_settings.speed_x = -12;
+  txt.anim_settings.speed_x = -30;
   txt.anim_settings.speed_y = 0;
-  txt.text_settings.font_size = 4;
+  txt.text_settings.font_size = 1;
   txt.text_settings.font = &defaultFont;
   txt.text_settings.text = "BOJANOWSKI WIKTOR";
   txt.anim_settings.animation_mode = AnimMode::LOOP;

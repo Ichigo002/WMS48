@@ -52,7 +52,7 @@ public:
 
     // Turn on pixel (x,y)
     // value - value between 0-31 sets brightness of individual pixel independently
-    void setPixelRaw(u_int x, u_int y, uint8_t value);
+    void setPixelRaw(int x, int y, uint8_t value);
 
     // Clears abstract buffer
     void clear();
