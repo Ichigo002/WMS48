@@ -294,7 +294,7 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "animInit",
+        .executable_name = "anInit",
         .category = "Text Animation",
         .one_word_cmd = true,
         .hint_details = " ",
@@ -320,11 +320,11 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "animate",
+        .executable_name = "anSetTxt",
         .category = "Text Animation",
         .one_word_cmd = false,
         .hint_details = " txt",
-        .help_details = " [your text] It starts animation.",
+        .help_details = " [your text]",
         .execute = [](ExecTools& ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
@@ -348,7 +348,7 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "animRestart",
+        .executable_name = "anRestart",
         .category = "Text Animation",
         .one_word_cmd = true,
         .hint_details = " ",
@@ -363,7 +363,7 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "animPause",
+        .executable_name = "anPause",
         .category = "Text Animation",
         .one_word_cmd = true,
         .hint_details = " ",
@@ -378,7 +378,7 @@ void SerialCmdsParser::initCommands()
         }});
 
         command_list.push_back(CommandBody{
-        .executable_name = "animUnPause",
+        .executable_name = "anUnPause",
         .category = "Text Animation",
         .one_word_cmd = true,
         .hint_details = " ",
@@ -393,7 +393,7 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "animMode",
+        .executable_name = "anMode",
         .category = "Text Animation",
         .one_word_cmd = false,
         .hint_details = " mode=[single, loop, pingPongInside, pingPongOut]",
@@ -413,9 +413,9 @@ void SerialCmdsParser::initCommands()
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::SINGLE;
             if (b == "loop")
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::LOOP;
-            if (b == "pingPongInside")
+            if (b == "pingponginside")
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::PING_PONG_INSIDE;
-            if (b == "pingPongOut")
+            if (b == "pingpongout")
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::PING_PONG_OUTSIDE;
 
             ext.txt_anim.restart();
@@ -424,7 +424,7 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "animSpeed",
+        .executable_name = "anSpeed",
         .category = "Text Animation",
         .one_word_cmd = false,
         .hint_details = " x y",
@@ -445,7 +445,7 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "animsettings",
+        .executable_name = "ansettings",
         .category = "Text Animation",
         .one_word_cmd = false,
         .hint_details = " start_x start_y font_size brightness",
