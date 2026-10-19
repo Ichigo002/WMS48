@@ -16,6 +16,7 @@ struct ExecTools
     Display& display;
     HardwareInterface& hardwareInterface;
     TextAnimator& txt_anim;
+    bool animation_initialized;
 };
 
 struct CommandBody

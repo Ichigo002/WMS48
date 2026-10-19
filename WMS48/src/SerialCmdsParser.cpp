@@ -8,7 +8,8 @@ SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f, HardwareInt
         font,
         display,
         hardwareInterface,
-        txt_anim};
+        txt_anim,
+        false};
 
     initCommands();
     createCategoryList();
