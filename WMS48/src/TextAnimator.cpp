@@ -28,13 +28,21 @@ void TextAnimator::update(float deltaTime)
     }
     if(a->animation_mode == AnimMode::LOOP) 
     {
-        if ((a->speed_x > 0 && pos_x > WIDTH+1) ||
-        (a->speed_x < 0 && pos_x + txt_w+1 < 0) ||
-        (a->speed_y > 0 && pos_y > HEIGHT+1) ||
-        (a->speed_y < 0 && pos_y + txt_h+1 < 0))
+         if (a->speed_x > 0 && pos_x > WIDTH) // right edge
         {
-            pos_x = a->start_pos_x;
-            pos_y = a->start_pos_y;
+            pos_x = -txt_w;
+        }
+        if (a->speed_x < 0 && pos_x + txt_w+1 < 0) // left edge
+        {
+            pos_x = WIDTH;
+        }
+        if (a->speed_y > 0 && pos_y > HEIGHT) // bottom edge
+        {
+            pos_y = -txt_h;
+        }
+        if (a->speed_y < 0 && pos_y + txt_h < 0) // top edge
+        {
+            pos_y = HEIGHT;
         }
         
     }
