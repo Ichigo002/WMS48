@@ -13,9 +13,9 @@ Display display;
 Graphics graphics(display);
 DefaultFont defaultFont;
 HardwareInterface hardwareInterface;
-TextAnimator txt;
+TextAnimator cmd_txt;
 
-SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, txt);
+SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt);
 
 void setup()
 {
@@ -29,13 +29,7 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
-  txt.anim_settings.speed_x = -30;
-  txt.anim_settings.speed_y = 30;
-  txt.text_settings.font_size = 1;
-  txt.text_settings.font = &defaultFont;
-  txt.text_settings.text = "HALLOWEEN UNO ONCE";
-  txt.anim_settings.animation_mode = AnimMode::LOOP;
-  txt.start();
+
 }
 
 uint32_t previousTime = 0;
@@ -43,23 +37,15 @@ float deltaTime;
 
 void loop()
 {
-  // if(txt.isAnimationStopped())
-  // {
-  //   Serial.println("it is stopped, lets re run");
-  //   txt.text_settings.text = "Goodbye!";
-  //   txt.anim_settings.speed_y = 2.5f;
-  //   txt.restart();
-  // }
 
   uint32_t currentTime = millis();
   deltaTime = (currentTime - previousTime) / 1000.0f; // seconds
   previousTime = currentTime;
 
-
-  txt.update(deltaTime);
+  cmd_txt.update(deltaTime);
 
   cmdParser.updateSerial();
   
-  txt.draw(graphics);
+  cmd_txt.draw(graphics);
   display.update();
 }
