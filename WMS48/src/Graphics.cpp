@@ -1,6 +1,8 @@
 #include "Graphics.h"
 
 #define ABS(a) (((a) < 0) ? -(a) : (a))
+#define WIDTH 48
+#define HEIGHT 32
 
 Graphics::Graphics(Display &_display) : display(_display)
 {
@@ -64,13 +66,31 @@ void Graphics::drawRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig)
     }
 }
 
-void Graphics::drawFilledRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig)
-{
-    for (size_t i = x; i < x + w; i++)
+void Graphics::drawFilledRect(int x, int y, int w, int h, uint8_t brig)
+{ 
+    if(brig > 31)
     {
-        for (size_t j = y; j < y + h; j++)
+        brig = 31;
+    }
+
+    if(x < 0) {
+        w += x;
+        x = 0;
+    }
+    if(y < 0) {
+        h += y;
+        y = 0;
+    }
+    if(x >= WIDTH || y >= HEIGHT) {
+        return;
+    }
+
+    for (int i = x; i < x + w; i++)
+    {
+        for (int j = y; j < y + h; j++)
         {
-            drawPixel(i, j, brig);
+            //display.__graphic_unsafe_setPixelRaw(i, j, brig);
+            display.setPixelRaw(i,j,brig);
         }
     }
 }

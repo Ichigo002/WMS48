@@ -28,48 +28,44 @@ void TextAnimator::update(float deltaTime)
     }
     if(a->animation_mode == AnimMode::LOOP) 
     {
+        if ((a->speed_x > 0 && pos_x > WIDTH+1) ||
+        (a->speed_x < 0 && pos_x + txt_w+1 < 0) ||
+        (a->speed_y > 0 && pos_y > HEIGHT+1) ||
+        (a->speed_y < 0 && pos_y + txt_h+1 < 0))
+        {
+            pos_x = a->start_pos_x;
+            pos_y = a->start_pos_y;
+        }
+        
+    }
+    if(a->animation_mode == AnimMode::PING_PONG)
+    {
         if (a->speed_x > 0 && pos_x > WIDTH) // right edge
         {
-            pos_x = -txt_w;
+           a->speed_x *= -1;
         }
         if (a->speed_x < 0 && pos_x + txt_w+1 < 0) // left edge
         {
-            pos_x = WIDTH;
+          //  pos_x = WIDTH;
+            pos_x = anim_settings.start_pos_x;
         }
         if (a->speed_y > 0 && pos_y > HEIGHT) // bottom edge
         {
-            pos_y = -txt_h;
+           // pos_y = -txt_h;
+            pos_y = anim_settings.start_pos_y;
         }
         if (a->speed_y < 0 && pos_y + txt_h < 0) // top edge
         {
-            pos_y = HEIGHT;
+           // pos_y = HEIGHT;
+            pos_y = anim_settings.start_pos_y;
         }
-    }
-    // if(a->animation_mode == AnimMode::INFINITE_SCROLLING) // TODO LATER
-    // {
-    //     if (a->speed_x > 0 && pos_x > WIDTH) // right edge
-    //     {
-    //         pos_x2 = -txt_w;
-
-    //     }
-
-    //     prev_x2 = pos_x2;
-    //     prev_y2 = pos_y2;
-
-    //     pos_x2 += a->speed_x * deltaTime;
-    //     pos_y2 += a->speed_y * deltaTime;
-    // }
-
-    if(a->animation_mode == AnimMode::PING_PONG)
-    {
-
     }
 
     prev_x = pos_x;
     prev_y = pos_y;
 
-    pos_x += a->speed_x * deltaTime;
-    pos_y += a->speed_y * deltaTime;
+    pos_x += speed_x * deltaTime;
+    pos_y += speed_y * deltaTime;
 }
 
 void TextAnimator::draw(Graphics &g)
@@ -78,14 +74,7 @@ void TextAnimator::draw(Graphics &g)
         return;
 
     g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
-
     g.drawText(pos_x, pos_y, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
-
-    // if(render_duplicated_txt) 
-    // {
-    //     g.drawFilledRect(prev_x2, prev_y2, txt_w, txt_h, 0);
-    //     g.drawText(pos_x2, pos_y2, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
-    // }
 }
 
 int TextAnimator::initSettings()
@@ -96,10 +85,11 @@ int TextAnimator::initSettings()
         return -1;
     }
 
-    render_duplicated_txt = false;
+    pos_x = a->start_pos_x;
+    pos_y = a->start_pos_y;
 
-    pos_x = pos_x2 = a->start_pos_x;
-    pos_y = pos_y2 = a->start_pos_y;
+    speed_x = a->speed_x;
+    speed_y = a->speed_y;
 
     txt_w = t->text.length() * t->font_size * (t->font->getCharacterWidth() + t->text_spacing);
     txt_h = t->font_size * t->font->getCharacterHeight();

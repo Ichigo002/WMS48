@@ -78,6 +78,11 @@ void Display::setPixelRaw(int x, int y, uint8_t value)
     abstract_buffer[x][y] = value;
 }
 
+void Display::__graphic_unsafe_setPixelRaw(int x, int y, uint8_t value)
+{
+    abstract_buffer[x][y] = value;
+}
+
 void Display::clear()
 {
     for (size_t x = 0; x < 48; x++)

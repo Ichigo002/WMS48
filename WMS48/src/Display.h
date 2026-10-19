@@ -54,6 +54,8 @@ public:
     // value - value between 0-31 sets brightness of individual pixel independently
     void setPixelRaw(int x, int y, uint8_t value);
 
+    void __graphic_unsafe_setPixelRaw(int x, int y, uint8_t value);
+
     // Clears abstract buffer
     void clear();
 

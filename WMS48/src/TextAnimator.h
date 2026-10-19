@@ -71,10 +71,7 @@ private:
     // unit: speed: pixels per second
     float pos_x, pos_y;
     float prev_x, prev_y;
-
-    float pos_x2, pos_y2;
-    float prev_x2, prev_y2;
-    bool render_duplicated_txt;
+    float speed_x, speed_y;
 
     int txt_w, txt_h;
 

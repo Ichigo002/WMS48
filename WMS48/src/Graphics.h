@@ -20,7 +20,7 @@ public:
     void drawPixel(int x, int y, uint8_t brig);
     void drawLine(int x0, int y0, int x1, int y1, uint8_t brig = 32);
     void drawRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig = 32);
-    void drawFilledRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig = 32);
+    void drawFilledRect(int x, int y, int w, int h, uint8_t brig = 32);
     void drawCircle(int x, int y, uint8_t r, uint8_t brig = 32);
 
     void drawCharacter(int x, int y, char ascii, const Font& font, int font_size = 1, uint8_t brig = 32);
