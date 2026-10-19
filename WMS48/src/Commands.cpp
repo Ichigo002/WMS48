@@ -449,7 +449,8 @@ void SerialCmdsParser::initCommands()
             float v1 = args[1].toFloat();
             float v2 = args[2].toFloat();
 
-            ext.txt_anim.updateSpeedParameter(v1, v2);
+            ext.txt_anim.anim_settings.speed_x = v1;
+             ext.txt_anim.anim_settings.speed_y = v2;
 
             return 0;
         }});
