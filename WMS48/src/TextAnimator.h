@@ -50,8 +50,6 @@ public:
     void update(float deltaTime);
     void draw(Graphics& g);
 
-    void updateOnlySpeedParameter(float sx, float sy);
-
     void start();
     void restart();
 
@@ -73,7 +71,6 @@ private:
     // unit: speed: pixels per second
     float pos_x, pos_y;
     float prev_x, prev_y;
-    float speed_x, speed_y;
 
     int txt_w, txt_h;
 

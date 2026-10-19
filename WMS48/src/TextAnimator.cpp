@@ -48,48 +48,48 @@ void TextAnimator::update(float deltaTime)
     }
     if(a->animation_mode == AnimMode::PING_PONG_OUTSIDE)
     {
-        if (speed_x > 0 && pos_x > WIDTH) // right edge
+        if (a->speed_x > 0 && pos_x > WIDTH) // right edge
         {
-           speed_x *= -1;
+           a->speed_x *= -1;
         }
-        if (speed_x < 0 && pos_x + txt_w+1 < 0) // left edge
+        if (a->speed_x < 0 && pos_x + txt_w+1 < 0) // left edge
         {
-            speed_x *= -1;
+            a->speed_x *= -1;
         }
-        if (speed_y > 0 && pos_y > HEIGHT) // bottom edge
+        if (a->speed_y > 0 && pos_y > HEIGHT) // bottom edge
         {
-           speed_y *= -1;
+           a->speed_y *= -1;
         }
-        if (speed_y < 0 && pos_y + txt_h < 0) // top edge
+        if (a->speed_y < 0 && pos_y + txt_h < 0) // top edge
         {
-           speed_y *= -1;
+           a->speed_y *= -1;
         }
     }
     if(a->animation_mode == AnimMode::PING_PONG_INSIDE)
     {
-        if (speed_x > 0 && pos_x + txt_w >= WIDTH) // right edge
+        if (a->speed_x > 0 && pos_x + txt_w >= WIDTH) // right edge
         {
-           speed_x *= -1;
+           a->speed_x *= -1;
         }
-        if (speed_x < 0 && pos_x < 0) // left edge
+        if (a->speed_x < 0 && pos_x < 0) // left edge
         {
-            speed_x *= -1;
+            a->speed_x *= -1;
         }
-        if (speed_y > 0 && pos_y + txt_h > HEIGHT) // bottom edge
+        if (a->speed_y > 0 && pos_y + txt_h > HEIGHT) // bottom edge
         {
-           speed_y *= -1;
+           a->speed_y *= -1;
         }
-        if (speed_y < 0 && pos_y < 0) // top edge
+        if (a->speed_y < 0 && pos_y < 0) // top edge
         {
-           speed_y *= -1;
+           a->speed_y *= -1;
         }
     }
 
     prev_x = pos_x;
     prev_y = pos_y;
 
-    pos_x += speed_x * deltaTime;
-    pos_y += speed_y * deltaTime;
+    pos_x += a->speed_x * deltaTime;
+    pos_y += a->speed_y * deltaTime;
 }
 
 void TextAnimator::draw(Graphics &g)
@@ -99,12 +99,6 @@ void TextAnimator::draw(Graphics &g)
 
     g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
     g.drawText(pos_x, pos_y, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
-}
-
-void TextAnimator::updateOnlySpeedParameter(float sx, float sy)
-{
-    speed_x = sx;
-    speed_y = sy;
 }
 
 int TextAnimator::initSettings()
@@ -117,9 +111,6 @@ int TextAnimator::initSettings()
 
     pos_x = a->start_pos_x;
     pos_y = a->start_pos_y;
-
-    speed_x = a->speed_x;
-    speed_y = a->speed_y;
 
     txt_w = t->text.length() * t->font_size * (t->font->getCharacterWidth() + t->text_spacing);
     txt_h = t->font_size * t->font->getCharacterHeight();
