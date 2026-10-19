@@ -67,7 +67,7 @@ void TextAnimator::update(float deltaTime)
     }
     if(a->animation_mode == AnimMode::PING_PONG_INSIDE)
     {
-        if (a->speed_x > 0 && pos_x + txt_w >= WIDTH) // right edge
+        if (a->speed_x > 0 && pos_x + txt_w > WIDTH) // right edge
         {
            a->speed_x *= -1;
         }
@@ -94,6 +94,13 @@ void TextAnimator::update(float deltaTime)
 
 void TextAnimator::draw(Graphics &g)
 {
+    if(!is_cleaned && !is_playing)
+    {
+        is_cleaned = true;
+        g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
+        g.drawFilledRect(pos_x, pos_y, txt_w, txt_h, 0);
+    }
+
     if(is_paused || !is_playing)
         return;
 
@@ -124,6 +131,7 @@ void TextAnimator::start()
         if(initSettings() != 0)
             return;
     }
+    is_cleaned = false;
     is_playing = true;
 }
 
@@ -162,5 +170,6 @@ void TextAnimator::stop()
 {
     is_playing = false;
     is_paused = false;
+    is_cleaned = false;
 }
 

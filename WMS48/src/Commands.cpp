@@ -294,7 +294,7 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "anInit",
+        .executable_name = "anStart",
         .category = "Text Animation",
         .one_word_cmd = true,
         .hint_details = " ",
@@ -315,6 +315,20 @@ void SerialCmdsParser::initCommands()
 
             ext.txt_anim.restart();
             ext.animation_initialized = true;
+
+            return 0;
+        }});
+
+    command_list.push_back(CommandBody{
+        .executable_name = "anStop",
+        .category = "Text Animation",
+        .one_word_cmd = true,
+        .hint_details = " ",
+        .help_details = " ",
+        .execute = [](ExecTools &ext, std::vector<String> &args)
+        {
+            ext.animation_initialized = false;
+            ext.txt_anim.stop();
 
             return 0;
         }});
@@ -342,6 +356,7 @@ void SerialCmdsParser::initCommands()
             }
 
             ext.txt_anim.text_settings.text = txt;
+            ext.txt_anim.initSettings();
 
             return 0;
         }});
@@ -390,6 +405,8 @@ void SerialCmdsParser::initCommands()
 
             return 0;
         }});
+
+    
 
     command_list.push_back(CommandBody{
         .executable_name = "anMode",
@@ -465,13 +482,13 @@ void SerialCmdsParser::initCommands()
         {
             if (!ext.animation_initialized)
                 return -2;
-            if (args.size() < 2 + 1)
+            if (args.size() < 4 + 1)
                 return -1;
 
             float v1 = args[1].toFloat();
             float v2 = args[2].toFloat();
-            int v3 = args[2].toInt();
-            int v4 = args[2].toInt();
+            int v3 = args[3].toInt();
+            int v4 = args[4].toInt();
 
             ext.txt_anim.anim_settings.start_pos_x = v1;
             ext.txt_anim.anim_settings.start_pos_y = v2;
@@ -479,7 +496,7 @@ void SerialCmdsParser::initCommands()
             ext.txt_anim.text_settings.brightness = v4;
             ext.txt_anim.text_settings.font_size = v3;
 
-            ext.txt_anim.restart();
+            ext.txt_anim.initSettings();
 
             return 0;
         }});

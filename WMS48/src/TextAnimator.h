@@ -61,7 +61,7 @@ public:
     bool isAnimationPlaying();
     bool isAnimationStopped();
     bool isAnimationPaused();
-private:
+
     int initSettings();
 
 private:
@@ -76,6 +76,7 @@ private:
 
     bool is_playing;
     bool is_paused;
+    bool is_cleaned;
 };
 
 #endif
