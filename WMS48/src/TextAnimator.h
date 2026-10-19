@@ -17,9 +17,9 @@ struct _TextParameters
 
 enum AnimMode {
     LOOP = 0,
-    INFINITE_SCROLLING = 1,
     SINGLE = 2,
-    PING_PONG = 3,
+    PING_PONG_OUTSIDE = 3,
+    PING_PONG_INSIDE = 4,
 };
 
 struct _AnimParameters
@@ -49,6 +49,8 @@ public:
 
     void update(float deltaTime);
     void draw(Graphics& g);
+
+    void updateOnlySpeedParameter(float sx, float sy);
 
     void start();
     void restart();
