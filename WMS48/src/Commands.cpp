@@ -292,4 +292,44 @@ void SerialCmdsParser::initCommands()
             
             return 0;
         }});
+
+    command_list.push_back(CommandBody{
+        .executable_name = "animate",
+        .category = "Text Animation",
+        .one_word_cmd = false,
+        .hint_details = " txt",
+        .help_details = " [your text] is animated!",
+        .execute = [](ExecTools ext, std::vector<String> &args)
+        {
+            if (args.size() < 1 + 1)
+                return -1;
+
+            ext.txt_anim.anim_settings.speed_x = -50;
+            ext.txt_anim.anim_settings.speed_x = 0;
+            ext.txt_anim.anim_settings.animation_mode == AnimMode::LOOP;
+            ext.txt_anim.anim_settings.start_pos_x = 0;
+            ext.txt_anim.anim_settings.start_pos_y = 0;
+
+            ext.txt_anim.text_settings.brightness = 32;
+            ext.txt_anim.text_settings.font = &ext.font;
+            ext.txt_anim.text_settings.font_size = 1;
+            ext.txt_anim.text_settings.text_spacing = 1;
+
+            if (args.size() < 1 + 1)
+                return -1;
+
+            String txt = "";
+            for (size_t i = 1; i < args.size(); i++)
+            {
+                txt += args[i];
+                if( i+1 < args.size())
+                    txt += " ";
+            }
+            
+
+            ext.txt_anim.text_settings.text = txt;
+
+            ext.txt_anim.restart();
+            return 0;
+        }});
 }

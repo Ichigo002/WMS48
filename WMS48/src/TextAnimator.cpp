@@ -76,13 +76,9 @@ void TextAnimator::draw(Graphics &g)
 {
     if(is_paused)
         return;
-    Serial.println("START\nprev_x: " + String(prev_x));
-Serial.println("prev_y: " + String(prev_y));
-Serial.println("txt_w: " + String(txt_w));
-Serial.println("txt_h: " + String(txt_h));
 
-    //g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
-    g.clear();
+    g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
+
     g.drawText(pos_x, pos_y, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
 
     // if(render_duplicated_txt) 

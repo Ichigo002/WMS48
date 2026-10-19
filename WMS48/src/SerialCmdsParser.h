@@ -3,6 +3,7 @@
 
 #include "Graphics.h"
 #include "HardwareInterface.h"
+#include "TextAnimator.h"
 #include <Arduino.h>
 #include <vector>
 #include <functional>
@@ -14,6 +15,7 @@ struct ExecTools
     Font& font;
     Display& display;
     HardwareInterface& hardwareInterface;
+    TextAnimator& txt_anim;
 };
 
 struct CommandBody
@@ -39,7 +41,7 @@ help example: rect [x=pos] [y=pos] [w=width] [h=height] [b=brightness(0-32)]
 class SerialCmdsParser
 {
 public:
-    SerialCmdsParser(Graphics& g, Display& d, Font& f, HardwareInterface& h);
+    SerialCmdsParser(Graphics& g, Display& d, Font& f, HardwareInterface& h, TextAnimator& t);
     ~SerialCmdsParser();
 
     void updateSerial();
@@ -61,6 +63,7 @@ private:
     Display& display;
     Font& font;
     HardwareInterface& hardwareInterface;
+    TextAnimator& txt_anim;
 
     ExecTools* execTools;
 

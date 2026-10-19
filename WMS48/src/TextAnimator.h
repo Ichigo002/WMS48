@@ -16,7 +16,7 @@ struct _TextParameters
 };
 
 enum AnimMode {
-    LOOP = 0, /*TODO FIX GOING ACROSS LOOP speed x and why aren't = 0*/
+    LOOP = 0,
     INFINITE_SCROLLING = 1,
     SINGLE = 2,
     PING_PONG = 3,

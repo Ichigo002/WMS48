@@ -15,7 +15,7 @@ DefaultFont defaultFont;
 HardwareInterface hardwareInterface;
 TextAnimator txt;
 
-SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface);
+SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, txt);
 
 void setup()
 {
@@ -29,12 +29,12 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
-  txt.anim_settings.speed_x = -30;
+  txt.anim_settings.speed_x = -50;
   txt.anim_settings.speed_y = 0;
   txt.text_settings.font_size = 1;
   txt.text_settings.font = &defaultFont;
-  txt.text_settings.text = "BOJANOWSKI WIKTOR";
-  txt.anim_settings.animation_mode = AnimMode::LOOP;
+  txt.text_settings.text = "HALLOWEEN UNO ONCE";
+  txt.anim_settings.animation_mode = AnimMode::SINGLE;
   txt.start();
 }
 
