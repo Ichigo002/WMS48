@@ -8,7 +8,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = true,
         .hint_details = "",
         .help_details = "",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             ext.graphics.clear();
             return 0;
@@ -20,7 +20,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x y b",
         .help_details = " [x start] [y start] [brightness (0-32)]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 3 + 1)
                 return -1;
@@ -39,7 +39,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x0 y0 x1 y1",
         .help_details = " [x start] [y start] [x end] [y end]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 4 + 1)
                 return -1;
@@ -59,7 +59,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x0 y0 w h",
         .help_details = " [x start] [y start] [width] [height]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 4 + 1)
                 return -1;
@@ -79,7 +79,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x0 y0 w h",
         .help_details = " [x start] [y start] [width] [height]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 4 + 1)
                 return -1;
@@ -99,7 +99,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x y r",
         .help_details = " [x center] [y center] [radius]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 3 + 1)
                 return -1;
@@ -118,7 +118,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x y f b txt",
         .help_details = " [x start] [y start] [font size 1-3] [brightness 0-32] [your text] ",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 5 + 1)
                 return -1;
@@ -146,7 +146,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x y text",
         .help_details = " [x start] [y start] [your text] ",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 3 + 1)
                 return -1;
@@ -172,7 +172,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " text",
         .help_details = " [your text] Automatic text placement",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 1 + 1)
                 return -1;
@@ -230,7 +230,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " v",
         .help_details = " [brightness value from 0.0f to 1.0f]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 1 + 1)
                 return -1;
@@ -247,7 +247,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " f",
         .help_details = " [frequency in Hz of screen. Def: 60Hz]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 1 + 1)
                 return -1;
@@ -264,7 +264,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " (1 or 0)",
         .help_details = " [1 - on, 0 - off]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 1 + 1)
                 return -1;
@@ -282,7 +282,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = true,
         .hint_details = " ",
         .help_details = " reads lux light of environment",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (args.size() < 0 + 1)
                 return -1;
@@ -299,7 +299,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = true,
         .hint_details = " ",
         .help_details = " here everything begins, it sets default params. If you don't call this first, then every animation cmd returns error: -2. not correctly initialized",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             ext.txt_anim.anim_settings.speed_x = -50;
             ext.txt_anim.anim_settings.speed_y = 0;
@@ -320,12 +320,12 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
-        .executable_name = "anSetTxt",
+        .executable_name = "anSetText",
         .category = "Text Animation",
         .one_word_cmd = false,
         .hint_details = " txt",
         .help_details = " [your text]",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
                 return -2;
@@ -343,7 +343,6 @@ void SerialCmdsParser::initCommands()
 
             ext.txt_anim.text_settings.text = txt;
 
-            ext.txt_anim.restart();
             return 0;
         }});
 
@@ -353,7 +352,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = true,
         .hint_details = " ",
         .help_details = " ",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
                 return -2;
@@ -368,7 +367,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = true,
         .hint_details = " ",
         .help_details = " ",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
                 return -2;
@@ -377,13 +376,13 @@ void SerialCmdsParser::initCommands()
             return 0;
         }});
 
-        command_list.push_back(CommandBody{
+    command_list.push_back(CommandBody{
         .executable_name = "anUnPause",
         .category = "Text Animation",
         .one_word_cmd = true,
         .hint_details = " ",
         .help_details = " ",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
                 return -2;
@@ -398,7 +397,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " mode=[single, loop, pingPongInside, pingPongOut]",
         .help_details = " sets mode of animation",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
                 return -2;
@@ -410,17 +409,28 @@ void SerialCmdsParser::initCommands()
             b.toLowerCase();
 
             if (b == "single")
+            {
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::SINGLE;
+                return 0;
+            }
+
             if (b == "loop")
+            {
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::LOOP;
+                return 0;
+            }
             if (b == "pingponginside")
+            {
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::PING_PONG_INSIDE;
+                return 0;
+            }
             if (b == "pingpongout")
+            {
                 ext.txt_anim.anim_settings.animation_mode = AnimMode::PING_PONG_OUTSIDE;
+                return 0;
+            }
 
-            ext.txt_anim.restart();
-
-            return 0;
+            return -3;
         }});
 
     command_list.push_back(CommandBody{
@@ -429,7 +439,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " x y",
         .help_details = " sets speed in x and y",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
                 return -2;
@@ -439,7 +449,7 @@ void SerialCmdsParser::initCommands()
             float v1 = args[1].toFloat();
             float v2 = args[2].toFloat();
 
-            ext.txt_anim.updateOnlySpeedParameter(v1, v2);
+            ext.txt_anim.updateSpeedParameter(v1, v2);
 
             return 0;
         }});
@@ -450,7 +460,7 @@ void SerialCmdsParser::initCommands()
         .one_word_cmd = false,
         .hint_details = " start_x start_y font_size brightness",
         .help_details = " update less popular settings",
-        .execute = [](ExecTools& ext, std::vector<String> &args)
+        .execute = [](ExecTools &ext, std::vector<String> &args)
         {
             if (!ext.animation_initialized)
                 return -2;
