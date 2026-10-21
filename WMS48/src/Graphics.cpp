@@ -1,8 +1,7 @@
 #include "Graphics.h"
+#include "config.h"
 
 #define ABS(a) (((a) < 0) ? -(a) : (a))
-#define WIDTH 48
-#define HEIGHT 32
 
 Graphics::Graphics(Display &_display) : display(_display)
 {
@@ -10,6 +9,11 @@ Graphics::Graphics(Display &_display) : display(_display)
 
 Graphics::~Graphics()
 {
+}
+
+int Graphics::getTextWidth(const String &txt, const Font &f, const int font_size, const int spacing)
+{
+    return txt.length() * font_size * (f.getCharacterWidth() + spacing) - font_size * spacing;
 }
 
 void Graphics::clear()
@@ -68,9 +72,9 @@ void Graphics::drawRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig)
 
 void Graphics::drawFilledRect(int x, int y, int w, int h, uint8_t brig)
 { 
-    if(brig > 31)
+    if(brig > MAX_BRIGHTNESS)
     {
-        brig = 31;
+        brig = MAX_BRIGHTNESS;
     }
 
     if(x < 0) {

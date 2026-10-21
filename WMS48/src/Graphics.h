@@ -16,6 +16,8 @@ public:
     Graphics(Display& _display);
     ~Graphics();
 
+    static int getTextWidth(const String& txt, const Font& f, const int font_size, const int spacing);
+
     void clear();
     void drawPixel(int x, int y, uint8_t brig);
     void drawLine(int x0, int y0, int x1, int y1, uint8_t brig = 32);
