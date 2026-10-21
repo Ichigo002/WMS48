@@ -103,13 +103,13 @@ private:
     uint8_t buff_rows[4];
 
     // pointers to 2 buffers
-    volatile uint8_t (*ptr_rebuild_bitplane)[32][6] = bitplanes_A;
-    volatile uint8_t (*ptr_ready_bitplane)[32][6] = bitplanes_B;
+    volatile uint8_t (*ptr_rebuild_bitplane)[HEIGHT][6] = bitplanes_A;
+    volatile uint8_t (*ptr_ready_bitplane)[HEIGHT][6] = bitplanes_B;
 
-    volatile uint8_t bitplanes_A[5][32][6]; // 5 bitplanes, [bitplane][rows][columns raw byte]
-    volatile uint8_t bitplanes_B[5][32][6]; // 5 bitplanes, [bitplane][rows][columns raw byte]
+    volatile uint8_t bitplanes_A[5][HEIGHT][6]; // 5 bitplanes, [bitplane][rows][columns raw byte]
+    volatile uint8_t bitplanes_B[5][HEIGHT][6]; // 5 bitplanes, [bitplane][rows][columns raw byte]
 
-    uint8_t abstract_buffer[48][32]; // [x][y]
+    uint8_t abstract_buffer[WIDTH][HEIGHT]; // [x][y]
     /*
         00000000 00000000 00000000 00000000 00000000 00000000  0
         00000000 00000000 00000000 00000000 00000000 00000000  .

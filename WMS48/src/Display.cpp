@@ -73,8 +73,8 @@ void Display::setPixelRaw(int x, int y, uint8_t value)
     if(x < 0 || y < 0 || x > 47 || y > 31)
         return;
         
-    if (value > 31)
-        value = 31;
+    if (value > MAX_BRIGHTNESS)
+        value = MAX_BRIGHTNESS;
     abstract_buffer[x][y] = value;
 }
 
@@ -85,9 +85,9 @@ void Display::__graphic_unsafe_setPixelRaw(int x, int y, uint8_t value)
 
 void Display::clear()
 {
-    for (size_t x = 0; x < 48; x++)
+    for (size_t x = 0; x < WIDTH; x++)
     {
-        for (size_t y = 0; y < 32; y++)
+        for (size_t y = 0; y < HEIGHT; y++)
         {
             abstract_buffer[x][y] = 0;
         }
@@ -143,14 +143,14 @@ void Display::buildBitPlanes()
 
     for (byte i = 0; i < 5; i++) // each bitplanes loop
     {
-        for (byte j = 0; j < 32; j++) // each row loop
+        for (byte j = 0; j < HEIGHT; j++) // each row loop
         {
             for (byte g = 0; g < 6; g++)
             {
                 ptr_rebuild_bitplane[i][j][g] = 0;
             }
 
-            for (byte l = 0; l < 48; l++) // each column loop
+            for (byte l = 0; l < WIDTH; l++) // each column loop
             {
 
                 if (abstract_buffer[l][j] & (1 << (i)))
@@ -275,7 +275,7 @@ void IRAM_ATTR Display::refreshISR()
 
     instance->current_row++;
 
-    if (instance->current_row >= 32)
+    if (instance->current_row >= HEIGHT)
     {
         instance->current_row = 0;
         instance->current_bitplane++;
