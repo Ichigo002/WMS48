@@ -1,4 +1,5 @@
 #include "SerialCmdsParser.h"
+#include "UnixTimestampFuncs.h"
 
 void SerialCmdsParser::initCommands()
 {
