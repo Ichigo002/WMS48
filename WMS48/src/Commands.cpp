@@ -3,6 +3,23 @@
 void SerialCmdsParser::initCommands()
 {
     command_list.push_back(CommandBody{
+        .executable_name = "setUnixTimeStamp",
+        .category = "Time",
+        .one_word_cmd = false,
+        .hint_details = " seconds",
+        .help_details = " [timestamp in seconds] (e.g. 1792605420)",
+        .execute = [](ExecTools &ext, std::vector<String> &args)
+        {
+            if (args.size() < 1 + 1)
+                return -1;
+
+            int v1 = args[1].toInt();
+
+            setESP32UnixTimeStamp(v1);
+            return 0;
+        }});
+
+    command_list.push_back(CommandBody{
         .executable_name = "clear",
         .category = "Graphics",
         .one_word_cmd = true,
