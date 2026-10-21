@@ -8,12 +8,14 @@
 #include "SerialCmdsParser.h"
 #include "HardwareInterface.h"
 #include "TextAnimator.h"
+#include "ClockAnimator.h"
 
 Display display;
 Graphics graphics(display);
 DefaultFont defaultFont;
 HardwareInterface hardwareInterface;
 TextAnimator cmd_txt;
+ClockAnimator cmd_clk;
 
 SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt);
 
@@ -30,6 +32,7 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
 
+  cmd_clk.text_settings.font = &defaultFont;
 }
 
 uint32_t previousTime = 0;
@@ -43,9 +46,11 @@ void loop()
   previousTime = currentTime;
 
   cmd_txt.update(deltaTime);
+  cmd_clk.update(deltaTime);
 
   cmdParser.updateSerial();
-  
+
+  cmd_clk.draw(graphics);
   cmd_txt.draw(graphics);
   display.update();
 }
