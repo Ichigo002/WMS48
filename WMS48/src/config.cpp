@@ -1,6 +1,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define WIDTH 48
+#define HEIGHT 32
+#define MAX_BRIGHTNESS 0b11111
+#define MIN_BRIGHTNESS 0
+
 namespace config
 {
     namespace display
