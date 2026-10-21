@@ -99,22 +99,23 @@ void Graphics::drawFilledRect(int x, int y, int w, int h, uint8_t brig)
     }
 }
 
-void Graphics::drawCircle(int x, int y, uint8_t r, uint8_t brig)
+void Graphics::drawCircle(int x0, int y0, int r, uint8_t brig)
 {
-    float t1 = r / 16;
-    int cx = r;
-    int cy = 0;
+    int dx = r;
+    int dy = 0;
+    int t1 = r / 16;
 
-    while (cx > cy)
+    while (dx >= dy)
     {
-        drawSymmetricCircle(cx, cy, x, y, r, brig);
-        cy++;
-        t1 += cy;
-        float t2 = t1 - cx;
+        drawSymmetricCircle(x0, y0, dx, dy, brig);
+
+        dy++;
+        t1 += dy;
+        int t2 = t1 - dx;
         if (t2 >= 0)
         {
             t1 = t2;
-            cx--;
+            dx--;
         }
     }
 }
@@ -163,20 +164,20 @@ void Graphics::drawText(int x, int y, String text, const Font &font, int font_si
     }
 }
 
-void Graphics::drawSymmetricCircle(uint8_t x, uint8_t y, uint8_t cx, uint8_t cy, uint8_t r, uint8_t brig)
+void Graphics::drawSymmetricCircle(int x0, int y0, int dx, int dy, uint8_t brig)
 {
-    drawPixel(cx + x, cx + y, brig);
-    drawPixel(cx - x, cy + y, brig);
-    drawPixel(cx + x, cy - y, brig);
-    drawPixel(cx - x, cy - y, brig);
+    drawPixel(x0 + dx, y0 + dy, brig);
+    drawPixel(x0 - dx, y0 + dy, brig);
+    drawPixel(x0 + dx, y0 - dy, brig);
+    drawPixel(x0 - dx, y0 - dy, brig);
 
-    drawPixel(cx + y, cx + x, brig);
-    drawPixel(cx - y, cy + x, brig);
-    drawPixel(cx + y, cy - x, brig);
-    drawPixel(cx - y, cy - x, brig);
+    drawPixel(x0 + dy, y0 + dx, brig);
+    drawPixel(x0 - dy, y0 + dx, brig);
+    drawPixel(x0 + dy, y0 - dx, brig);
+    drawPixel(x0 - dy, y0 - dx, brig);
 }
 
-void Graphics::drawLineLow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t brig)
+void Graphics::drawLineLow(int x0, int y0, int x1, int y1, uint8_t brig)
 {
     int dx = x1 - x0;
     int dy = y1 - y0;
@@ -192,7 +193,7 @@ void Graphics::drawLineLow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8
     int D = 2 * dy - dx;
     int y = y0;
 
-    for (int x = x0; x < x1; x++)
+    for (int x = x0; x <= x1; x++)
     {
         drawPixel(x, y, brig);
         if (D > 0)
@@ -207,7 +208,7 @@ void Graphics::drawLineLow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8
     }
 }
 
-void Graphics::drawLineHigh(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t brig)
+void Graphics::drawLineHigh(int x0, int y0, int x1, int y1, uint8_t brig)
 {
     int dx = x1 - x0;
     int dy = y1 - y0;
@@ -223,7 +224,7 @@ void Graphics::drawLineHigh(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint
     int D = 2 * dx - dy;
     int x = x0;
 
-    for (int y = y0; y < y1; y++)
+    for (int y = y0; y <= y1; y++)
     {
         drawPixel(x, y, brig);
         if (D > 0)

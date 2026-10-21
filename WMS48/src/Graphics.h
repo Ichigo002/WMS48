@@ -23,7 +23,7 @@ public:
     void drawLine(int x0, int y0, int x1, int y1, uint8_t brig = 32);
     void drawRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig = 32);
     void drawFilledRect(int x, int y, int w, int h, uint8_t brig = 32);
-    void drawCircle(int x, int y, uint8_t r, uint8_t brig = 32);
+    void drawCircle(int x0, int y0, int r, uint8_t brig = 32);
 
     void drawCharacter(int x, int y, char ascii, const Font& font, int font_size = 1, uint8_t brig = 32);
 
@@ -31,10 +31,10 @@ public:
 
 private:
 
-    void drawSymmetricCircle(uint8_t x, uint8_t y,uint8_t cx, uint8_t cy, uint8_t r, uint8_t brig);
+    void drawSymmetricCircle(int x0, int y0, int dx, int dy, uint8_t brig);
 
-    void drawLineLow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t brig);
-    void drawLineHigh(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t brig);
+    void drawLineLow(int x0, int y0, int x1, int y1, uint8_t brig);
+    void drawLineHigh(int x0, int y0, int x1, int y1, uint8_t brig);
     Display& display;
 };
 
