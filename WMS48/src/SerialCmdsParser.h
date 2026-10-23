@@ -4,6 +4,7 @@
 #include "Graphics.h"
 #include "HardwareInterface.h"
 #include "TextAnimator.h"
+#include "ClockAnimator.h"
 #include <Arduino.h>
 #include <vector>
 #include <functional>
@@ -11,6 +12,7 @@
 // struct containing pointers to all required objects to execute effieciently command
 struct ExecTools
 {
+    ClockAnimator& clk;
     Graphics& graphics;
     Font& font;
     Display& display;
@@ -42,7 +44,7 @@ help example: rect [x=pos] [y=pos] [w=width] [h=height] [b=brightness(0-32)]
 class SerialCmdsParser
 {
 public:
-    SerialCmdsParser(Graphics& g, Display& d, Font& f, HardwareInterface& h, TextAnimator& t);
+    SerialCmdsParser(Graphics& g, Display& d, Font& f, HardwareInterface& h, TextAnimator& t, ClockAnimator& c);
     ~SerialCmdsParser();
 
     void updateSerial();
@@ -60,6 +62,7 @@ private:
     void createCategoryList();
 
 private:
+    ClockAnimator& clk;
     Graphics& graphics;
     Display& display;
     Font& font;

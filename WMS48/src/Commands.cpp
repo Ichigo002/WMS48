@@ -21,6 +21,61 @@ void SerialCmdsParser::initCommands()
         }});
 
     command_list.push_back(CommandBody{
+        .executable_name = "setClockMode",
+        .category = "Time",
+        .one_word_cmd = false,
+        .hint_details = " appearance_of_clock",
+        .help_details = " shows clock and you set choose between: analog, hm, hms",
+        .execute = [](ExecTools &ext, std::vector<String> &args)
+        {
+            if (args.size() < 1 + 1)
+                return -1;
+
+            String v1 = args[1];
+            v1.toLowerCase();
+
+            if(v1 == "analog")
+                ext.clk.settings.mode = ClockMode::ANALOG_;
+                if(v1 == "hm")
+                ext.clk.settings.mode = ClockMode::DIGITAL_HH_MM;
+                if(v1 == "hms")
+                ext.clk.settings.mode = ClockMode::DIGITAL_HH_MM_SS;
+            
+            ext.clk.start();
+            return 0;
+        }});
+
+    command_list.push_back(CommandBody{
+        .executable_name = "showClock",
+        .category = "Time",
+        .one_word_cmd = true,
+        .hint_details = " ",
+        .help_details = " shows clock :)",
+        .execute = [](ExecTools &ext, std::vector<String> &args)
+        {
+            if (args.size() < 0 + 1)
+                return -1;
+
+            ext.clk.start();
+            return 0;
+        }});
+
+    command_list.push_back(CommandBody{
+        .executable_name = "hideClock",
+        .category = "Time",
+        .one_word_cmd = true,
+        .hint_details = " ",
+        .help_details = " hides clock :)",
+        .execute = [](ExecTools &ext, std::vector<String> &args)
+        {
+            if (args.size() < 0 + 1)
+                return -1;
+
+            ext.clk.stop();
+            return 0;
+        }});
+
+    command_list.push_back(CommandBody{
         .executable_name = "clear",
         .category = "Graphics",
         .one_word_cmd = true,

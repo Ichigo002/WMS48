@@ -17,11 +17,14 @@ enum ClockMode {
 };
 
 struct ClockSettings {
-    ClockMode mode = ClockMode::ANALOG_;
+    ClockMode mode = ClockMode::DIGITAL_HH_MM_SS;
     int start_pos_x = 0;
     int start_pos_y = 0;
-    bool hidden = false;
     bool blinking_colon = true;
+
+    uint8_t hour_hand_brightness = 20;
+    uint8_t minute_hand_brightness = 20;
+    uint8_t second_hand_brightness = 20;
 };
 
 struct ClockHand {
@@ -41,6 +44,9 @@ public:
     void update(float deltaTime);
     void draw(Graphics& g);
 
+    void start();
+    void stop();
+
 private:
     void updateDigital();
     void updateAnalog();
@@ -53,6 +59,7 @@ private:
     void drawAnalog(Graphics& g);
 
 private:
+    bool is_hidden;
     ClockSettings* s;
     _TextParameters* t;
 

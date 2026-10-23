@@ -4,6 +4,7 @@ ClockAnimator::ClockAnimator(/* args */)
 {
     s = &settings;
     t = &text_settings;
+    is_hidden = true;
 }
 
 ClockAnimator::~ClockAnimator()
@@ -12,11 +13,11 @@ ClockAnimator::~ClockAnimator()
 
 void ClockAnimator::update(float deltaTime)
 {
-    if (s->hidden)
+    if (is_hidden)
         return;
 
     raw_time = getESP32Time_t();
-    time_info = gmtime(&raw_time);
+    time_info = localtime(&raw_time);
 
     if (s->mode == ClockMode::ANALOG_)
     {
@@ -28,7 +29,7 @@ void ClockAnimator::update(float deltaTime)
 
 void ClockAnimator::draw(Graphics &g)
 {
-    if (t->font == nullptr || s->hidden)
+    if (t->font == nullptr || is_hidden)
     {
         return;
     }
@@ -39,6 +40,16 @@ void ClockAnimator::draw(Graphics &g)
         return;
     }
     drawDigital(g);
+}
+
+void ClockAnimator::start()
+{
+    is_hidden = false;
+}
+
+void ClockAnimator::stop()
+{
+    is_hidden = true;
 }
 
 void ClockAnimator::updateDigital()
@@ -63,9 +74,10 @@ void ClockAnimator::updateAnalog()
 void ClockAnimator::calculateClkHandPos(ClockHand &hand, int radius, float percent_of_wheel)
 {
     hand.x = ANALOG_CENTER_X - round(radius * cos(2*3.141*(percent_of_wheel + 0.25f)));
+    hand.y = ANALOG_CENTER_Y - round(radius * sin(2*3.141*(percent_of_wheel + 0.25f)));
+
     if(hand.x > ANALOG_CENTER_X)
         hand.x++;
-    hand.y = ANALOG_CENTER_Y - round(radius * sin(2*3.141*(percent_of_wheel + 0.25f)));
     if(hand.y > ANALOG_CENTER_Y)
         hand.y++;
 }
@@ -135,12 +147,13 @@ void ClockAnimator::drawAnalog(Graphics &g)
     //DRAW CENTER PIXEL
     g.drawPixel(ANALOG_CENTER_X, ANALOG_CENTER_Y, t->brightness);
 
-    //DRAW SECOND HAND
-    g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, sec_hand.x, sec_hand.y, t->brightness);
-    //DRAW MINUTE HAND
-    g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, min_hand.x, min_hand.y, t->brightness);
+
     //DRAW HOUR HAND
-    g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, hour_hand.x, hour_hand.y, t->brightness);
+    g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, hour_hand.x, hour_hand.y, s->hour_hand_brightness);
+    //DRAW MINUTE HAND
+    g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, min_hand.x, min_hand.y, s->minute_hand_brightness);
+    //DRAW SECOND HAND
+    g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, sec_hand.x, sec_hand.y, s->second_hand_brightness);
 
 
 }

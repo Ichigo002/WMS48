@@ -1,9 +1,13 @@
 #include "SerialCmdsParser.h"
 
-SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f, HardwareInterface &h, TextAnimator& t)
-    : graphics(g), display(d), font(f), hardwareInterface(h), txt_anim(t)
+SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f, HardwareInterface &h, TextAnimator& t, ClockAnimator& c)
+    : graphics(g), display(d), font(f), hardwareInterface(h), txt_anim(t), clk(c)
 {
+
+    clk.text_settings.font = &font;
+
     execTools = new ExecTools{
+        clk,
         graphics,
         font,
         display,

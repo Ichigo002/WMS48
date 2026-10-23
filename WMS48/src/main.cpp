@@ -17,7 +17,7 @@ HardwareInterface hardwareInterface;
 TextAnimator cmd_txt;
 ClockAnimator cmd_clk;
 
-SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt);
+SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt, cmd_clk);
 
 void setup()
 {
@@ -31,8 +31,6 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
-
-  cmd_clk.text_settings.font = &defaultFont;
 }
 
 uint32_t previousTime = 0;
