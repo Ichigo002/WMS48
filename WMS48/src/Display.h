@@ -2,7 +2,8 @@
 #define DISPLAY_H
 
 #include <Arduino.h>
-#include "config.cpp"
+
+#include "config.h"
 
 /*
 frame rate = 60Hz

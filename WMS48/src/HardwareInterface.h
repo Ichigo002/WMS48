@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include <SparkFun_VEML7700_Arduino_Library.h>
-#include "config.cpp"
+#include "config.h"
 
 class HardwareInterface
 {

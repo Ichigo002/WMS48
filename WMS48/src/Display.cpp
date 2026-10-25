@@ -1,4 +1,5 @@
 #include "Display.h"
+#include "soc/gpio_struct.h"
 
 Display *Display::instance = nullptr;
 
@@ -33,6 +34,7 @@ Display::Display()
 
 Display::~Display()
 {
+
 }
 
 void Display::setup(uint8_t refresh_freq_hz)
@@ -50,13 +52,12 @@ void Display::setup(uint8_t refresh_freq_hz)
     calculateRefresh(refresh_freq_hz);
     setBrightness(1);
     instance = this;
+    
 
-    timer = timerBegin(0, 8, true);
+    timer = timerBegin(10000000); // 1Mhz clock
 
-    timerAttachInterrupt(timer, &Display::refreshISR, true);
-    timerAlarmWrite(timer, ticks_per_row_refresh, true);
-    timerWrite(timer, 0);
-    timerAlarmEnable(timer);
+    timerAttachInterrupt(timer, &Display::refreshISR);
+    timerAlarm(timer, ticks_per_row_refresh, true, 0);
 
     ROW_OE_HIGH();
 
@@ -167,7 +168,7 @@ void Display::buildBitPlanes()
     build_bitplane_ready = true;
 }
 
-void IRAM_ATTR Display::swapBitplaneBuffer()
+void Display::swapBitplaneBuffer()
 {
     if (ptr_ready_bitplane == bitplanes_A)
     {
@@ -181,7 +182,7 @@ void IRAM_ATTR Display::swapBitplaneBuffer()
     }
 }
 
-void IRAM_ATTR Display::iram_refresh_finished()
+void Display::iram_refresh_finished()
 {
     if (build_bitplane_ready)
     {
@@ -190,7 +191,7 @@ void IRAM_ATTR Display::iram_refresh_finished()
     }
 }
 
-void IRAM_ATTR Display::refresh_row(int row)
+void Display::refresh_row(int row)
 {
     ROW_LATCH_LOW();
     ROW_CLK_LOW();
@@ -231,7 +232,7 @@ void IRAM_ATTR Display::refresh_row(int row)
     COL_OE_LOW();
 }
 
-void IRAM_ATTR Display::refresh_cols(int current_row, int current_bitplane)
+void Display::refresh_cols(int current_row, int current_bitplane)
 {
     COL_OE_HIGH();
     ROW_OE_HIGH();
@@ -273,12 +274,12 @@ void IRAM_ATTR Display::refreshISR()
 
     instance->refresh_row(instance->current_row);
 
-    instance->current_row++;
+    instance->current_row = instance->current_row + 1;
 
     if (instance->current_row >= HEIGHT)
     {
         instance->current_row = 0;
-        instance->current_bitplane++;
+        instance->current_bitplane = instance->current_bitplane + 1;
         if (instance->current_bitplane > 4)
         {
             instance->current_bitplane = 0;
@@ -288,5 +289,5 @@ void IRAM_ATTR Display::refreshISR()
 
     int next_alarm_ticks = instance->modified_ticks_per_row * (1 << instance->current_bitplane);
 
-    timerAlarmWrite(instance->timer, next_alarm_ticks, true);
+    timerAlarm(instance->timer, next_alarm_ticks, true, 0);
 }
