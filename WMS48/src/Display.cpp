@@ -34,7 +34,7 @@ Display::Display()
 
 Display::~Display()
 {
-
+    
 }
 
 void Display::setup(uint8_t refresh_freq_hz)
