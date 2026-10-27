@@ -7,6 +7,7 @@ SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f, HardwareInt
     clk.text_settings.font = &font;
 
     execTools = new ExecTools{
+        nullptr,
         clk,
         graphics,
         font,
@@ -24,11 +25,11 @@ SerialCmdsParser::~SerialCmdsParser()
 {
 }
 
-void SerialCmdsParser::updateSerial()
+void SerialCmdsParser::processSerialIfAvailable(Stream& s)
 {
-    while (Serial.available() > 0)
+    while (s.available() > 0)
     {
-        char c = Serial.read();
+        char c = s.read();
         cmd_raw += c;
     }
     if(cmd_raw != "")
@@ -37,7 +38,7 @@ void SerialCmdsParser::updateSerial()
 
         parseCommand(cmd_raw, args); 
         cmd_raw = "";
-        processArgumentList(args);
+        executeFromArgsList(args, s);
     }
 }
 
@@ -61,7 +62,7 @@ void SerialCmdsParser::parseCommand(String cmd, std::vector<String> &ready_args)
     ready_args[ready_args.size() - 1].trim();
 }
 
-int SerialCmdsParser::processArgumentList(std::vector<String> &args)
+int SerialCmdsParser::executeFromArgsList(std::vector<String> &args, Stream& s)
 {
     if (args.empty())
     {
@@ -87,10 +88,10 @@ int SerialCmdsParser::processArgumentList(std::vector<String> &args)
     {
         if (args[0] == "help")
         {
-            printHelp();
+            printHelp(s);
             return 0;
         }
-        Serial.println("Command not found. Use 'help' for more information");
+        s.println("Command not found. Use 'help' for more information");
         return -1;
     }
 
@@ -98,30 +99,31 @@ int SerialCmdsParser::processArgumentList(std::vector<String> &args)
 
     if (args.size() == 1 && !cb.one_word_cmd) // hint
     {
-        Serial.print(cb.executable_name);
-        Serial.println(cb.hint_details);
+        s.print(cb.executable_name);
+        s.println(cb.hint_details);
         return 0;
     }
     else if (args.size() > 1 && args[1] == "help") // help
     {
-        Serial.print(cb.executable_name);
-        Serial.println(cb.help_details);
+        s.print(cb.executable_name);
+        s.println(cb.help_details);
         return 0;
     }
     else // world.execute(me);
     {
+        execTools->out = &s;
         int r = cb.execute(*execTools, args);
         if (r == 0)
         {
-            Serial.print(cb.executable_name);
-            Serial.println(" successfully executed.");
+            s.print(cb.executable_name);
+            s.println(" successfully executed.");
             return 0;
         }
         else
         {
-            Serial.print(cb.executable_name);
-            Serial.print(", error occured: ");
-            Serial.println(r);
+            s.print(cb.executable_name);
+            s.print(", error occured: ");
+            s.println(r);
             return -1;
         }
     }
@@ -147,26 +149,26 @@ void SerialCmdsParser::createCategoryList()
     }
 }
 
-void SerialCmdsParser::printHelp()
+void SerialCmdsParser::printHelp(Stream& s)
 {
     String h = "\n";
 
-    printHelpDecoration(h);
+    makeHelpDecoration(h);
 
     h += "\n\n # For command's syntax type: 'command help' # \n";
 
-    printHelpTree(h);
+    makeHelpTree(h);
 
     h += "\n";
 
-    printHelpDecoration(h);
+    makeHelpDecoration(h);
 
     h += "\n";
 
-    Serial.print(h);
+    s.print(h);
 }
 
-void SerialCmdsParser::printHelpDecoration(String &h)
+void SerialCmdsParser::makeHelpDecoration(String &h)
 {
     for (size_t i = 0; i < 10; i++)
     {
@@ -179,7 +181,7 @@ void SerialCmdsParser::printHelpDecoration(String &h)
     }
 }
 
-void SerialCmdsParser::printHelpTree(String &h)
+void SerialCmdsParser::makeHelpTree(String &h)
 {
     String c;
     for (size_t i = 0; i < category_list.size(); i++)

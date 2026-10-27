@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <BluetoothSerial.h>
+
 #include <Wire.h>
 #include <SPI.h>
 #include <SparkFun_VEML7700_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_VEML7700
@@ -11,6 +11,10 @@
 #include "TextAnimator.h"
 #include "ClockAnimator.h"
 
+#ifdef USE_BT_CLASSIC
+#include <BluetoothSerial.h>
+#endif
+
 Display display;
 Graphics graphics(display);
 DefaultFont defaultFont;
@@ -19,18 +23,17 @@ TextAnimator cmd_txt;
 ClockAnimator cmd_clk;
 
 SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt, cmd_clk);
-BluetoothSerial bl;
 
-// void btAdvertisedDeviceFound(BTAdvertisedDevice *pDevice) used for server BT
-// {
-//   Serial.printf("Found a device asynchronously: %s\n", pDevice->toString().c_str());
-// }
+#ifdef USE_BT_CLASSIC
+BluetoothSerial bl;
+#endif
 
 void setup()
 {
+#ifdef USE_BT_CLASSIC
   bl.begin("ESP32-WMS48");
-  //bl.discoverAsync(btAdvertisedDeviceFound); used for server BT
-  // Initialize your setup code here
+#endif
+
   display.setup(config::refresh_rate_hz);
   hardwareInterface.setup();
 
@@ -48,7 +51,6 @@ float deltaTime;
 void loop()
 {
 
-  Stream& s = bl;
   uint32_t currentTime = millis();
   deltaTime = (currentTime - previousTime) / 1000.0f; // seconds
   previousTime = currentTime;
@@ -56,16 +58,12 @@ void loop()
   cmd_txt.update(deltaTime);
   cmd_clk.update(deltaTime);
 
-  //cmdParser.updateSerial();
-  // if(Serial.available()) it is bluetooth classic!
-  // {
-  //   bl.write(Serial.read());
-  // }
+  cmdParser.processSerialIfAvailable(Serial);
 
-  // if(bl.available())
-  // {
-  //   Serial.write(bl.read());
-  // }
+#ifdef USE_BT_CLASSIC
+  cmdParser.processSerialIfAvailable(bl);
+#endif
+  
 
   cmd_clk.draw(graphics);
   cmd_txt.draw(graphics);

@@ -360,8 +360,8 @@ void SerialCmdsParser::initCommands()
             if (args.size() < 0 + 1)
                 return -1;
 
-            Serial.print("LUX VALUE = ");
-            Serial.println(ext.hardwareInterface.getLuxValue());
+            ext.out->print("LUX VALUE = ");
+            ext.out->println(ext.hardwareInterface.getLuxValue());
 
             return 0;
         }});

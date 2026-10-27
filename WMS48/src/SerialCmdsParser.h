@@ -12,6 +12,7 @@
 // struct containing pointers to all required objects to execute effieciently command
 struct ExecTools
 {
+    Stream* out;
     ClockAnimator& clk;
     Graphics& graphics;
     Font& font;
@@ -47,16 +48,20 @@ public:
     SerialCmdsParser(Graphics& g, Display& d, Font& f, HardwareInterface& h, TextAnimator& t, ClockAnimator& c);
     ~SerialCmdsParser();
 
-    void updateSerial();
+    // check if Stream has any new data to read and if it has, then it process data to call approppierate command
+    void processSerialIfAvailable(Stream& s);
     
-    
-private:
+    // it parses raw cmd String into ready vector with arguments to use.
     void parseCommand(String cmd, std::vector<String>& ready_args);
-    int processArgumentList(std::vector<String>& args);
+    // it executes command which is found inside args, output of command is written to Stream
+    int executeFromArgsList(std::vector<String>& args, Stream& s);
+    // prints help tree into Stream
+    void printHelp(Stream& s);
 
-    void printHelp();
-    void printHelpDecoration(String& h);
-    void printHelpTree(String& h);
+private:
+
+    void makeHelpDecoration(String& h);
+    void makeHelpTree(String& h);
 
     void initCommands();
     void createCategoryList();
