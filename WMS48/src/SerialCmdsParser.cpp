@@ -46,6 +46,8 @@ void SerialCmdsParser::parseCommand(String cmd, std::vector<String> &ready_args)
 {
     cmd.trim();
 
+    removePolishDiacritics(cmd);
+
     String cutout = "";
 
     for (size_t i = 0; i < cmd.length(); i++)
@@ -200,4 +202,42 @@ void SerialCmdsParser::makeHelpTree(String &h)
         }
         
     }
+}
+
+void SerialCmdsParser::removePolishDiacritics(String &str) {
+        // Ą and ą
+    str.replace("\xC4\x84", "A");
+    str.replace("\xC4\x85", "a");
+    
+    // Ę and ę
+    str.replace("\xC4\x98", "E");
+    str.replace("\xC4\x99", "e");
+    
+    // Ć and ć
+    str.replace("\xC4\x86", "C");
+    str.replace("\xC4\x87", "c");
+    
+    // Ł and ł 
+    str.replace("\xC5\x81", "L");
+    str.replace("\xC5\x82", "l");
+
+    // Ń and ń
+    str.replace("\xC5\x83", "N");
+    str.replace("\xC5\x84", "n");
+    
+    // Ó and ó
+    str.replace("\xC3\x93", "O");
+    str.replace("\xC3\xB3", "o");
+    
+    // Ś and ś
+    str.replace("\xC5\x9A", "S");
+    str.replace("\xC5\x9B", "s");
+    
+    // Ź and ź
+    str.replace("\xC5\xB9", "Z");
+    str.replace("\xC5\xBA", "z");
+    
+    // Ż and ż
+    str.replace("\xC5\xBB", "Z");
+    str.replace("\xC5\xBC", "z");
 }

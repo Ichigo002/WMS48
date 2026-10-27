@@ -1,5 +1,4 @@
 #include <Arduino.h>
-
 #include <Wire.h>
 #include <SPI.h>
 #include <SparkFun_VEML7700_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_VEML7700
@@ -10,6 +9,8 @@
 #include "HardwareInterface.h"
 #include "TextAnimator.h"
 #include "ClockAnimator.h"
+
+#define USE_BT_CLASSIC
 
 #ifdef USE_BT_CLASSIC
 #include <BluetoothSerial.h>

@@ -58,6 +58,8 @@ public:
     // prints help tree into Stream
     void printHelp(Stream& s);
 
+    void removePolishDiacritics(String &str);
+
 private:
 
     void makeHelpDecoration(String& h);
