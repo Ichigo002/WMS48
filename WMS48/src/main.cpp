@@ -10,7 +10,8 @@
 #include "TextAnimator.h"
 #include "ClockAnimator.h"
 
-#define USE_BT_CLASSIC
+// Uncomment line below in order to use Classic Serial sBluetooth
+//#define USE_BT_CLASSIC
 
 #ifdef USE_BT_CLASSIC
 #include <BluetoothSerial.h>
