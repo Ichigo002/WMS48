@@ -10,6 +10,14 @@
 #include "TextAnimator.h"
 #include "ClockAnimator.h"
 
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
+
+#define SERVICE_UUID "4b3e2482-b393-47b8-a01b-57eac3823be0"
+#define CHARACTERISTIC_UUID "0bd5b399-f7b5-4d20-9f93-65b258f62150"
+
+
 // Uncomment line below in order to use Classic Serial sBluetooth
 //#define USE_BT_CLASSIC
 
@@ -45,6 +53,32 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
+
+  BLEDevice::init("WMS-48 BLE Tech.");
+  BLEServer* pServer = BLEDevice::createServer();
+
+  /* BUILDING SERVICE */
+
+  BLEService* pService = pServer->createService(SERVICE_UUID);
+
+  BLECharacteristic *pcharacteristic = 
+    pService->createCharacteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+
+  pcharacteristic->setValue("Hello, I'm Wiktor and like hot cookies!");
+
+  pService->start(); // it ends building service,
+
+
+  /* Advertising */
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setMinPreferred(0x06);
+  pAdvertising->setMaxPreferred(0x12);
+
+  BLEDevice::startAdvertising();
+
 }
 
 uint32_t previousTime = 0;
