@@ -1,0 +1,13 @@
+GATT - General Attributes
+
+GATT Profile
+    - ...
+    - Service:
+        - ...
+        - Characteristic (data):
+            - value {data}
+            - Properties
+                - Handle = 16 bit used for access 
+                - UUID = 128 bit Characteristic ID
+                - Permissions = Read, write or Notify
+            - Descriptor (Additional infromation or configuration options for Characteristic)
