@@ -10,7 +10,10 @@
 #include "TextAnimator.h"
 #include "ClockAnimator.h"
 
-#define USE_BT_CLASSIC
+#include "BLE/BleServerBridge.h"
+
+// Uncomment line below in order to use Classic Serial sBluetooth
+// #define USE_BT_CLASSIC
 
 #ifdef USE_BT_CLASSIC
 #include <BluetoothSerial.h>
@@ -24,6 +27,8 @@ TextAnimator cmd_txt;
 ClockAnimator cmd_clk;
 
 SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt, cmd_clk);
+
+BleServerBridge ble_server;
 
 #ifdef USE_BT_CLASSIC
 BluetoothSerial bl;
@@ -44,6 +49,16 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MAJOR,
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
+
+  ble_server.onWriteUnixTime = [](const uint8_t *d, size_t n)
+  {
+    Serial.println("HELLO THERE");
+    cmd_txt.text_settings.text = "It works";
+    cmd_txt.text_settings.font = &defaultFont;
+    cmd_txt.start();
+  };
+
+  ble_server.begin("WMS-48 NEW BORN");
 }
 
 uint32_t previousTime = 0;
@@ -64,7 +79,6 @@ void loop()
 #ifdef USE_BT_CLASSIC
   cmdParser.processSerialIfAvailable(bl);
 #endif
-  
 
   cmd_clk.draw(graphics);
   cmd_txt.draw(graphics);
