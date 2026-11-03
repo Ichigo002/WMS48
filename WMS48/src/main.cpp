@@ -10,16 +10,10 @@
 #include "TextAnimator.h"
 #include "ClockAnimator.h"
 
-#include <BLEDevice.h>
-#include <BLEUtils.h>
-#include <BLEServer.h>
-
-#define SERVICE_UUID "4b3e2482-b393-47b8-a01b-57eac3823be0"
-#define CHARACTERISTIC_UUID "0bd5b399-f7b5-4d20-9f93-65b258f62150"
-
+#include "BleServerBridge.h"
 
 // Uncomment line below in order to use Classic Serial sBluetooth
-//#define USE_BT_CLASSIC
+// #define USE_BT_CLASSIC
 
 #ifdef USE_BT_CLASSIC
 #include <BluetoothSerial.h>
@@ -33,6 +27,8 @@ TextAnimator cmd_txt;
 ClockAnimator cmd_clk;
 
 SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt, cmd_clk);
+
+BleServerBridge ble_server;
 
 #ifdef USE_BT_CLASSIC
 BluetoothSerial bl;
@@ -54,31 +50,15 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
 
-  BLEDevice::init("WMS-48 BLE Tech.");
-  BLEServer* pServer = BLEDevice::createServer();
+  ble_server.onWriteCommandScene = [](const uint8_t *d, size_t n)
+  {
+    Serial.println("HELLO THERE");
+    cmd_txt.text_settings.text = "It works";
+    cmd_txt.text_settings.font = &defaultFont;
+    cmd_txt.start();
+  };
 
-  /* BUILDING SERVICE */
-
-  BLEService* pService = pServer->createService(SERVICE_UUID);
-
-  BLECharacteristic *pcharacteristic = 
-    pService->createCharacteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
-
-  pcharacteristic->setValue("Hello, I'm Wiktor and like hot cookies!");
-
-  pService->start(); // it ends building service,
-
-
-  /* Advertising */
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
-
-  pAdvertising->addServiceUUID(SERVICE_UUID);
-  pAdvertising->setScanResponse(true);
-  pAdvertising->setMinPreferred(0x06);
-  pAdvertising->setMaxPreferred(0x12);
-
-  BLEDevice::startAdvertising();
-
+  ble_server.begin("WMS-48 NEW BORN");
 }
 
 uint32_t previousTime = 0;
@@ -99,7 +79,6 @@ void loop()
 #ifdef USE_BT_CLASSIC
   cmdParser.processSerialIfAvailable(bl);
 #endif
-  
 
   cmd_clk.draw(graphics);
   cmd_txt.draw(graphics);
