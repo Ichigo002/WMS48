@@ -16,7 +16,12 @@ void BleServerBridge::begin(char *device_name)
     BLEDevice::init(device_name);
     BLEServer *pServer = BLEDevice::createServer();
     
-    pServer->setCallbacks(new ServerCb);
+    ServerCb* servcb = new ServerCb();
+
+    servcb->onConnectCb = onConnectEvent;
+    servcb->OnDisconnectCb = OnDisconnectEvent;
+
+    pServer->setCallbacks(servcb);
 
     /* BUILDING SERVICE */
 
@@ -24,9 +29,10 @@ void BleServerBridge::begin(char *device_name)
 
 
     CreateCharacteristics(pService);
+
     setCharacteristicsCallbacks();
 
-        pService->start(); // it ends building service,
+    pService->start(); // it ends building service,
 
     /* Advertising */
     BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();

@@ -33,6 +33,9 @@ public:
     std::function<void(const uint8_t *, size_t)> onWriteUnixTime;
     std::function<void(const uint8_t *, size_t)> onReadUnixTime;
 
+    std::function<void()> onConnectEvent;
+    std::function<void()> OnDisconnectEvent;
+
 private:
     Characteristics chars;
 
@@ -104,13 +107,19 @@ private:
 
 class ServerCb : public BLEServerCallbacks
 {
+public:
+    std::function<void()> onConnectCb;
+    std::function<void()> OnDisconnectCb;
+
     void onConnect(BLEServer *server)
     {
-        // phone connected
+        if(onConnectCb)
+            onConnectCb();
     }
     void onDisconnect(BLEServer *server)
     {
-        // phone left session, start advertising
+        if(OnDisconnectCb)
+            OnDisconnectCb();
         server->startAdvertising();
     }
 };

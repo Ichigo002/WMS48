@@ -50,7 +50,7 @@ void setup()
   //                 ESP_ARDUINO_VERSION_MINOR,
   //                 ESP_ARDUINO_VERSION_PATCH);
 
-  ble_server.onWriteCommandScene = [](const uint8_t *d, size_t n)
+  ble_server.onWriteUnixTime = [](const uint8_t *d, size_t n)
   {
     Serial.println("HELLO THERE");
     cmd_txt.text_settings.text = "It works";
