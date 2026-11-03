@@ -24,19 +24,80 @@ public:
 
     void begin(char *device_name);
 
-    std::function<void(const uint8_t*, size_t)> onWriteCommandScene;
+    std::function<void(const uint8_t *, size_t)> onWriteSceneIndex;
+    std::function<void(const uint8_t *, size_t)> onReadSceneIndex;
+
+    std::function<void(const uint8_t *, size_t)> onWriteCommandScene;
+    std::function<void(const uint8_t *, size_t)> onWriteCommand;
+
+    std::function<void(const uint8_t *, size_t)> onWriteUnixTime;
+    std::function<void(const uint8_t *, size_t)> onReadUnixTime;
 
 private:
     Characteristics chars;
 
+    void CreateCharacteristics(BLEService *pService);
+    void setCharacteristicsCallbacks();
+
+    class CharsSceneIndexCb : public BLECharacteristicCallbacks
+    {
+    public:
+        std::function<void(const uint8_t *, size_t)> onWriteCb;
+        std::function<void(const uint8_t *, size_t)> onReadCb;
+
+        void onWrite(BLECharacteristic *pCharacteristic) override
+        {
+            if (onWriteCb)
+                onWriteCb(pCharacteristic->getData(), pCharacteristic->getLength());
+        }
+
+        void onRead(BLECharacteristic *pCharacteristic) override
+        {
+            if (onReadCb)
+                onReadCb(pCharacteristic->getData(), pCharacteristic->getLength());
+        }
+    };
+
     class CharsCommandSceneCb : public BLECharacteristicCallbacks
     {
     public:
-        std::function<void(const uint8_t*, size_t)> handler;
+        std::function<void(const uint8_t *, size_t)> onWriteCb;
 
-        void onWrite(BLECharacteristic *pCharacteristic) override {
-            if(handler)
-                handler(pCharacteristic->getData(), pCharacteristic->getLength());
+        void onWrite(BLECharacteristic *pCharacteristic) override
+        {
+            if (onWriteCb)
+                onWriteCb(pCharacteristic->getData(), pCharacteristic->getLength());
+        }
+    };
+
+    class CharsCommandCb : public BLECharacteristicCallbacks
+    {
+    public:
+        std::function<void(const uint8_t *, size_t)> onWriteCb;
+
+        void onWrite(BLECharacteristic *pCharacteristic) override
+        {
+            if (onWriteCb)
+                onWriteCb(pCharacteristic->getData(), pCharacteristic->getLength());
+        }
+    };
+
+    class CharsUnixTimeCb : public BLECharacteristicCallbacks
+    {
+    public:
+        std::function<void(const uint8_t *, size_t)> onWriteCb;
+        std::function<void(const uint8_t *, size_t)> onReadCb;
+
+        void onWrite(BLECharacteristic *pCharacteristic) override
+        {
+            if (onWriteCb)
+                onWriteCb(pCharacteristic->getData(), pCharacteristic->getLength());
+        }
+
+        void onRead(BLECharacteristic *pCharacteristic) override
+        {
+            if (onReadCb)
+                onReadCb(pCharacteristic->getData(), pCharacteristic->getLength());
         }
     };
 };

@@ -22,17 +22,30 @@ void BleServerBridge::begin(char *device_name)
 
     BLEService *pService = pServer->createService(BLE_UUIDs::WMS_SERVICE);
 
+
+    CreateCharacteristics(pService);
+    setCharacteristicsCallbacks();
+
+        pService->start(); // it ends building service,
+
+    /* Advertising */
+    BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+
+    pAdvertising->addServiceUUID(BLE_UUIDs::WMS_SERVICE);
+    pAdvertising->setScanResponse(true);
+    pAdvertising->setMinPreferred(0x06);
+    pAdvertising->setMaxPreferred(0x12);
+
+    BLEDevice::startAdvertising();
+}
+
+void BleServerBridge::CreateCharacteristics(BLEService* pService)
+{
     chars.command =
         pService->createCharacteristic(BLE_UUIDs::COMMAND_CHAR, BLECharacteristic::PROPERTY_WRITE);
 
     chars.command_scene =
         pService->createCharacteristic(BLE_UUIDs::COMMAND_SCENE_CHAR, BLECharacteristic::PROPERTY_WRITE);
-
-    CharsCommandSceneCb* c = new CharsCommandSceneCb();
-
-    c->handler = onWriteCommandScene;
-
-    chars.command_scene->setCallbacks(c);
 
     chars.event =
         pService->createCharacteristic(BLE_UUIDs::EVENT_CHAR, BLECharacteristic::PROPERTY_NOTIFY | BLECharacteristic::PROPERTY_READ);
@@ -46,16 +59,25 @@ void BleServerBridge::begin(char *device_name)
     chars.unix_time =
         pService->createCharacteristic(BLE_UUIDs::UNIX_TIME_CHAR, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_READ);
 
+}
 
-        pService->start(); // it ends building service,
+void BleServerBridge::setCharacteristicsCallbacks()
+{
+    CharsCommandCb* c = new CharsCommandCb();
+    c->onWriteCb = onWriteCommand;
+    chars.command->setCallbacks(c);
 
-    /* Advertising */
-    BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+    CharsCommandSceneCb* cs = new CharsCommandSceneCb();
+    cs->onWriteCb = onWriteCommandScene;
+    chars.command_scene->setCallbacks(cs);
 
-    pAdvertising->addServiceUUID(BLE_UUIDs::WMS_SERVICE);
-    pAdvertising->setScanResponse(true);
-    pAdvertising->setMinPreferred(0x06);
-    pAdvertising->setMaxPreferred(0x12);
+    CharsSceneIndexCb* i = new CharsSceneIndexCb();
+    i->onWriteCb = onWriteSceneIndex;
+    i->onReadCb = onReadSceneIndex;
+    chars.scene_index->setCallbacks(i);
 
-    BLEDevice::startAdvertising();
+    CharsUnixTimeCb* t = new CharsUnixTimeCb();
+    t->onReadCb = onReadUnixTime;
+    t->onWriteCb = onWriteUnixTime;
+    chars.unix_time->setCallbacks(t);
 }
