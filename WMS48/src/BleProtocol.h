@@ -1,6 +1,13 @@
 #ifndef BLE_PROTOCOL_H
 #define BLE_RPOTOCOL_H
 
+/*----------------------------------------------------------------
+|                                                                |
+|    The whole BLE protocol required to communicate.             |
+|    It should be identical on both side: server and client      |
+|                                                                |
+------------------------------------------------------------------*/
+
 namespace BLE_UUIDs
 {
     constexpr const char* WMS_SERVICE = "1c7bfa9a-e1cb-4537-afcb-7720637cd505";

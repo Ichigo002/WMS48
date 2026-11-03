@@ -16,6 +16,13 @@ struct Characteristics
     BLECharacteristic *unix_time;
 };
 
+/*
+BleServer Bridge is a brdige between smartphone (client) and this esp32 (server). It creates BLE connection
+and forwards all callbacks. 
+
+REMEMBER! All Events should be assigned before calling begin(...) method, any changes to event methods won't be applied.
+
+*/
 class BleServerBridge
 {
 public:
@@ -36,11 +43,13 @@ public:
     std::function<void()> onConnectEvent;
     std::function<void()> OnDisconnectEvent;
 
-private:
+    // group of all characteristics in BLE connection.
     Characteristics chars;
+private:
 
     void CreateCharacteristics(BLEService *pService);
     void setCharacteristicsCallbacks();
+
 
     class CharsSceneIndexCb : public BLECharacteristicCallbacks
     {
