@@ -10,7 +10,7 @@
 #include "TextAnimator.h"
 #include "ClockAnimator.h"
 
-#include "BleServerBridge.h"
+#include "BLE/BleServerBridge.h"
 
 // Uncomment line below in order to use Classic Serial sBluetooth
 // #define USE_BT_CLASSIC
