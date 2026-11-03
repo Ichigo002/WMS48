@@ -17,7 +17,7 @@ struct Characteristics
 };
 
 /*
-BleServer Bridge is a brdige between smartphone (client) and this esp32 (server). It creates BLE connection
+BleServer Bridge is a bridge between smartphone (client) and this esp32 (server). It creates BLE connection
 and forwards all callbacks. 
 
 REMEMBER! All Events should be assigned before calling begin(...) method, any changes to event methods won't be applied.
