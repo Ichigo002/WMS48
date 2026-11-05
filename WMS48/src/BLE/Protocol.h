@@ -1,5 +1,5 @@
-#ifndef BLE_PROTOCOL_H
-#define BLE_RPOTOCOL_H
+#ifndef PROTOCOL_H
+#define RPOTOCOL_H
 
 /*----------------------------------------------------------------
 |                                                                |
