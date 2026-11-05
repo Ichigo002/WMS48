@@ -1,9 +1,9 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
-#include "Graphics.h"
+#include "graphics/Graphics.h"
 #include "Scene.h"
-#include "BLE/BleProtocol.h"
+#include "BLE/Protocol.h"
 #include <vector>
 
 class SceneManager

@@ -1,7 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "Graphics.h"
+#include "graphics/Graphics.h"
 
 class Scene
 {

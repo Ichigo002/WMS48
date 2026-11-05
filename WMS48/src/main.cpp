@@ -13,7 +13,7 @@
 #include "BLE/BleServerBridge.h"
 
 // Uncomment line below in order to use Classic Serial sBluetooth
-// #define USE_BT_CLASSIC
+ #define USE_BT_CLASSIC
 
 #ifdef USE_BT_CLASSIC
 #include <BluetoothSerial.h>
