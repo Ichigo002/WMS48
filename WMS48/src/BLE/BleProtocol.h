@@ -22,4 +22,12 @@ namespace BLE_UUIDs
     constexpr const char* UNIX_TIME_CHAR = "9a3fa590-b5da-4368-bbb5-41c680a2051e";
 };
 
+enum SceneIDs
+{
+    NULL_S = -1,
+    SANDBOX_SCENE = 0,
+    TEXT_SCENE = 1,
+    WELCOME_SCENE = 2,
+};
+
 #endif
