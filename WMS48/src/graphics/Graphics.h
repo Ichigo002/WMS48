@@ -2,7 +2,7 @@
 #define GRAPHICS_H
 
 #include "Display.h"
-#include "Font.h"
+#include "graphics/fonts/Font.h"
 
 #include <string>
 #include <math.h>
@@ -13,8 +13,10 @@ using std::string;
 class Graphics
 {
 public:
-    Graphics(Display& _display);
+    Graphics(Display& _display, const Font& ebmedded_font);
     ~Graphics();
+
+    void setFont(const Font& f);
 
     static int getTextWidth(const String& txt, const Font& f, const int font_size, const int spacing);
 
@@ -26,8 +28,12 @@ public:
     void drawCircle(int x0, int y0, int r, uint8_t brig = 32);
 
     void drawCharacter(int x, int y, char ascii, const Font& font, int font_size = 1, uint8_t brig = 32);
+    void drawCharacter(int x, int y, char ascii, int font_size = 1, uint8_t brig = 32);
+
 
     void drawText(int x, int y, String text, const Font& font, int font_size = 1, uint8_t brig = 32, int spacing = 1);
+    void drawText(int x, int y, String text, int font_size = 1, uint8_t brig = 32, int spacing = 1);
+
 
 private:
 
@@ -36,6 +42,8 @@ private:
     void drawLineLow(int x0, int y0, int x1, int y1, uint8_t brig);
     void drawLineHigh(int x0, int y0, int x1, int y1, uint8_t brig);
     Display& display;
+
+    const Font* embeddedFont;
 };
 
 #endif

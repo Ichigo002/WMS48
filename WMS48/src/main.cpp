@@ -20,8 +20,8 @@
 #endif
 
 Display display;
-Graphics graphics(display);
 DefaultFont defaultFont;
+Graphics graphics(display, defaultFont);
 HardwareInterface hardwareInterface;
 TextAnimator cmd_txt;
 ClockAnimator cmd_clk;

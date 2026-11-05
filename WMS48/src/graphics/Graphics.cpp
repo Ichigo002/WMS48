@@ -3,12 +3,18 @@
 
 #define ABS(a) (((a) < 0) ? -(a) : (a))
 
-Graphics::Graphics(Display &_display) : display(_display)
+Graphics::Graphics(Display &_display, const Font& embedded_font) 
+    : display(_display), embeddedFont(&embedded_font)
 {
 }
 
 Graphics::~Graphics()
 {
+}
+
+void Graphics::setFont(const Font& f)
+{
+    embeddedFont = &f;
 }
 
 int Graphics::getTextWidth(const String &txt, const Font &f, const int font_size, const int spacing)
@@ -150,6 +156,11 @@ void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int fon
     }
 }
 
+void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t brig)
+{
+    drawCharacter(x, y, ascii, *embeddedFont, font_size, brig);
+}
+
 void Graphics::drawText(int x, int y, String text, const Font &font, int font_size, uint8_t brig, int spacing)
 {
     for (size_t i = 0; i < text.length(); i++)
@@ -162,6 +173,11 @@ void Graphics::drawText(int x, int y, String text, const Font &font, int font_si
 
         drawCharacter(tx, y, text[i], font, font_size, brig);
     }
+}
+
+void Graphics::drawText(int x, int y, String text, int font_size, uint8_t brig, int spacing)
+{
+    drawText(x, y, text, *embeddedFont, font_size, brig, spacing);
 }
 
 void Graphics::drawSymmetricCircle(int x0, int y0, int dx, int dy, uint8_t brig)
