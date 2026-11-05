@@ -3,8 +3,8 @@
 #include <SPI.h>
 #include <SparkFun_VEML7700_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_VEML7700
 #include "Display.h"
-#include "Graphics.h"
-#include "DefaultFont.h"
+#include "graphics/Graphics.h"
+#include "graphics/fonts/DefaultFont.h"
 #include "SerialCmdsParser.h"
 #include "HardwareInterface.h"
 #include "TextAnimator.h"

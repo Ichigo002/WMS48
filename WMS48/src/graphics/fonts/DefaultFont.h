@@ -1,7 +1,7 @@
 #ifndef DEFAULT_FONT_H
 #define DEFAULT_FONT_H
 
-#include "Font.h"
+#include "graphics/fonts/Font.h"
 #include <Arduino.h>
 
 class DefaultFont : public Font

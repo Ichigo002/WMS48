@@ -1,7 +1,7 @@
 #ifndef CLOCK_ANIMATOR_H
 #define CLOCK_ANIMATOR_H
 
-#include "Graphics.h"
+#include "graphics/Graphics.h"
 #include "UnixTimestampFuncs.h"
 #include "TextAnimator.h"
 #include <math.h>

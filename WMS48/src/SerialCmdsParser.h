@@ -1,7 +1,7 @@
 #ifndef SCH_H
 #define SCH_H
 
-#include "Graphics.h"
+#include "graphics/Graphics.h"
 #include "HardwareInterface.h"
 #include "TextAnimator.h"
 #include "ClockAnimator.h"

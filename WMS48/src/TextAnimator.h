@@ -1,7 +1,7 @@
 #ifndef TEXT_ANIMATOR_H
 #define TEXT_ANIMATOR_H
 
-#include "Graphics.h"
+#include "graphics/Graphics.h"
 
 #define WIDTH 48
 #define HEIGHT 32
