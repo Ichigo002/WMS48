@@ -131,52 +131,26 @@ void Graphics::drawCircle(int x0, int y0, int r, uint8_t brig)
 
 void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int font_size, uint8_t brig)
 {
-    const Glyph &g = font.getGlyphByChar(ascii);
+    const Glyph &g = font.getGlyph(ascii);
 
     int bit_size = g.h * g.w;
 
-    x += g.xOffset;
-    y += g.yOffset;
-
-    if (g.byteAddr + ceil(bit_size / 8.0f) >= font.bitmap_length)
-    {
-        Serial.println("ERROR: Graphics::drawCharacter. character bitmap out of range!!");
-        return;
-    }
+    x += g.xOffset * font_size;
+    y += g.yOffset * font_size;
 
     for (size_t i = 0; i < bit_size; i++)
     {
-        if (font.bitmap[g.byteAddr + i / 8] & (1 << (i % 8)) != 0)
+        if ((font.getByte(g.byteAddr + i / 8) & (1 << (7 - (i % 8)))) != 0)
         {
-            drawPixel(
-                x + (i % g.w),
-                y + (i / g.w),
-                brig
-            );
+            for (size_t j = 0; j < font_size; j++) // how to do it??
+            {
+                drawPixel(
+                    x + (i % g.w) + j,
+                    y + (i / g.w),
+                    brig);
+            }
         }
     }
-
-    // const uint8_t *ch = font.getCharacter(ascii);
-
-    // for (size_t iy = 0; iy < font.getCharacterHeight(); iy++)
-    // {
-    //     for (size_t ix = 0; ix < font.getCharacterWidth(); ix++)
-    //     {
-    //         if (ch[iy] & (1 << (font.getCharacterWidth() - ix - 1)))
-    //         {
-    //             //Serial.println(font_size);
-    //             for (size_t sx = 0; sx < font_size; sx++)
-    //             {
-    //                 for (size_t sy = 0; sy < font_size; sy++)
-    //                 {
-    //                     drawPixel(x + sx + font_size * ix, y + sy + font_size * iy, brig);
-
-    //                     //Serial.printf("x: %d, y: %d", x + sx + font_size * ix, y + sy + font_size * iy);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 }
 
 void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t brig)
@@ -184,19 +158,19 @@ void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t br
     drawCharacter(x, y, ascii, *embeddedFont, font_size, brig);
 }
 
-void Graphics::drawText(int x, int y, String text, const Font &font, int font_size, uint8_t brig, int spacing)
+void Graphics::drawText(int x, int y, String text, const Font &font, int font_size, uint8_t brig)
 {
+    int cursor = x;
     for (size_t i = 0; i < text.length(); i++)
     {
-        int tx = x + i * font_size * font.getTextWidth(text);
-
-        drawCharacter(tx, y, text[i], font, font_size, brig);
+        drawCharacter(cursor, y, text[i], font_size, brig);
+        cursor += (font.spacing + font.getGlyph(text[i]).xAdvance) * font_size;
     }
 }
 
-void Graphics::drawText(int x, int y, String text, int font_size, uint8_t brig, int spacing)
+void Graphics::drawText(int x, int y, String text, int font_size, uint8_t brig)
 {
-    drawText(x, y, text, *embeddedFont, font_size, brig, spacing);
+    drawText(x, y, text, *embeddedFont, font_size, brig);
 }
 
 void Graphics::drawSymmetricCircle(int x0, int y0, int dx, int dy, uint8_t brig)

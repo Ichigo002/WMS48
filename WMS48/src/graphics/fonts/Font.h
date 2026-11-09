@@ -15,17 +15,18 @@ struct Glyph
 class Font
 {
 public:
+    Font(int bitmap_leng, int glyphs_leng, int spacing_) 
+        : bitmap_length(bitmap_leng), glyphs_length(glyphs_leng), spacing(spacing_)
+        {};
     virtual ~Font() = default;
 
     int getTextWidth(const String& txt, int font_size = 1) const;
-    const Glyph& getGlyphByChar(char c) const;
+    virtual const Glyph& getGlyph(char c) const = 0;
+    virtual const uint8_t& getByte(int i) const = 0;
 
-    const uint8_t bitmap[0];
-    const Glyph glyphs[0];
 
     const int bitmap_length; // length of bitmap table
     const int glyphs_length; // length of glyphs table
-
     const int spacing;
 };
 

@@ -104,16 +104,17 @@ void ClockAnimator::drawDigital(Graphics &g)
              t->font_size * 4; // second colon
 
     // CLEAR AREA
-    g.drawFilledRect(s->start_pos_x, s->start_pos_y, w, t->font->getCharacterHeight(), 0);
+   // g.drawFilledRect(s->start_pos_x, s->start_pos_y, w, t->font->getCharacterHeight(), 0);
+    // fix it later
 
     // DRAW HOURS
-    g.drawText(s->start_pos_x, s->start_pos_y, str_hh, *t->font, t->font_size, t->brightness, t->text_spacing);
+    g.drawText(s->start_pos_x, s->start_pos_y, str_hh, *t->font, t->font_size, t->brightness);
 
     int start_str_mm = s->start_pos_x + Graphics::getTextWidth(str_hh, *t->font, t->font_size, t->text_spacing) +
                        4 * t->font_size;
 
     // DRAW MINUTES
-    g.drawText(start_str_mm, s->start_pos_y, str_mm, *t->font, t->font_size, t->brightness, t->text_spacing);
+    g.drawText(start_str_mm, s->start_pos_y, str_mm, *t->font, t->font_size, t->brightness);
 
     // DRAW TOP SPLITTER
     if (s->blinking_colon && s->mode == DIGITAL_HH_MM && time_info->tm_sec % 2 == 0)
@@ -131,7 +132,7 @@ void ClockAnimator::drawDigital(Graphics &g)
 
         start_str_mm += 4 * t->font_size;
 
-        g.drawText(start_str_mm, s->start_pos_y, str_ss, *t->font, t->font_size, t->brightness, t->text_spacing);
+        g.drawText(start_str_mm, s->start_pos_y, str_ss, *t->font, t->font_size, t->brightness);
     }
 }
 

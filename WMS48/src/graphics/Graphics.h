@@ -31,8 +31,8 @@ public:
     void drawCharacter(int x, int y, char ascii, int font_size = 1, uint8_t brig = 32);
 
 
-    void drawText(int x, int y, String text, const Font& font, int font_size = 1, uint8_t brig = 32, int spacing = 1);
-    void drawText(int x, int y, String text, int font_size = 1, uint8_t brig = 32, int spacing = 1);
+    void drawText(int x, int y, String text, const Font& font, int font_size = 1, uint8_t brig = 32);
+    void drawText(int x, int y, String text, int font_size = 1, uint8_t brig = 32);
 
 
 private:

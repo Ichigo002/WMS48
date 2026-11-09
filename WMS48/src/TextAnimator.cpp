@@ -105,7 +105,7 @@ void TextAnimator::draw(Graphics &g)
         return;
 
     g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
-    g.drawText(pos_x, pos_y, t->text, *t->font, t->font_size, t->brightness, t->text_spacing);
+    g.drawText(pos_x, pos_y, t->text, *t->font, t->font_size, t->brightness);
 }
 
 int TextAnimator::initSettings()
@@ -118,9 +118,9 @@ int TextAnimator::initSettings()
 
     pos_x = a->start_pos_x;
     pos_y = a->start_pos_y;
-
-    txt_w = t->text.length() * t->font_size * (t->font->getCharacterWidth() + t->text_spacing);
-    txt_h = t->font_size * t->font->getCharacterHeight();
+    // fix it later!!!
+   // txt_w = t->text.length() * t->font_size * (t->font->getCharacterWidth() + t->text_spacing);
+   // txt_h = t->font_size * t->font->getCharacterHeight();
     return 0;
 }
 

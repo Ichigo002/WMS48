@@ -13,7 +13,7 @@
 #include "BLE/BleServerBridge.h"
 
 // Uncomment line below in order to use Classic Serial sBluetooth
- #define USE_BT_CLASSIC
+// #define USE_BT_CLASSIC
 
 #ifdef USE_BT_CLASSIC
 #include <BluetoothSerial.h>
@@ -71,8 +71,8 @@ void loop()
   deltaTime = (currentTime - previousTime) / 1000.0f; // seconds
   previousTime = currentTime;
 
-  cmd_txt.update(deltaTime);
-  cmd_clk.update(deltaTime);
+  //cmd_txt.update(deltaTime);
+  //cmd_clk.update(deltaTime);
 
   cmdParser.processSerialIfAvailable(Serial);
 
@@ -80,7 +80,8 @@ void loop()
   cmdParser.processSerialIfAvailable(bl);
 #endif
 
-  cmd_clk.draw(graphics);
-  cmd_txt.draw(graphics);
+  graphics.drawText(16,16,"aaa",2);
+  //cmd_clk.draw(graphics);
+  //cmd_txt.draw(graphics);
   display.update();
 }
