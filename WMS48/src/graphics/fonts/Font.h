@@ -5,6 +5,7 @@
 
 struct Glyph
 {
+    uint8_t byteAddr; // tells which byte in bitmap starts a glyph
     uint8_t xAdvance; // tells how much move cursor after drawing
     uint8_t w, h; // width and height of glyph
     int8_t xOffset, yOffset; // offset from cursor/baseline to top-left of bitmap
@@ -16,10 +17,11 @@ class Font
 public:
     virtual ~Font() = default;
 
-    int getTextWidth();
+    int getTextWidth(const String& txt, int font_size = 1) const;
+    const Glyph& getGlyphByChar(char c) const;
 
-    const uint8_t bitmap;
-    const Glyph glyphs;
+    const uint8_t bitmap[0];
+    const Glyph glyphs[0];
 
     const int bitmap_length; // length of bitmap table
     const int glyphs_length; // length of glyphs table
@@ -49,9 +51,10 @@ generator font output:
     01110100|01100011|11111000|11000110|00100000
 
     const uint8_t bitmap[4] = {0x74, 0x63, 0xf8, 0xc6, 0x20};
-    const Glyph glyphs[1] = {{5, 5, 7, 0, -7}};
+    const Glyph glyphs[1] = {{0, 5, 5, 7, 0, -7}};
 
     {5, 5, 7, 0, -7} =>
+                byteAddr = 0;
                 xAdvance = 5;
                 w = 5;
                 h = 7;

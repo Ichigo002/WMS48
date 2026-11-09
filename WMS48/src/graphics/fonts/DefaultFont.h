@@ -13,15 +13,15 @@ public:
     DefaultFont();
     ~DefaultFont();
 
-private:
+    
+    const Glyph glyphs[1] = {{0, 5, 5, 7, 0, -7}};
 
-    const uint8_t bitmap[5] = {0x74, 0x63, 0xf8, 0xc6, 0x20};
-    const Glyph glyphs[1] = {{5, 5, 7, 0, -7}};
-
-    const int bitmap_length = 5; // length of bitmap table
     const int glyphs_length = 1; // length of glyphs table
-
     const int spacing = 1;
+
+private:
+    const uint8_t bitmap[5] = {0x74, 0x63, 0xf8, 0xc6, 0x20};
+    const int bitmap_length = 5; // length of bitmap table
 };
 
 

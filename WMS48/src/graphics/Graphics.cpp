@@ -3,7 +3,7 @@
 
 #define ABS(a) (((a) < 0) ? -(a) : (a))
 
-Graphics::Graphics(Display &_display, const Font& embedded_font) 
+Graphics::Graphics(Display &_display, const Font &embedded_font)
     : display(_display), embeddedFont(&embedded_font)
 {
 }
@@ -12,14 +12,14 @@ Graphics::~Graphics()
 {
 }
 
-void Graphics::setFont(const Font& f)
+void Graphics::setFont(const Font &f)
 {
     embeddedFont = &f;
 }
 
 int Graphics::getTextWidth(const String &txt, const Font &f, const int font_size, const int spacing)
 {
-    return txt.length() * font_size * (f.getCharacterWidth() + spacing) - font_size * spacing;
+    return txt.length() * font_size * (f.getTextWidth(txt) + spacing) - font_size * spacing;
 }
 
 void Graphics::clear()
@@ -77,21 +77,24 @@ void Graphics::drawRect(int x, int y, uint8_t w, uint8_t h, uint8_t brig)
 }
 
 void Graphics::drawFilledRect(int x, int y, int w, int h, uint8_t brig)
-{ 
-    if(brig > MAX_BRIGHTNESS)
+{
+    if (brig > MAX_BRIGHTNESS)
     {
         brig = MAX_BRIGHTNESS;
     }
 
-    if(x < 0) {
+    if (x < 0)
+    {
         w += x;
         x = 0;
     }
-    if(y < 0) {
+    if (y < 0)
+    {
         h += y;
         y = 0;
     }
-    if(x >= WIDTH || y >= HEIGHT) {
+    if (x >= WIDTH || y >= HEIGHT)
+    {
         return;
     }
 
@@ -99,8 +102,8 @@ void Graphics::drawFilledRect(int x, int y, int w, int h, uint8_t brig)
     {
         for (int j = y; j < y + h; j++)
         {
-            //display.__graphic_unsafe_setPixelRaw(i, j, brig);
-            display.setPixelRaw(i,j,brig);
+            // display.__graphic_unsafe_setPixelRaw(i, j, brig);
+            display.setPixelRaw(i, j, brig);
         }
     }
 }
@@ -128,32 +131,52 @@ void Graphics::drawCircle(int x0, int y0, int r, uint8_t brig)
 
 void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int font_size, uint8_t brig)
 {
-    if (ascii == ' ')
+    const Glyph &g = font.getGlyphByChar(ascii);
+
+    int bit_size = g.h * g.w;
+
+    x += g.xOffset;
+    y += g.yOffset;
+
+    if (g.byteAddr + ceil(bit_size / 8.0f) >= font.bitmap_length)
     {
+        Serial.println("ERROR: Graphics::drawCharacter. character bitmap out of range!!");
         return;
     }
 
-    const uint8_t *ch = font.getCharacter(ascii);
-
-    for (size_t iy = 0; iy < font.getCharacterHeight(); iy++)
+    for (size_t i = 0; i < bit_size; i++)
     {
-        for (size_t ix = 0; ix < font.getCharacterWidth(); ix++)
+        if (font.bitmap[g.byteAddr + i / 8] & (1 << (i % 8)) != 0)
         {
-            if (ch[iy] & (1 << (font.getCharacterWidth() - ix - 1)))
-            {
-                //Serial.println(font_size);
-                for (size_t sx = 0; sx < font_size; sx++)
-                {
-                    for (size_t sy = 0; sy < font_size; sy++)
-                    {
-                        drawPixel(x + sx + font_size * ix, y + sy + font_size * iy, brig);
-
-                        //Serial.printf("x: %d, y: %d", x + sx + font_size * ix, y + sy + font_size * iy);
-                    }
-                }
-            }
+            drawPixel(
+                x + (i % g.w),
+                y + (i / g.w),
+                brig
+            );
         }
     }
+
+    // const uint8_t *ch = font.getCharacter(ascii);
+
+    // for (size_t iy = 0; iy < font.getCharacterHeight(); iy++)
+    // {
+    //     for (size_t ix = 0; ix < font.getCharacterWidth(); ix++)
+    //     {
+    //         if (ch[iy] & (1 << (font.getCharacterWidth() - ix - 1)))
+    //         {
+    //             //Serial.println(font_size);
+    //             for (size_t sx = 0; sx < font_size; sx++)
+    //             {
+    //                 for (size_t sy = 0; sy < font_size; sy++)
+    //                 {
+    //                     drawPixel(x + sx + font_size * ix, y + sy + font_size * iy, brig);
+
+    //                     //Serial.printf("x: %d, y: %d", x + sx + font_size * ix, y + sy + font_size * iy);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t brig)
@@ -165,11 +188,7 @@ void Graphics::drawText(int x, int y, String text, const Font &font, int font_si
 {
     for (size_t i = 0; i < text.length(); i++)
     {
-        int tx = x + i * font_size * (font.getCharacterWidth() + spacing);
-        // if(tx > 48)
-        // {
-        //     return;
-        // }
+        int tx = x + i * font_size * font.getTextWidth(text);
 
         drawCharacter(tx, y, text[i], font, font_size, brig);
     }
