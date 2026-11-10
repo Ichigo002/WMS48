@@ -80,7 +80,7 @@ void loop()
   cmdParser.processSerialIfAvailable(bl);
 #endif
 
-  graphics.drawText(16,16,"aaa",2);
+  graphics.drawText(0,16,"aaa",3);
   //cmd_clk.draw(graphics);
   //cmd_txt.draw(graphics);
   display.update();

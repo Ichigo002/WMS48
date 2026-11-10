@@ -142,13 +142,18 @@ void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int fon
     {
         if ((font.getByte(g.byteAddr + i / 8) & (1 << (7 - (i % 8)))) != 0)
         {
-            for (size_t j = 0; j < font_size; j++) // how to do it??
+            for (size_t fx = 1; fx <= font_size; fx++)
             {
-                drawPixel(
-                    x + (i % g.w) + j,
-                    y + (i / g.w),
+                for (size_t fy = 1; fy <= font_size; fy++)
+                {
+                    drawPixel(
+                    (x + (i % g.w)*font_size) + fx,
+                    (y + (i / g.w)*font_size) + fy,
                     brig);
+                }
+                
             }
+
         }
     }
 }
