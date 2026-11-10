@@ -71,8 +71,8 @@ void loop()
   deltaTime = (currentTime - previousTime) / 1000.0f; // seconds
   previousTime = currentTime;
 
-  //cmd_txt.update(deltaTime);
-  //cmd_clk.update(deltaTime);
+  cmd_txt.update(deltaTime);
+  cmd_clk.update(deltaTime);
 
   cmdParser.processSerialIfAvailable(Serial);
 
@@ -80,8 +80,8 @@ void loop()
   cmdParser.processSerialIfAvailable(bl);
 #endif
 
-  graphics.drawText(0,16,"aaa",3);
-  //cmd_clk.draw(graphics);
-  //cmd_txt.draw(graphics);
+  //graphics.drawText(0,16,"a a",1);
+  cmd_clk.draw(graphics);
+  cmd_txt.draw(graphics);
   display.update();
 }

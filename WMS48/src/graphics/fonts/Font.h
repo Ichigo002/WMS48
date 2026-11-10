@@ -5,18 +5,17 @@
 
 struct Glyph
 {
-    uint8_t byteAddr; // tells which byte in bitmap starts a glyph
-    uint8_t xAdvance; // tells how much move cursor after drawing
+    uint16_t byteAddr; // tells which byte in bitmap starts a glyph
     uint8_t w, h; // width and height of glyph
-    int8_t xOffset, yOffset; // offset from cursor/baseline to top-left of bitmap
+    int8_t yOffset; // offset from cursor/baseline to top-left of bitmap
 };
 
 
 class Font
 {
 public:
-    Font(int bitmap_leng, int glyphs_leng, int spacing_) 
-        : bitmap_length(bitmap_leng), glyphs_length(glyphs_leng), spacing(spacing_)
+    Font(int bitmap_leng, int glyphs_leng, int spacing_, int max_Yoffset) 
+        : bitmap_length(bitmap_leng), glyphs_length(glyphs_leng), spacing(spacing_), max_Yoffset(max_Yoffset)
         {};
     virtual ~Font() = default;
 
@@ -28,6 +27,7 @@ public:
     const int bitmap_length; // length of bitmap table
     const int glyphs_length; // length of glyphs table
     const int spacing;
+    const int max_Yoffset; // max height over baseline
 };
 
 #endif

@@ -135,7 +135,6 @@ void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int fon
 
     int bit_size = g.h * g.w;
 
-    x += g.xOffset * font_size;
     y += g.yOffset * font_size;
 
     for (size_t i = 0; i < bit_size; i++)
@@ -147,13 +146,11 @@ void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int fon
                 for (size_t fy = 1; fy <= font_size; fy++)
                 {
                     drawPixel(
-                    (x + (i % g.w)*font_size) + fx,
-                    (y + (i / g.w)*font_size) + fy,
-                    brig);
+                        (x + (i % g.w) * font_size) + fx,
+                        (y + (i / g.w) * font_size) + fy,
+                        brig);
                 }
-                
             }
-
         }
     }
 }
@@ -169,7 +166,7 @@ void Graphics::drawText(int x, int y, String text, const Font &font, int font_si
     for (size_t i = 0; i < text.length(); i++)
     {
         drawCharacter(cursor, y, text[i], font_size, brig);
-        cursor += (font.spacing + font.getGlyph(text[i]).xAdvance) * font_size;
+        cursor += (font.spacing + font.getGlyph(text[i]).w) * font_size;
     }
 }
 
