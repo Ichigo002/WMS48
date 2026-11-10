@@ -79,7 +79,7 @@ void TextAnimator::update(float deltaTime)
         {
            a->speed_y *= -1;
         }
-        if (a->speed_y < 0 && pos_y < 0) // top edge
+        if (a->speed_y < 0 && pos_y < 0) // top edge // fix bug
         {
            a->speed_y *= -1;
         }

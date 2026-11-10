@@ -27,7 +27,7 @@ int Font::getTextHeight(const String &txt, int font_size) const
             h_above = g->yOffset;
     }
     
-    return ((-h_above) + h_below) * font_size + 1;
+    return ((-h_above) + h_below + 1) * font_size;
 }
 
 const Glyph &Font::getGlyph(char c) const
