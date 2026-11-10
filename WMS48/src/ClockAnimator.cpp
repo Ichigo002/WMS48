@@ -66,19 +66,19 @@ void ClockAnimator::updateDigital()
 
 void ClockAnimator::updateAnalog()
 {
-    calculateClkHandPos(sec_hand, 14, (time_info->tm_sec+1) / 60.0f);
-    calculateClkHandPos(min_hand, 12, (time_info->tm_min+1) / 60.0f);
-    calculateClkHandPos(hour_hand, 7, ((time_info->tm_hour%12) + 1) / 12.0f);
+    calculateClkHandPos(sec_hand, 14, (time_info->tm_sec + 1) / 60.0f);
+    calculateClkHandPos(min_hand, 12, (time_info->tm_min + 1) / 60.0f);
+    calculateClkHandPos(hour_hand, 7, ((time_info->tm_hour % 12) + 1) / 12.0f);
 }
 
 void ClockAnimator::calculateClkHandPos(ClockHand &hand, int radius, float percent_of_wheel)
 {
-    hand.x = ANALOG_CENTER_X - round(radius * cos(2*3.141*(percent_of_wheel + 0.25f)));
-    hand.y = ANALOG_CENTER_Y - round(radius * sin(2*3.141*(percent_of_wheel + 0.25f)));
+    hand.x = ANALOG_CENTER_X - round(radius * cos(2 * 3.141 * (percent_of_wheel + 0.25f)));
+    hand.y = ANALOG_CENTER_Y - round(radius * sin(2 * 3.141 * (percent_of_wheel + 0.25f)));
 
-    if(hand.x > ANALOG_CENTER_X)
+    if (hand.x > ANALOG_CENTER_X)
         hand.x++;
-    if(hand.y > ANALOG_CENTER_Y)
+    if (hand.y > ANALOG_CENTER_Y)
         hand.y++;
 }
 
@@ -95,22 +95,19 @@ void ClockAnimator::drawColon(int x, int y, Graphics &g)
 
 void ClockAnimator::drawDigital(Graphics &g)
 {
-    int w = Graphics::getTextWidth(str_hh, *t->font, t->font_size, t->text_spacing) +
-            Graphics::getTextWidth(str_mm, *t->font, t->font_size, t->text_spacing) +
-            t->font_size * 4; // colon width
+    int w = t->font->getTextWidth(str_hh) + t->font->getTextWidth(str_mm) + t->font_size * 4; // colon width
 
     if (s->mode == ClockMode::DIGITAL_HH_MM_SS)
-        w += Graphics::getTextWidth(str_ss, *t->font, t->font_size, t->text_spacing) +
+        w += t->font->getTextWidth(str_ss) +
              t->font_size * 4; // second colon
 
     // CLEAR AREA
-   // g.drawFilledRect(s->start_pos_x, s->start_pos_y, w, t->font->getCharacterHeight(), 0);
-    // fix it later
+    g.drawFilledRect(s->start_pos_x, s->start_pos_y, w, t->font->getTextHeight("1"), 0);
 
     // DRAW HOURS
     g.drawText(s->start_pos_x, s->start_pos_y, str_hh, *t->font, t->font_size, t->brightness);
 
-    int start_str_mm = s->start_pos_x + Graphics::getTextWidth(str_hh, *t->font, t->font_size, t->text_spacing) +
+    int start_str_mm = s->start_pos_x + t->font->getTextWidth(str_hh) +
                        4 * t->font_size;
 
     // DRAW MINUTES
@@ -127,7 +124,7 @@ void ClockAnimator::drawDigital(Graphics &g)
     if (s->mode == ClockMode::DIGITAL_HH_MM_SS)
     {
         // DRAW SECOND COLON
-        start_str_mm += Graphics::getTextWidth(str_hh, *t->font, t->font_size, t->text_spacing);
+        start_str_mm += t->font->getTextWidth(str_hh);
         drawColon(start_str_mm, s->start_pos_y, g);
 
         start_str_mm += 4 * t->font_size;
@@ -139,22 +136,19 @@ void ClockAnimator::drawDigital(Graphics &g)
 void ClockAnimator::drawAnalog(Graphics &g)
 {
 
-    //CLEAR
-    g.drawFilledRect(ANALOG_CENTER_X-ANALOG_RADIUS, ANALOG_CENTER_Y-ANALOG_RADIUS, 2*ANALOG_RADIUS, 2*ANALOG_RADIUS, 0);
+    // CLEAR
+    g.drawFilledRect(ANALOG_CENTER_X - ANALOG_RADIUS, ANALOG_CENTER_Y - ANALOG_RADIUS, 2 * ANALOG_RADIUS, 2 * ANALOG_RADIUS, 0);
 
-    //DRAW CIRCLE
+    // DRAW CIRCLE
     g.drawCircle(ANALOG_CENTER_X, ANALOG_CENTER_Y, ANALOG_RADIUS, t->brightness);
 
-    //DRAW CENTER PIXEL
+    // DRAW CENTER PIXEL
     g.drawPixel(ANALOG_CENTER_X, ANALOG_CENTER_Y, t->brightness);
 
-
-    //DRAW HOUR HAND
+    // DRAW HOUR HAND
     g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, hour_hand.x, hour_hand.y, s->hour_hand_brightness);
-    //DRAW MINUTE HAND
+    // DRAW MINUTE HAND
     g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, min_hand.x, min_hand.y, s->minute_hand_brightness);
-    //DRAW SECOND HAND
+    // DRAW SECOND HAND
     g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, sec_hand.x, sec_hand.y, s->second_hand_brightness);
-
-
 }

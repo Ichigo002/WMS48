@@ -26,7 +26,6 @@ int Font::getTextHeight(const String &txt, int font_size) const
         if(g->yOffset < h_above)
             h_above = g->yOffset;
     }
-    Serial.println(h_below);
     
     return ((-h_above) + h_below) * font_size + 1;
 }

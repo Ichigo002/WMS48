@@ -17,11 +17,6 @@ void Graphics::setFont(const Font &f)
     embeddedFont = &f;
 }
 
-int Graphics::getTextWidth(const String &txt, const Font &f, const int font_size, const int spacing)
-{
-    return txt.length() * font_size * (f.getTextWidth(txt) + spacing) - font_size * spacing;
-}
-
 void Graphics::clear()
 {
     display.clear();
