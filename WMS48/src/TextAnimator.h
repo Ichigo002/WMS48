@@ -12,7 +12,6 @@ struct _TextParameters
     Font* font = nullptr;
     int font_size = 1;
     uint8_t brightness = 32;
-    int text_spacing = 1;
 };
 
 enum AnimMode {

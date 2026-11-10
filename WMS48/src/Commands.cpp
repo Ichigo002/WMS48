@@ -289,7 +289,7 @@ void SerialCmdsParser::initCommands()
 
             for (size_t i = 0; i < s; i++)
             {
-                ext.graphics.drawText(0, -ext.font.max_Yoffset * i +2, txts[i], ext.font, 1);
+                ext.graphics.drawText(0, (-ext.font.max_Yoffset+1) * i, txts[i], ext.font, 1);
             }
 
             return 0;
@@ -383,7 +383,6 @@ void SerialCmdsParser::initCommands()
             ext.txt_anim.text_settings.brightness = 32;
             ext.txt_anim.text_settings.font = &ext.font;
             ext.txt_anim.text_settings.font_size = 1;
-            ext.txt_anim.text_settings.text_spacing = 1;
             ext.txt_anim.text_settings.text = "WMS-48";
 
             ext.txt_anim.restart();
