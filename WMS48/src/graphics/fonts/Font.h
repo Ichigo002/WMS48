@@ -20,14 +20,17 @@ public:
     virtual ~Font() = default;
 
     int getTextWidth(const String& txt, int font_size = 1) const;
-    virtual const Glyph& getGlyph(char c) const = 0;
+    int getTextHeight(const String& txt, int font_size = 1) const;
+    const Glyph& getGlyph(char c) const;
+
+    virtual const Glyph& _getGlyph(int g) const = 0;
     virtual const uint8_t& getByte(int i) const = 0;
 
 
     const int bitmap_length; // length of bitmap table
     const int glyphs_length; // length of glyphs table
     const int spacing;
-    const int max_Yoffset; // max height over baseline
+    const int max_Yoffset; // max y offest over baseline, IT IS NEGATIVE: -7 example
 };
 
 #endif
@@ -56,11 +59,9 @@ generator font output:
 
     {5, 5, 7, 0, -7} =>
                 byteAddr = 0;
-                xAdvance = 5;
                 w = 5;
                 h = 7;
                 xOffset = 0;
-                yOffset = -7;
 
     const int bitmap_length = 5; // length of bitmap table
     const int glyphs_length = 1; // length of glyphs table

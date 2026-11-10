@@ -118,9 +118,9 @@ int TextAnimator::initSettings()
 
     pos_x = a->start_pos_x;
     pos_y = a->start_pos_y;
-    // fix it later!!!
-   // txt_w = t->text.length() * t->font_size * (t->font->getCharacterWidth() + t->text_spacing);
-   // txt_h = t->font_size * t->font->getCharacterHeight();
+
+    txt_w = t->font->getTextWidth(t->text, t->font_size);
+    txt_h = t->font->getTextHeight(t->text, t->font_size);
     return 0;
 }
 

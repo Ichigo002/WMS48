@@ -289,7 +289,7 @@ void SerialCmdsParser::initCommands()
 
             for (size_t i = 0; i < s; i++)
             {
-                ext.graphics.drawText(0, 8 * i, txts[i], ext.font, 1);
+                ext.graphics.drawText(0, -ext.font.max_Yoffset * i +2, txts[i], ext.font, 1);
             }
 
             return 0;

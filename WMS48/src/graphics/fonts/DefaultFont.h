@@ -10,12 +10,9 @@ public:
     DefaultFont() : Font(396, 95, 1, -7) {};
     ~DefaultFont() override = default;
 
-    virtual const Glyph &getGlyph(char c) const override
+    virtual const Glyph &_getGlyph(int g) const override
     {
-        if ((c - 0x20) >= glyphs_length)
-            return glyphs[1]; // X NULL GLYPH
-
-        return glyphs[c - 0x20]; // change it later to c - 0x20
+        return glyphs[g];
     }
 
     virtual const uint8_t &getByte(int i) const override
