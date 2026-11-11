@@ -136,9 +136,9 @@ void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int fon
     {
         if ((font.getByte(g.byteAddr + i / 8) & (1 << (7 - (i % 8)))) != 0)
         {
-            for (size_t fx = 1; fx <= font_size; fx++)
+            for (size_t fx = 0; fx < font_size; fx++)
             {
-                for (size_t fy = 1; fy <= font_size; fy++)
+                for (size_t fy = 0; fy < font_size; fy++)
                 {
                     drawPixel(
                         (x + (i % g.w) * font_size) + fx,
@@ -157,7 +157,6 @@ void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t br
 
 void Graphics::drawText(int x, int y, String text, const Font &font, int font_size, uint8_t brig)
 {
-    y += -font.max_Yoffset * font_size;
     int cursor = x;
     for (size_t i = 0; i < text.length(); i++)
     {

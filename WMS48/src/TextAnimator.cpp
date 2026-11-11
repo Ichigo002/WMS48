@@ -12,27 +12,27 @@ TextAnimator::~TextAnimator()
 
 void TextAnimator::update(float deltaTime)
 {
-    if(is_paused || !is_playing)
+    if (is_paused || !is_playing)
         return;
-    
-    if(a->animation_mode == AnimMode::SINGLE)
+
+    if (a->animation_mode == AnimMode::SINGLE)
     {
-        if ((a->speed_x > 0 && pos_x > WIDTH+1) ||
-        (a->speed_x < 0 && pos_x + txt_w+1 < 0) ||
-        (a->speed_y > 0 && pos_y > HEIGHT+1) ||
-        (a->speed_y < 0 && pos_y + txt_h+1 < 0))
+        if ((a->speed_x > 0 && pos_x > WIDTH + 1) ||
+            (a->speed_x < 0 && pos_x + txt_w + 1 < 0) ||
+            (a->speed_y > 0 && pos_y > HEIGHT + 1) ||
+            (a->speed_y < 0 && pos_y + txt_h + 1 < 0))
         {
             stop();
             return;
         }
     }
-    if(a->animation_mode == AnimMode::LOOP) 
+    if (a->animation_mode == AnimMode::LOOP)
     {
-         if (a->speed_x > 0 && pos_x > WIDTH) // right edge
+        if (a->speed_x > 0 && pos_x > WIDTH) // right edge
         {
             pos_x = -txt_w;
         }
-        if (a->speed_x < 0 && pos_x + txt_w+1 < 0) // left edge
+        if (a->speed_x < 0 && pos_x + txt_w + 1 < 0) // left edge
         {
             pos_x = WIDTH;
         }
@@ -44,32 +44,31 @@ void TextAnimator::update(float deltaTime)
         {
             pos_y = HEIGHT;
         }
-        
     }
-    if(a->animation_mode == AnimMode::PING_PONG_OUTSIDE)
+    if (a->animation_mode == AnimMode::PING_PONG_OUTSIDE)
     {
         if (a->speed_x > 0 && pos_x > WIDTH) // right edge
         {
-           a->speed_x *= -1;
+            a->speed_x *= -1;
         }
-        if (a->speed_x < 0 && pos_x + txt_w+1 < 0) // left edge
+        if (a->speed_x < 0 && pos_x + txt_w + 1 < 0) // left edge
         {
             a->speed_x *= -1;
         }
         if (a->speed_y > 0 && pos_y > HEIGHT) // bottom edge
         {
-           a->speed_y *= -1;
+            a->speed_y *= -1;
         }
         if (a->speed_y < 0 && pos_y + txt_h < 0) // top edge
         {
-           a->speed_y *= -1;
+            a->speed_y *= -1;
         }
     }
-    if(a->animation_mode == AnimMode::PING_PONG_INSIDE)
+    if (a->animation_mode == AnimMode::PING_PONG_INSIDE)
     {
         if (a->speed_x > 0 && pos_x + txt_w > WIDTH) // right edge
         {
-           a->speed_x *= -1;
+            a->speed_x *= -1;
         }
         if (a->speed_x < 0 && pos_x < 0) // left edge
         {
@@ -77,11 +76,11 @@ void TextAnimator::update(float deltaTime)
         }
         if (a->speed_y > 0 && pos_y + txt_h > HEIGHT) // bottom edge
         {
-           a->speed_y *= -1;
+            a->speed_y *= -1;
         }
         if (a->speed_y < 0 && pos_y < 0) // top edge // fix bug
         {
-           a->speed_y *= -1;
+            a->speed_y *= -1;
         }
     }
 
@@ -94,23 +93,25 @@ void TextAnimator::update(float deltaTime)
 
 void TextAnimator::draw(Graphics &g)
 {
-    if(!is_cleaned && !is_playing)
+    if (!is_cleaned && !is_playing)
     {
         is_cleaned = true;
         g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
         g.drawFilledRect(pos_x, pos_y, txt_w, txt_h, 0);
     }
 
-    if(is_paused || !is_playing)
+    if (is_paused || !is_playing)
         return;
 
+    // Serial.printf("drawFilledRect top=%d y=%d sum=%d h=%d color=%d\n",
+    //    (int)txt_top, (int)prev_y, (int)pos_y + txt_top, (int)txt_h, 0);
     g.drawFilledRect(prev_x, prev_y, txt_w, txt_h, 0);
-    g.drawText(pos_x, pos_y, t->text, *t->font, t->font_size, t->brightness);
+    g.drawText(pos_x, pos_y + txt_top, t->text, *t->font, t->font_size, t->brightness);
 }
 
 int TextAnimator::initSettings()
 {
-    if(t->font == nullptr)
+    if (t->font == nullptr)
     {
         Serial.println("Font* font is nullptr in TextAnimator.text_params, can't start aniamtion");
         return -1;
@@ -121,14 +122,17 @@ int TextAnimator::initSettings()
 
     txt_w = t->font->getTextWidth(t->text, t->font_size);
     txt_h = t->font->getTextHeight(t->text, t->font_size);
+
+    txt_top = t->font->getTextTopOffset(t->text, t->font_size);
+
     return 0;
 }
 
 void TextAnimator::start()
 {
-    if(!is_playing && !is_paused)
+    if (!is_playing && !is_paused)
     {
-        if(initSettings() != 0)
+        if (initSettings() != 0)
             return;
     }
     is_cleaned = false;
@@ -172,4 +176,3 @@ void TextAnimator::stop()
     is_paused = false;
     is_cleaned = false;
 }
-

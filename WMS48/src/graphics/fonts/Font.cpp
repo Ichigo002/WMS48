@@ -20,14 +20,45 @@ int Font::getTextHeight(const String &txt, int font_size) const
     for (size_t i = 0; i < txt.length(); i++)
     {
         g =  &getGlyph(txt[i]);
+       // Serial.printf("%c yOff=%d h=%d top=%d bottom=%d\n",
+        //   txt[i], g->yOffset, g->h, g->yOffset, g->yOffset + g->h);
 
         if(g->yOffset + g->h > h_below)
             h_below = g->yOffset + g->h;
+            
         if(g->yOffset < h_above)
             h_above = g->yOffset;
     }
     
-    return ((-h_above) + h_below + 1) * font_size;
+    return ((-h_above) + h_below) * font_size;
+}
+
+int Font::getTextTopOffset(const String &txt, int font_size) const
+{
+    int top = 0;
+    const Glyph *g;
+    for (size_t i = 0; i < txt.length(); i++)
+    {
+        g =  &getGlyph(txt[i]);
+        if(g->yOffset < top)
+            top = g->yOffset;
+    }
+    
+    return -top * font_size;
+}
+
+int Font::getTextBottomOffset(const String &txt, int font_size) const
+{
+    int bot = 0;
+    const Glyph *g;
+    for (size_t i = 0; i < txt.length(); i++)
+    {
+        g =  &getGlyph(txt[i]);
+        if(g->yOffset + g->h > bot)
+            bot = g->yOffset + g->h;
+    }
+    
+    return bot * font_size;
 }
 
 const Glyph &Font::getGlyph(char c) const

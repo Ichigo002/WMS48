@@ -72,6 +72,7 @@ private:
     float prev_x, prev_y;
 
     int txt_w, txt_h;
+    int txt_top;
 
     bool is_playing;
     bool is_paused;

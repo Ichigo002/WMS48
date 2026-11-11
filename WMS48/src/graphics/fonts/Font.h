@@ -21,6 +21,10 @@ public:
 
     int getTextWidth(const String& txt, int font_size = 1) const;
     int getTextHeight(const String& txt, int font_size = 1) const;
+    // returns positive integer of top height above baseline
+    int getTextTopOffset(const String& txt, int font_size = 1) const;
+    // returns positive integer of height below baseline
+    int getTextBottomOffset(const String& txt, int font_size = 1) const;
     const Glyph& getGlyph(char c) const;
 
     virtual const Glyph& _getGlyph(int g) const = 0;
