@@ -66,7 +66,7 @@ void TextAnimator::update(float deltaTime)
     }
     if (a->animation_mode == AnimMode::PING_PONG_INSIDE)
     {
-        if (a->speed_x > 0 && pos_x + txt_w > WIDTH) // right edge
+        if (a->speed_x > 0 && pos_x + txt_w-1 > WIDTH) // right edge
         {
             a->speed_x *= -1;
         }
@@ -74,7 +74,7 @@ void TextAnimator::update(float deltaTime)
         {
             a->speed_x *= -1;
         }
-        if (a->speed_y > 0 && pos_y + txt_h > HEIGHT) // bottom edge
+        if (a->speed_y > 0 && pos_y + txt_h-1 > HEIGHT) // bottom edge
         {
             a->speed_y *= -1;
         }

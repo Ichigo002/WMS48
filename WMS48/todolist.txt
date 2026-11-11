@@ -1,5 +1,4 @@
 TODO LIST:
     - ClockAnimator - fix bug of resreshing digital clock, use monospace font??
-    - TextAnimator - fix refreshing bug
     - Refactor code, use FontManager
     - add Polishi letters
