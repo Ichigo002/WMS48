@@ -7,7 +7,7 @@
 class DefaultFont : public Font
 {
 public:
-    DefaultFont() : Font(396, 95, 1, -7) {};
+    DefaultFont() : Font(396, 95, 1, -7, "default") {};
     ~DefaultFont() override = default;
 
     virtual const Glyph &_getGlyph(int g) const override

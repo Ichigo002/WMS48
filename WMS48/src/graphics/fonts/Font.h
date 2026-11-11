@@ -14,8 +14,8 @@ struct Glyph
 class Font
 {
 public:
-    Font(int bitmap_leng, int glyphs_leng, int spacing_, int max_Yoffset) 
-        : bitmap_length(bitmap_leng), glyphs_length(glyphs_leng), spacing(spacing_), max_Yoffset(max_Yoffset)
+    Font(int bitmap_leng, int glyphs_leng, int spacing_, int max_Yoffset, String name) 
+        : bitmap_length(bitmap_leng), glyphs_length(glyphs_leng), spacing(spacing_), max_Yoffset(max_Yoffset), name(name)
         {};
     virtual ~Font() = default;
 
@@ -31,6 +31,7 @@ public:
     const int glyphs_length; // length of glyphs table
     const int spacing;
     const int max_Yoffset; // max y offest over baseline, IT IS NEGATIVE: -7 example
+    const String name;
 };
 
 #endif
