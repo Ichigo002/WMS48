@@ -8,7 +8,7 @@ FontManager::~FontManager()
 {
 }
 
-const Font &FontManager::getFont(String name) const
+Font &FontManager::getFont(String name)
 {
     if(name == FONT_MONO)
         return font_d;

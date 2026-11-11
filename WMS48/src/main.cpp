@@ -4,7 +4,7 @@
 #include <SparkFun_VEML7700_Arduino_Library.h> // Click here to get the library: http://librarymanager/All#SparkFun_VEML7700
 #include "Display.h"
 #include "graphics/Graphics.h"
-#include "graphics/fonts/DefaultFont.h"
+#include "graphics/fonts/FontManager.h"
 #include "SerialCmdsParser.h"
 #include "HardwareInterface.h"
 #include "TextAnimator.h"
@@ -20,13 +20,14 @@
 #endif
 
 Display display;
-DefaultFont defaultFont;
-Graphics graphics(display, defaultFont);
+FontManager font_mgr;
+
+Graphics graphics(display, font_mgr.getFont(FONT_DEFAULT));
 HardwareInterface hardwareInterface;
 TextAnimator cmd_txt;
 ClockAnimator cmd_clk;
 
-SerialCmdsParser cmdParser(graphics, display, defaultFont, hardwareInterface, cmd_txt, cmd_clk);
+SerialCmdsParser cmdParser(graphics, display, font_mgr.getFont(FONT_DEFAULT), hardwareInterface, cmd_txt, cmd_clk);
 
 BleServerBridge ble_server;
 
@@ -54,7 +55,7 @@ void setup()
   {
     Serial.println("HELLO THERE");
     cmd_txt.text_settings.text = "It works";
-    cmd_txt.text_settings.font = &defaultFont;
+    cmd_txt.text_settings.font = &font_mgr.getFont(FONT_DEFAULT);
     cmd_txt.start();
   };
 

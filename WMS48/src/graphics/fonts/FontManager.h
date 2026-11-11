@@ -14,9 +14,9 @@ public:
     FontManager();
     ~FontManager();
 
-    const Font& getFont(String name) const;
+    Font& getFont(String name);
 private:
-    const DefaultFont font_d;
+    DefaultFont font_d;
 };
 
 
