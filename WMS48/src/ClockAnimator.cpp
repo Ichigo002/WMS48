@@ -102,7 +102,7 @@ void ClockAnimator::drawDigital(Graphics &g)
              t->font_size * 4; // second colon
 
     // CLEAR AREA
-    g.drawFilledRect(s->start_pos_x, s->start_pos_y, w, t->font->getTextHeight("1"), 0);
+    g.drawFilledRect(s->start_pos_x, s->start_pos_y, w+t->font_size*2, t->font->getTextHeight("1"), 0);
 
     // DRAW HOURS
     g.drawText(s->start_pos_x, s->start_pos_y, str_hh, *t->font, t->font_size, t->brightness);
