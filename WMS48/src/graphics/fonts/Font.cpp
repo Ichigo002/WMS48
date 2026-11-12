@@ -3,13 +3,10 @@
 
 int Font::getTextWidth(const String &txt, int font_size) const
 {
-    int* idxs;
-    int size;
-
-    decodeTextToCharIndex(txt, idxs, size);
+    std::vector<int>& idxs = decodeTextToCharIndex(txt);
 
     int l = 0;
-    for (size_t i = 0; i < txt.length(); i++)
+    for (size_t i = 0; i < idxs.size(); i++)
     {
         l += getGlyphByCharIndex(idxs[i]).w * font_size;
 
@@ -22,12 +19,9 @@ int Font::getTextHeight(const String &txt, int font_size) const
 {
     int h_above = 0;
     int h_below = 0;
-    int* idxs;
-    int size;
-
-    decodeTextToCharIndex(txt, idxs, size);
+    std::vector<int>& idxs = decodeTextToCharIndex(txt);
     const Glyph *g;
-    for (size_t i = 0; i < txt.length(); i++)
+    for (size_t i = 0; i < idxs.size(); i++)
     {
         g = &getGlyphByCharIndex(idxs[i]);
         // Serial.printf("%c yOff=%d h=%d top=%d bottom=%d\n",
@@ -46,13 +40,10 @@ int Font::getTextHeight(const String &txt, int font_size) const
 int Font::getTextTopOffset(const String &txt, int font_size) const
 {
     int top = 0;
-    int* idxs;
-    int size;
-
-    decodeTextToCharIndex(txt, idxs, size);
+    std::vector<int>& idxs = decodeTextToCharIndex(txt);
 
     const Glyph *g;
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < idxs.size(); i++)
     {
         g = &getGlyphByCharIndex(idxs[i]);
         if (g->yOffset < top)
@@ -65,12 +56,9 @@ int Font::getTextTopOffset(const String &txt, int font_size) const
 int Font::getTextBottomOffset(const String &txt, int font_size) const
 {
     int bot = 0;
-    int* idxs;
-    int size;
-
-    decodeTextToCharIndex(txt, idxs, size);
+    std::vector<int>& idxs = decodeTextToCharIndex(txt);
     const Glyph *g;
-    for (size_t i = 0; i < txt.length(); i++)
+    for (size_t i = 0; i < idxs.size(); i++)
     {
         g = &getGlyphByCharIndex(idxs[i]);
         if (g->yOffset + g->h > bot)
@@ -98,9 +86,9 @@ const Glyph &Font::getGlyphByCharIndex(int char_index) const
     return _getGlyph(char_index + ascii_glyphs_length);
 }
 
-const uint8_t Font::getByte(int n) const
+uint8_t Font::getByte(int n) const
 {
-    if(n < 0 || n > bitmap_length);
-        return 0;
+    // if(n < 0 || n >= bitmap_length);
+    //     return 0;
     return _getByte(n);
 }

@@ -156,12 +156,9 @@ void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int fon
     String t = "";
     t += ascii;
 
-    int* idxs;
-    int size;
+    std::vector<int>& idxs = decodeTextToCharIndex(t);
 
-    decodeTextToCharIndex(t, idxs, size);
-    
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < idxs.size(); i++)
     {
         drawGlyph(x, y, idxs[i], font, font_size, brig);
     }
@@ -199,12 +196,9 @@ void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t br
 void Graphics::drawText(int x, int y, String text, const Font &font, int font_size, uint8_t brig)
 {
     int cursor = x;
-    int* idxs = nullptr;
-    int size;
+    std::vector<int>& idxs = decodeTextToCharIndex(text);
 
-    decodeTextToCharIndex(text, idxs, size);
-
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < idxs.size(); i++)
     {
         drawGlyph(cursor, y, idxs[i], font, font_size, brig);
         cursor += (font.spacing + font.getGlyphByCharIndex(idxs[i]).w) * font_size;

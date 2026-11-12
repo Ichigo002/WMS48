@@ -28,7 +28,7 @@ public:
 
     const Glyph& getGlyphByCharIndex(int char_index) const;
     
-    const uint8_t getByte(int n) const;
+    uint8_t getByte(int n) const;
 
     const int spacing;
     const int max_Yoffset; // max y offest over baseline, IT IS NEGATIVE: -7 example
@@ -41,6 +41,7 @@ private:
     const int bitmap_length; // length of bitmap table
     const int glyphs_length; // length of glyphs table
     const int ascii_glyphs_length = 95; // when ascii ends in glyph table 
+
 };
 
 #endif

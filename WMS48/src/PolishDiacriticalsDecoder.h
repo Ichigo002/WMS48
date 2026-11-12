@@ -2,6 +2,7 @@
 #define PL_DIACRITICAL_DECODER_H
 
 #include <Arduino.h>
+#include <vector>
 
 inline char32_t decode2(const String &s)
 {
@@ -23,46 +24,36 @@ inline int polishIndex(char32_t cp)
 
 inline const int PL_SHIFT = 9;
 
+#define TXT_DECODER_DEFAULT_BUFFER_SIZE 50
+inline std::vector<int> _char_decoding_polish_index_buffer;
+
+
 // positive values idxs = standard ascii
 // negative values idxs = polish diacritical
-inline void decodeTextToCharIndex(const String &txt, int *&idxs, int &size)
+inline std::vector<int> &decodeTextToCharIndex(const String &txt)
 {
-    if(txt.length() == 0)
-    {
-        size = 0;
-        idxs = nullptr;
-        return;
-    }
+    _char_decoding_polish_index_buffer.clear();
 
-    size = txt.length();
-    idxs = new int[size];
-    int index = 0;
-    
 
-    for (size_t i = 0; i < size; i++)
+    if(_char_decoding_polish_index_buffer.capacity() < TXT_DECODER_DEFAULT_BUFFER_SIZE)
+        _char_decoding_polish_index_buffer.reserve(TXT_DECODER_DEFAULT_BUFFER_SIZE);
+
+    for (size_t i = 0; i < txt.length(); i++)
     {
         if ((unsigned char)txt[i] <= 127)
         {
-            idxs[index] = (unsigned char)txt[i];
-            index++;
-            //printf("char: %i\n", (int)txt[i]);
+            _char_decoding_polish_index_buffer.push_back((unsigned char)txt[i]);
         }
         else
         {
             String t = txt.substring(i, i+1);
             i++;
-            idxs[index] = polishIndex(decode2(t));
-            index++;
-            //printf("cp=0x%X idx=%d\n", (unsigned)cp, -idx);
+
+            _char_decoding_polish_index_buffer.push_back(-polishIndex(decode2(t)));
         }
     }
 
-
-    if(index < size)
-    {
-        size = index;
-    }
-    
+    return _char_decoding_polish_index_buffer;
 }
 
 #endif
