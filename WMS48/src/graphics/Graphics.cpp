@@ -1,5 +1,6 @@
 #include "Graphics.h"
 #include "config.h"
+#include "PolishDiacriticalsDecoder.h"
 
 #define ABS(a) (((a) < 0) ? -(a) : (a))
 
@@ -126,7 +127,7 @@ void Graphics::drawCircle(int x0, int y0, int r, uint8_t brig)
 
 void Graphics::drawGlyph(int x, int y, int glyph_font_index, const Font &font, int font_size, uint8_t brig)
 {
-    const Glyph &g = font._getGlyph(glyph_font_index);
+    const Glyph &g = font.getGlyphByCharIndex(glyph_font_index);
 
     int bit_size = g.h * g.w;
 
@@ -152,28 +153,42 @@ void Graphics::drawGlyph(int x, int y, int glyph_font_index, const Font &font, i
 
 void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int font_size, uint8_t brig)
 {
-    const Glyph &g = font.getGlyph(ascii);
+    String t = "";
+    t += ascii;
 
-    int bit_size = g.h * g.w;
+    int* idxs;
+    int size;
 
-    y += g.yOffset * font_size;
-
-    for (size_t i = 0; i < bit_size; i++)
+    decodeTextToCharIndex(t, idxs, size);
+    
+    for (size_t i = 0; i < size; i++)
     {
-        if ((font.getByte(g.byteAddr + i / 8) & (1 << (7 - (i % 8)))) != 0)
-        {
-            for (size_t fx = 0; fx < font_size; fx++)
-            {
-                for (size_t fy = 0; fy < font_size; fy++)
-                {
-                    drawPixel(
-                        (x + (i % g.w) * font_size) + fx,
-                        (y + (i / g.w) * font_size) + fy,
-                        brig);
-                }
-            }
-        }
+        drawGlyph(x, y, idxs[i], font, font_size, brig);
     }
+    
+
+    // const Glyph &g = font.getGlyph(ascii);
+
+    // int bit_size = g.h * g.w;
+
+    // y += g.yOffset * font_size;
+
+    // for (size_t i = 0; i < bit_size; i++)
+    // {
+    //     if ((font.getByte(g.byteAddr + i / 8) & (1 << (7 - (i % 8)))) != 0)
+    //     {
+    //         for (size_t fx = 0; fx < font_size; fx++)
+    //         {
+    //             for (size_t fy = 0; fy < font_size; fy++)
+    //             {
+    //                 drawPixel(
+    //                     (x + (i % g.w) * font_size) + fx,
+    //                     (y + (i / g.w) * font_size) + fy,
+    //                     brig);
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t brig)
@@ -184,11 +199,23 @@ void Graphics::drawCharacter(int x, int y, char ascii, int font_size, uint8_t br
 void Graphics::drawText(int x, int y, String text, const Font &font, int font_size, uint8_t brig)
 {
     int cursor = x;
-    for (size_t i = 0; i < text.length(); i++)
+    int* idxs = nullptr;
+    int size;
+
+    decodeTextToCharIndex(text, idxs, size);
+
+    for (size_t i = 0; i < size; i++)
     {
-        drawCharacter(cursor, y, text[i], font_size, brig);
-        cursor += (font.spacing + font.getGlyph(text[i]).w) * font_size;
+        drawGlyph(cursor, y, idxs[i], font, font_size, brig);
+        cursor += (font.spacing + font.getGlyphByCharIndex(idxs[i]).w) * font_size;
     }
+    
+
+    // for (size_t i = 0; i < text.length(); i++)
+    // {
+    //     drawCharacter(cursor, y, text[i], font_size, brig);
+    //     cursor += (font.spacing + font.getGlyph(text[i]).w) * font_size;
+    // }
 }
 
 void Graphics::drawText(int x, int y, String text, int font_size, uint8_t brig)

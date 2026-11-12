@@ -26,19 +26,21 @@ public:
     // returns positive integer of height below baseline
     int getTextBottomOffset(const String& txt, int font_size = 1) const;
 
-    void convertStringToGlyphIndexTable(const String& txt, int* glyph_index_tab, int &size);
+    const Glyph& getGlyphByCharIndex(int char_index) const;
+    
+    const uint8_t getByte(int n) const;
 
-    const Glyph& getGlyph(char c) const;
-
-    virtual const Glyph& _getGlyph(int g) const = 0;
-    virtual const uint8_t& getByte(int i) const = 0;
-
-
-    const int bitmap_length; // length of bitmap table
-    const int glyphs_length; // length of glyphs table
     const int spacing;
     const int max_Yoffset; // max y offest over baseline, IT IS NEGATIVE: -7 example
     const String name;
+
+private:
+    virtual const Glyph& _getGlyph(int g) const = 0;
+    virtual const uint8_t& _getByte(int i) const = 0;
+
+    const int bitmap_length; // length of bitmap table
+    const int glyphs_length; // length of glyphs table
+    const int ascii_glyphs_length = 95; // when ascii ends in glyph table 
 };
 
 #endif
