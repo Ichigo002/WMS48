@@ -46,9 +46,9 @@ inline std::vector<int> &decodeTextToCharIndex(const String &txt)
         }
         else
         {
-            String t = txt.substring(i, i+1);
+            String t = txt.substring(i, i+2);
             i++;
-
+            //Serial.printf("decode index pl: %i\n", -polishIndex(decode2(t)));
             _char_decoding_polish_index_buffer.push_back(-polishIndex(decode2(t)));
         }
     }

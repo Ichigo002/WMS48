@@ -70,20 +70,21 @@ int Font::getTextBottomOffset(const String &txt, int font_size) const
 
 const Glyph &Font::getGlyphByCharIndex(int char_index) const
 {
+    
     if (char_index > 0)
     {
         if ((char_index - 0x20) >= 0 && (char_index - 0x20) < ascii_glyphs_length)
-            return _getGlyph(char_index - 0x20);
+            return _getGlyph(char_index - 0x20); // return correct ascii
 
-        return _getGlyph('X' - 0x20); // X NULL GLYPH
+        return _getGlyph('X' - 0x20); // X Bad GLYPH INDEX
     }
 
     char_index *= -1;
 
     if (char_index + ascii_glyphs_length >= glyphs_length)
-        return _getGlyph(char_index - 0x20);
+        return _getGlyph('R' - 0x20); // R Bad GLYPH INDEX
 
-    return _getGlyph(char_index + ascii_glyphs_length);
+    return _getGlyph(char_index + ascii_glyphs_length); // return correct polish case
 }
 
 uint8_t Font::getByte(int n) const
