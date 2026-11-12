@@ -12,6 +12,10 @@ public:
 
     virtual const Glyph &_getGlyph(int g) const override
     {
+        if(g < 0 || g > glyphs_length)
+        {
+            g = 1;
+        }
         return glyphs[g];
     }
 
@@ -22,7 +26,7 @@ public:
 
 private:
     const Glyph glyphs[95] = {
-        
+
     };
     const uint8_t bitmap[396] = {
 

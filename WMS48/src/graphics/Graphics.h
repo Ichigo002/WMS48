@@ -25,7 +25,11 @@ public:
     void drawFilledRect(int x, int y, int w, int h, uint8_t brig = 32);
     void drawCircle(int x0, int y0, int r, uint8_t brig = 32);
 
+
+    void drawGlyph(int x, int y, int glyph_font_index, const Font& font, int font_size = 1, uint8_t brig = 32);
+
     // draw character. y = baseline of character
+    
     void drawCharacter(int x, int y, char ascii, const Font& font, int font_size = 1, uint8_t brig = 32);
     void drawCharacter(int x, int y, char ascii, int font_size = 1, uint8_t brig = 32);
 

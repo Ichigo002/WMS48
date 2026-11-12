@@ -25,6 +25,9 @@ public:
     int getTextTopOffset(const String& txt, int font_size = 1) const;
     // returns positive integer of height below baseline
     int getTextBottomOffset(const String& txt, int font_size = 1) const;
+
+    void convertStringToGlyphIndexTable(const String& txt, int* glyph_index_tab, int &size);
+
     const Glyph& getGlyph(char c) const;
 
     virtual const Glyph& _getGlyph(int g) const = 0;

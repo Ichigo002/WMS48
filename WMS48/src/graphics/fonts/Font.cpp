@@ -61,10 +61,27 @@ int Font::getTextBottomOffset(const String &txt, int font_size) const
     return bot * font_size;
 }
 
+void Font::convertStringToGlyphIndexTable(const String &txt, int *glyph_index_tab, int &size)
+{
+    for (size_t i = 0; i < txt.length(); i++)
+    {
+        if((unsigned char)txt[i] <= 127)
+        {
+            Serial.printf("char: %i", (int)txt[i]);
+        }
+        else
+        {
+            Serial.printf("utf: %#x, %#x", txt[i], txt[i+1]);
+            i++;
+        }
+    }
+    
+}
+
 const Glyph &Font::getGlyph(char c) const
 {
     if ((c - 0x20) >= glyphs_length)
-            return _getGlyph(1); // X NULL GLYPH
+            return _getGlyph('X' - 0x20); // X NULL GLYPH
 
-    return _getGlyph(c - 0x20); // change it later to c - 0x20
+    return _getGlyph(c - 0x20);
 }

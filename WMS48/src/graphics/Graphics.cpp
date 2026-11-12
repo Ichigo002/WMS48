@@ -124,6 +124,32 @@ void Graphics::drawCircle(int x0, int y0, int r, uint8_t brig)
     }
 }
 
+void Graphics::drawGlyph(int x, int y, int glyph_font_index, const Font &font, int font_size, uint8_t brig)
+{
+    const Glyph &g = font._getGlyph(glyph_font_index);
+
+    int bit_size = g.h * g.w;
+
+    y += g.yOffset * font_size;
+
+    for (size_t i = 0; i < bit_size; i++)
+    {
+        if ((font.getByte(g.byteAddr + i / 8) & (1 << (7 - (i % 8)))) != 0)
+        {
+            for (size_t fx = 0; fx < font_size; fx++)
+            {
+                for (size_t fy = 0; fy < font_size; fy++)
+                {
+                    drawPixel(
+                        (x + (i % g.w) * font_size) + fx,
+                        (y + (i / g.w) * font_size) + fy,
+                        brig);
+                }
+            }
+        }
+    }
+}
+
 void Graphics::drawCharacter(int x, int y, char ascii, const Font &font, int font_size, uint8_t brig)
 {
     const Glyph &g = font.getGlyph(ascii);
