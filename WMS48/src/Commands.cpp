@@ -374,9 +374,8 @@ void SerialCmdsParser::initCommands()
         .help_details = " here everything begins, it sets default params. If you don't call this first, then every animation cmd returns error: -2. not correctly initialized",
         .execute = [](ExecTools &ext, std::vector<String> &args)
         {
-            ext.txt_anim.anim_settings.speed_x = -50;
+            ext.txt_anim.anim_settings.speed_x = -30;
             ext.txt_anim.anim_settings.speed_y = 0;
-            ext.txt_anim.anim_settings.animation_mode == AnimMode::LOOP;
             ext.txt_anim.anim_settings.start_pos_x = 0;
             ext.txt_anim.anim_settings.start_pos_y = 0;
 
