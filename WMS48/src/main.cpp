@@ -13,7 +13,7 @@
 #include "BLE/BleServerBridge.h"
 
 // Uncomment line below in order to use Classic Serial sBluetooth
-// #define USE_BT_CLASSIC
+ #define USE_BT_CLASSIC
 
 #ifdef USE_BT_CLASSIC
 #include <BluetoothSerial.h>
@@ -22,12 +22,12 @@
 Display display;
 FontManager font_mgr;
 
-Graphics graphics(display, font_mgr.getFont(FONT_DEFAULT));
+Graphics graphics(display, font_mgr.getFont(FONT_MONOSPACE));
 HardwareInterface hardwareInterface;
 TextAnimator cmd_txt;
 ClockAnimator cmd_clk;
 
-SerialCmdsParser cmdParser(graphics, display, font_mgr.getFont(FONT_DEFAULT), hardwareInterface, cmd_txt, cmd_clk);
+SerialCmdsParser cmdParser(graphics, display, font_mgr.getFont(FONT_MONOSPACE), hardwareInterface, cmd_txt, cmd_clk);
 
 BleServerBridge ble_server;
 
@@ -55,7 +55,7 @@ void setup()
   {
     Serial.println("HELLO THERE");
     cmd_txt.text_settings.text = "It works";
-    cmd_txt.text_settings.font = &font_mgr.getFont(FONT_DEFAULT);
+    cmd_txt.text_settings.font = &font_mgr.getFont(FONT_NATALIA);
     cmd_txt.start();
   };
 

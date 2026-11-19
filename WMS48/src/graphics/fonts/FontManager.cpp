@@ -10,10 +10,8 @@ FontManager::~FontManager()
 
 Font &FontManager::getFont(String name)
 {
-    if(name == FONT_MONO)
-        return font_d;
-    if(name == FONT_LOVELY)
-        return font_d;
+    if(name == FONT_MONOSPACE)
+        return f2;
 
-    return font_d; // FONT_dEFAULT
+    return f1; // FONT_dEFAULT
 }

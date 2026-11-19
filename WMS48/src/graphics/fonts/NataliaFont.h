@@ -1,14 +1,19 @@
-#ifndef DEFAULT_FONT_H
-#define DEFAULT_FONT_H
+#ifndef NATALIA_FONT_H
+#define NATALIA_FONT_H
 
 #include "graphics/fonts/Font.h"
 #include <Arduino.h>
 
-class DefaultFont : public Font
+#define NATALIA_FONT_GLYPH_LENGTH 113
+#define NATALIA_FONT_BITMAP_LENGTH 491
+#define NATALIA_FONT_Y_MAXOFFSET -9
+#define FONT_NATALIA "natalia-var-font"
+
+class NataliaFont : public Font
 {
 public:
-    DefaultFont() : Font(491, 113, 1, -9, "default") {};
-    ~DefaultFont() override = default;
+    NataliaFont() : Font(NATALIA_FONT_GLYPH_LENGTH, NATALIA_FONT_BITMAP_LENGTH, 1, NATALIA_FONT_Y_MAXOFFSET, FONT_NATALIA) {};
+    ~NataliaFont() override = default;
 
 private:
 
@@ -22,7 +27,7 @@ private:
         return bitmap[i];
     }
 
-    const Glyph glyphs[113] = {
+    const Glyph glyphs[NATALIA_FONT_GLYPH_LENGTH] = {
         {0, 3, 1, -1},   /* Space | 0 */
         {1, 2, 8, -7},   /* ! | 1 */
         {3, 3, 7, -7},   /* " | 2 */
@@ -138,7 +143,7 @@ private:
         {486, 5, 7, -7}};
 
 
-    const uint8_t bitmap[491] = {
+    const uint8_t bitmap[NATALIA_FONT_BITMAP_LENGTH] = {
         0x0,
         0xAA, 0x82,
         0xB4, 0x0, 0x0,

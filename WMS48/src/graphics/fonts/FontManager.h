@@ -2,11 +2,8 @@
 #define FONT_MANAGER_H
 
 #include "graphics/fonts/Font.h"
-#include "graphics/fonts/DefaultFont.h"
-
-#define FONT_DEFAULT "default"
-#define FONT_MONO "monospace"
-#define FONT_LOVELY "fell-in-love-natalia"
+#include "graphics/fonts/NataliaFont.h"
+#include "graphics/fonts/MonospaceFont.h"
 
 class FontManager
 {
@@ -16,7 +13,8 @@ public:
 
     Font& getFont(String name);
 private:
-    DefaultFont font_d;
+    NataliaFont f1;
+    MonospaceFont f2;
 };
 
 
