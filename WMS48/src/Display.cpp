@@ -79,10 +79,6 @@ void Display::setPixelRaw(int x, int y, uint8_t value)
     abstract_buffer[x][y] = value;
 }
 
-void Display::__graphic_unsafe_setPixelRaw(int x, int y, uint8_t value)
-{
-    abstract_buffer[x][y] = value;
-}
 
 void Display::clear()
 {
@@ -103,19 +99,25 @@ void Display::setNewRefreshRate(uint8_t refresh_freq_hz)
     
 }
 
+/*
+ level of brightness modifys time of refreshing one row. if it is too low, then esp32 get stuck, stops responding
+
+*/
 void Display::setBrightness(float _brightness)
 {
     if (_brightness < 0)
-        _brightness = 0;
+        _brightness = 0.1f;
     if (_brightness > 1.0f)
         _brightness = 1.0f;
 
     modified_ticks_per_row = ticks_per_row_refresh * _brightness;
 
-    if (modified_ticks_per_row < 20)
+    if (modified_ticks_per_row < 30)
     {
-        modified_ticks_per_row = 20;
+        modified_ticks_per_row = 30;
     }
+
+    Serial.printf("modified_ticks_per_row = %i", modified_ticks_per_row);
 }
 
 float Display::getBrightness()

@@ -1,3 +1,4 @@
 TODO LIST:
     - ClockAnimator - fix bug of resreshing digital clock, use monospace font??
-    - Refactor code, use FontManager
+    - Fix birghtness bug
+    - lagging animation
