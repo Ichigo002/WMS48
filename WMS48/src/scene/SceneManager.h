@@ -24,7 +24,7 @@ public:
     void update(float deltaTime);
     void draw(Graphics& g);
     
-    void onCommandScene(const uint8_t* d, size_t n);
+    void onCommandScene(const uint8_t* data, size_t n);
 
 private:
     Scene* current;

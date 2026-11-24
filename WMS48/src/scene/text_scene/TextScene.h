@@ -8,7 +8,7 @@ class TextScene : public Scene
 {
 public:
     TextScene();
-    ~TextScene();
+    ~TextScene() override;
 
     virtual void setup();
 
@@ -18,11 +18,7 @@ public:
     virtual void update(float deltaTime);
     virtual void draw(Graphics& g);
 
-    virtual void onCommand();
+    virtual void onCommand(const uint8_t* data, size_t n);
 
 };
-
-
-
-
 #endif

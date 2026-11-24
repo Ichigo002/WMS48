@@ -7,7 +7,7 @@ class Scene
 {
 public:
     Scene(const int id) : ID(id) { }
-    virtual ~Scene() = 0;
+    virtual ~Scene() = default;
 
     virtual void setup() = 0;
 
@@ -17,11 +17,10 @@ public:
     virtual void update(float deltaTime) = 0;
     virtual void draw(Graphics& g) = 0;
 
-    virtual void onCommand() = 0;
+    virtual void onCommand(const uint8_t* data, size_t n) = 0;
 
     const int ID;
 };
-
 
 
 #endif

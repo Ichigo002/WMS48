@@ -31,6 +31,7 @@ public:
 
     void begin(char *device_name);
 
+    // (const raw data, size);
     std::function<void(const uint8_t *, size_t)> onWriteSceneIndex;
     std::function<void(const uint8_t *, size_t)> onReadSceneIndex;
 

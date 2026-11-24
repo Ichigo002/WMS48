@@ -29,6 +29,6 @@ void TextScene::draw(Graphics &g)
 {
 }
 
-void TextScene::onCommand()
+void TextScene::onCommand(const uint8_t* data, size_t n)
 {
 }
