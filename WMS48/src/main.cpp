@@ -25,7 +25,7 @@ FontManager font_mgr;
 Graphics graphics(display, font_mgr.getFont(FONT_MONOSPACE));
 HardwareInterface hardwareInterface;
 TextAnimator cmd_txt;
-ClockAnimator cmd_clk;
+ClockAnimator cmd_clk(font_mgr);
 
 SerialCmdsParser cmdParser(graphics, display, font_mgr.getFont(FONT_MONOSPACE), hardwareInterface, cmd_txt, cmd_clk);
 

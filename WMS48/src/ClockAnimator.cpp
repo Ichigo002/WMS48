@@ -1,10 +1,11 @@
 #include "ClockAnimator.h"
 
-ClockAnimator::ClockAnimator(/* args */)
+ClockAnimator::ClockAnimator(FontManager& font_mgr)
 {
     s = &settings;
-    t = &text_settings;
+    font = &font_mgr.getFont(FONT_MONOSPACE);
     is_hidden = true;
+
 }
 
 ClockAnimator::~ClockAnimator()
@@ -29,7 +30,7 @@ void ClockAnimator::update(float deltaTime)
 
 void ClockAnimator::draw(Graphics &g)
 {
-    if (t->font == nullptr || is_hidden)
+    if (font == nullptr || is_hidden)
     {
         return;
     }
@@ -84,34 +85,34 @@ void ClockAnimator::calculateClkHandPos(ClockHand &hand, int radius, float perce
 
 void ClockAnimator::drawColon(int x, int y, Graphics &g)
 {
-    int x1 = x + t->font_size;
-    int y1 = y + t->font_size;
-    g.drawFilledRect(x1, y1, 2 * t->font_size, 2 * t->font_size, t->brightness);
+    int x1 = x + font_size - 1;
+    int y1 = y + font_size;
+    g.drawFilledRect(x1, y1, 2 * font_size, 2 * font_size, brightness);
 
     // DRAW BOTTOM SPLITTER
-    y1 += 3 * t->font_size;
-    g.drawFilledRect(x1, y1, 2 * t->font_size, 2 * t->font_size, t->brightness);
+    y1 += 3 * font_size;
+    g.drawFilledRect(x1, y1, 2 * font_size, 2 * font_size, brightness);
 }
 
 void ClockAnimator::drawDigital(Graphics &g)
 {
-    int w = t->font->getTextWidth(str_hh) + t->font->getTextWidth(str_mm) + t->font_size * 4; // colon width
+    int w = font->getTextWidth(str_hh) + font->getTextWidth(str_mm) + font_size * 4; // colon width
 
     if (s->mode == ClockMode::DIGITAL_HH_MM_SS)
-        w += t->font->getTextWidth(str_ss) +
-             t->font_size * 4; // second colon
+        w += font->getTextWidth(str_ss) +
+             font_size * 4; // second colon
 
     // CLEAR AREA
-    g.drawFilledRect(s->start_pos_x, s->start_pos_y, w+t->font_size*2, t->font->getTextHeight("1"), 0);
+    g.drawFilledRect(s->start_pos_x, s->start_pos_y, w+font_size*2, font->getTextHeight("1"), 0);
 
     // DRAW HOURS
-    g.drawText(s->start_pos_x, s->start_pos_y, str_hh, *t->font, t->font_size, t->brightness);
+    g.drawText(s->start_pos_x, s->start_pos_y - font->max_Yoffset, str_hh, *font, font_size, brightness);
 
-    int start_str_mm = s->start_pos_x + t->font->getTextWidth(str_hh) +
-                       4 * t->font_size;
+    int start_str_mm = s->start_pos_x + font->getTextWidth(str_hh) +
+                       4 * font_size;
 
     // DRAW MINUTES
-    g.drawText(start_str_mm, s->start_pos_y, str_mm, *t->font, t->font_size, t->brightness);
+    g.drawText(start_str_mm, s->start_pos_y - font->max_Yoffset, str_mm, *font, font_size, brightness);
 
     // DRAW TOP SPLITTER
     if (s->blinking_colon && s->mode == DIGITAL_HH_MM && time_info->tm_sec % 2 == 0)
@@ -119,17 +120,17 @@ void ClockAnimator::drawDigital(Graphics &g)
         return;
     }
 
-    drawColon(start_str_mm - 4 * t->font_size, s->start_pos_y, g);
+    drawColon(start_str_mm - 4 * font_size, s->start_pos_y, g);
 
     if (s->mode == ClockMode::DIGITAL_HH_MM_SS)
     {
         // DRAW SECOND COLON
-        start_str_mm += t->font->getTextWidth(str_hh);
+        start_str_mm += font->getTextWidth(str_hh);
         drawColon(start_str_mm, s->start_pos_y, g);
 
-        start_str_mm += 4 * t->font_size;
+        start_str_mm += 4 * font_size;
 
-        g.drawText(start_str_mm, s->start_pos_y, str_ss, *t->font, t->font_size, t->brightness);
+        g.drawText(start_str_mm, s->start_pos_y - font->max_Yoffset, str_ss, *font, font_size, brightness);
     }
 }
 
@@ -140,10 +141,10 @@ void ClockAnimator::drawAnalog(Graphics &g)
     g.drawFilledRect(ANALOG_CENTER_X - ANALOG_RADIUS, ANALOG_CENTER_Y - ANALOG_RADIUS, 2 * ANALOG_RADIUS, 2 * ANALOG_RADIUS, 0);
 
     // DRAW CIRCLE
-    g.drawCircle(ANALOG_CENTER_X, ANALOG_CENTER_Y, ANALOG_RADIUS, t->brightness);
+    g.drawCircle(ANALOG_CENTER_X, ANALOG_CENTER_Y, ANALOG_RADIUS, brightness);
 
     // DRAW CENTER PIXEL
-    g.drawPixel(ANALOG_CENTER_X, ANALOG_CENTER_Y, t->brightness);
+    g.drawPixel(ANALOG_CENTER_X, ANALOG_CENTER_Y, brightness);
 
     // DRAW HOUR HAND
     g.drawLine(ANALOG_CENTER_X, ANALOG_CENTER_Y, hour_hand.x, hour_hand.y, s->hour_hand_brightness);

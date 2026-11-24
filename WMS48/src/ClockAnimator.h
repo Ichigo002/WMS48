@@ -5,6 +5,7 @@
 #include "UnixTimestampFuncs.h"
 #include "TextAnimator.h"
 #include <math.h>
+#include "graphics/fonts/FontManager.h"
 
 #define ANALOG_CENTER_X WIDTH / 2
 #define ANALOG_CENTER_Y HEIGHT / 2
@@ -35,11 +36,13 @@ struct ClockHand {
 class ClockAnimator
 {
 public:
-    ClockAnimator(/* args */);
+    ClockAnimator(FontManager& font_mgr);
     ~ClockAnimator();
 
     ClockSettings settings;
-    _TextParameters text_settings;
+    int font_size = 1;
+    int brightness = 32;
+    
 
     void update(float deltaTime);
     void draw(Graphics& g);
@@ -61,7 +64,7 @@ private:
 private:
     bool is_hidden;
     ClockSettings* s;
-    _TextParameters* t;
+    Font* font;
 
     time_t raw_time;
     struct tm* time_info;

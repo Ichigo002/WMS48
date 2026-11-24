@@ -4,8 +4,6 @@ SerialCmdsParser::SerialCmdsParser(Graphics &g, Display &d, Font &f, HardwareInt
     : graphics(g), display(d), font(f), hardwareInterface(h), txt_anim(t), clk(c)
 {
 
-    clk.text_settings.font = &font;
-
     execTools = new ExecTools{
         nullptr,
         clk,
