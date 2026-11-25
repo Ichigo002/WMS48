@@ -35,10 +35,15 @@ enum SceneIDs
     WELCOME_SCENE = 2,
 };
 
-//Sets Standard Non Animated Text
-enum class SetStandardTextOP : uint8_t {
-    OP_CODE = 0x01,
-    /* rest of bytes is chars*/
-};
+
+namespace BLE_CMD_SCENE {
+    /*
+    NAME: Set only raw text. TEST COMMAND
+    BODY:
+        OP_CODE,
+        TEXT BYTES... (length: n-1)
+    */
+    constexpr const uint8_t OP_SET_TEXT = 0x01;
+}
 
 #endif

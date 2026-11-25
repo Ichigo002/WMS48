@@ -2,7 +2,9 @@
 #define TEXT_SCENE_H
 
 #include "scene/Scene.h"
+#include "ByteReader.h"
 #include "BLE/Protocol.h"
+#include <Arduino.h>
 
 class TextScene : public Scene
 {

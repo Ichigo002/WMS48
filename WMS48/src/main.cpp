@@ -55,6 +55,12 @@ void pushNewScenes()
 
 void handle_ble_server_events()
 {
+
+  ble_server.onWriteCommandScene = [](const uint8_t *d, size_t n)
+  {
+    smgr.onCommandScene(d, n);
+  };
+
   ble_server.onWriteSceneIndex = [](const uint8_t *d, size_t n)
   {
     Serial.println("WRITE INDEX: ");

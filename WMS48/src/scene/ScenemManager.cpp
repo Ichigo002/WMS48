@@ -69,5 +69,9 @@ void SceneManager::draw(Graphics &g)
 
 void SceneManager::onCommandScene(const uint8_t *d, size_t n)
 {
-    // TODO
+    Serial.println("SceneManager::onCommandScene...");
+    if(current)
+    {
+        current->onCommand(d, n);
+    }
 }
