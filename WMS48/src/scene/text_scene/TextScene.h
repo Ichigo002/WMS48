@@ -9,7 +9,7 @@
 class TextScene : public Scene
 {
 public:
-    TextScene();
+    TextScene(FontManager& font_mgr);
     ~TextScene() override;
 
     virtual void setup();

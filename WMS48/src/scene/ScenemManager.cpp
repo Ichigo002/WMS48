@@ -38,7 +38,7 @@ Scene *SceneManager::getCurrentScene()
 int SceneManager::getCurrentSceneID()
 {
     if(!current)
-        return SceneIDs::NULL_S;
+        return -1;
     return current->ID;
 }
 
@@ -69,7 +69,6 @@ void SceneManager::draw(Graphics &g)
 
 void SceneManager::onCommandScene(const uint8_t *d, size_t n)
 {
-    Serial.println("SceneManager::onCommandScene...");
     if(current)
     {
         current->onCommand(d, n);

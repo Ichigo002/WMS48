@@ -1,7 +1,7 @@
 #include "TextScene.h"
 
-TextScene::TextScene()
-    : Scene(SceneIDs::TEXT_SCENE)
+TextScene::TextScene(FontManager& font_mgr)
+    : Scene(SceneIDs::TEXT_SCENE, font_mgr)
 {
 }
 

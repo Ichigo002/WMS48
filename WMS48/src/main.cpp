@@ -11,6 +11,7 @@
 #include "ClockAnimator.h"
 #include "scene/SceneManager.h"
 #include "scene/text_scene/TextScene.h"
+#include "scene/welcome_scene/WelcomeScene.h"
 
 #include "BLE/BleServerBridge.h"
 
@@ -31,18 +32,16 @@ HardwareInterface hardwareInterface;
 SceneManager smgr;
 
 /*=== SCENES ===*/
-TextScene _TextScene;
-
+TextScene _TextScene(font_mgr);
+WelcomeScene _WelcomeScene(font_mgr);
 
 /*=== END SCENES ===*/
 
-
-TextAnimator cmd_txt;
-ClockAnimator cmd_clk(font_mgr);
-
-SerialCmdsParser cmdParser(graphics, display, font_mgr.getFont(FONT_MONOSPACE), hardwareInterface, cmd_txt, cmd_clk);
-
-
+/*=== SERIAL PARSER OBSCOLETE*/
+//TextAnimator cmd_txt;
+//ClockAnimator cmd_clk(font_mgr);
+//SerialCmdsParser cmdParser(graphics, display, font_mgr.getFont(FONT_MONOSPACE), hardwareInterface, cmd_txt, cmd_clk);
+/*=== END SERIAL ===*/
 
 #ifdef USE_BT_CLASSIC
 BluetoothSerial bl;
@@ -51,29 +50,52 @@ BluetoothSerial bl;
 void pushNewScenes()
 {
   smgr.pushNewScene(&_TextScene);
+  smgr.pushNewScene(&_WelcomeScene);
 }
 
 void handle_ble_server_events()
 {
+  ble_server.onWriteSceneIndex = [](const uint8_t *d, size_t n)
+  {
+    ByteReader r(d, n);
+    uint8_t id;
+    if(r.u8(id))
+    {
+      smgr.switchScene(id);
+    }
+  };
+
+  ble_server.onReadSceneIndex = [](BLECharacteristic *pCharacteristic)
+  {
+    uint8_t id = smgr.getCurrentSceneID();
+    pCharacteristic->setValue(&id, 1);
+  };
 
   ble_server.onWriteCommandScene = [](const uint8_t *d, size_t n)
   {
     smgr.onCommandScene(d, n);
   };
 
-  ble_server.onWriteSceneIndex = [](const uint8_t *d, size_t n)
+  ble_server.onWriteCommand = [](const uint8_t *d, size_t n)
   {
-    Serial.println("WRITE INDEX: ");
-    Serial.println(*d);
-    Serial.println(n);
+    // ???????????????????/
   };
 
   ble_server.onWriteUnixTime = [](const uint8_t *d, size_t n)
   {
-    Serial.println("HELLO THERE");
-    cmd_txt.text_settings.text = "It works";
-    cmd_txt.text_settings.font = &font_mgr.getFont(FONT_NATALIA);
-    cmd_txt.start();
+    ByteReader r(d, n);
+    uint32_t time;
+
+    if(r.u32(time))
+    {
+      setESP32UnixTimeStamp(time);
+    }
+  };
+
+  ble_server.onReadUnixTime = [](BLECharacteristic *pCharacteristic)
+  {
+    uint32_t t = getESP32Timestamp();
+    pCharacteristic->setValue((uint8_t*)&t, 4);
   };
 }
 
@@ -95,7 +117,7 @@ void setup()
 
   smgr.setup();
 
-  smgr.switchScene(_TextScene.ID);
+  smgr.switchScene(_WelcomeScene.ID);
 }
 
 uint32_t previousTime = 0;
@@ -108,18 +130,18 @@ void loop()
   deltaTime = (currentTime - previousTime) / 1000.0f; // seconds
   previousTime = currentTime;
 
-  cmd_txt.update(deltaTime);
-  cmd_clk.update(deltaTime);
+  //cmd_txt.update(deltaTime);
+  //cmd_clk.update(deltaTime);
   smgr.update(deltaTime);
 
-  cmdParser.processSerialIfAvailable(Serial);
+  //cmdParser.processSerialIfAvailable(Serial);
 
 #ifdef USE_BT_CLASSIC
   cmdParser.processSerialIfAvailable(bl);
 #endif
 
   smgr.draw(graphics);
-  cmd_clk.draw(graphics);
-  cmd_txt.draw(graphics);
+  //cmd_clk.draw(graphics);
+  //cmd_txt.draw(graphics);
   display.update();
 }

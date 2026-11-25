@@ -33,13 +33,13 @@ public:
 
     // (const raw data, size);
     std::function<void(const uint8_t *, size_t)> onWriteSceneIndex;
-    std::function<void(const uint8_t *, size_t)> onReadSceneIndex;
+    std::function<void(BLECharacteristic*)> onReadSceneIndex;
 
     std::function<void(const uint8_t *, size_t)> onWriteCommandScene;
     std::function<void(const uint8_t *, size_t)> onWriteCommand;
 
     std::function<void(const uint8_t *, size_t)> onWriteUnixTime;
-    std::function<void(const uint8_t *, size_t)> onReadUnixTime;
+    std::function<void(BLECharacteristic*)> onReadUnixTime;
 
     std::function<void()> onConnectEvent;
     std::function<void()> OnDisconnectEvent;
@@ -56,7 +56,7 @@ private:
     {
     public:
         std::function<void(const uint8_t *, size_t)> onWriteCb;
-        std::function<void(const uint8_t *, size_t)> onReadCb;
+        std::function<void(BLECharacteristic *)> onReadCb;
 
         void onWrite(BLECharacteristic *pCharacteristic) override
         {
@@ -66,8 +66,9 @@ private:
 
         void onRead(BLECharacteristic *pCharacteristic) override
         {
+
             if (onReadCb)
-                onReadCb(pCharacteristic->getData(), pCharacteristic->getLength());
+                onReadCb(pCharacteristic);
         }
     };
 
@@ -99,7 +100,7 @@ private:
     {
     public:
         std::function<void(const uint8_t *, size_t)> onWriteCb;
-        std::function<void(const uint8_t *, size_t)> onReadCb;
+        std::function<void(BLECharacteristic*)> onReadCb;
 
         void onWrite(BLECharacteristic *pCharacteristic) override
         {
@@ -110,7 +111,7 @@ private:
         void onRead(BLECharacteristic *pCharacteristic) override
         {
             if (onReadCb)
-                onReadCb(pCharacteristic->getData(), pCharacteristic->getLength());
+                onReadCb(pCharacteristic);
         }
     };
 };
